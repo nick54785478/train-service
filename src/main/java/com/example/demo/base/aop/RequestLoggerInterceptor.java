@@ -45,7 +45,7 @@ public class RequestLoggerInterceptor {
     }
 
     /**
-     * 用於記錄方法執行前的訊息。
+     * 記錄方法執行前的訊息。
      * 
      * @param joinPoint 切入點
      */
