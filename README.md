@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/6db1e646-bdfd-44fa-95b9-ea97c640cedd)<h3>背景</h3>
+<h3>背景</h3>
 <hr />
 
 TODO
