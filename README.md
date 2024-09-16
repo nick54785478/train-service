@@ -20,7 +20,7 @@ TODO
 https://github.com/nick54785478/reactive-system-demo
 
 <br/>
-1. 在Maven項目或者pom.xml上右鍵 -->  Run As --> "Maven Build... " 或 Run Configuration --> "Maven Build"。
+1. 在Maven項目或者pom.xml上右鍵 -->  Run As --> "Maven Build... " 或 Run Configuration --> "Maven Build"。 <br/>
 2. 在"Goals"输入框中输入：**clean install** 。
 3. 使用時在 Run As 中選中 Maven build 即可。
 4. console 出現 BUILD SUCCESS 即打包完成。
