@@ -28,8 +28,13 @@ https://github.com/nick54785478/reactive-system-demo
 3. 使用時在 Run As 中選中 Maven build 即可。
 4. console 出現 BUILD SUCCESS 即打包完成。
 5. 透過命令列(CMD) 進入 Dockerfile 所在目錄(我放在專案內那一層)
-6. 輸入 **docker build -t {image 名稱} .**  <br/>
-註. 可透過 docker images 看是否有打包成功。
+6. 輸入 **docker build -t {image 名稱} .**  (註. 可透過 docker images 看是否有打包成功。)
+7. 解壓縮 **auth-service.zip** (在專案內那一層)
+8. 到裡面點擊 run.sh，即容器化完成。
+9. 在該 MySQL 中建立 auth 庫，並將 init-schema.sql 的內容執行(新增資料表及資料)
+10. 註冊一個使用者帳號以進行後續動作。
+
+11. 
 
 <br/> 
 
