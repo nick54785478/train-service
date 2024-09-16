@@ -39,6 +39,7 @@ https://github.com/nick54785478/reactive-system-demo 	 <br/>
 Request Body :
 
 <br/>
+
  ```
 	 {
 	    "name": "Nick",
@@ -48,6 +49,7 @@ Request Body :
 	    "address":"台北市內湖區"	
 	}
  ```
+
 <br/> 
 
 <h3>第二步: Clone train-demo</h3>
@@ -94,7 +96,7 @@ networks:
 
 <h3>第三步: 建立表及新增相關資料</h3>
 
-執行專案目錄下的 init-schema.sql 進行
+	執行專案目錄下的 init-schema.sql 進行
 
 <br />
 
