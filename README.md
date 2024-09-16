@@ -35,17 +35,17 @@ https://github.com/nick54785478/reactive-system-demo
 10. 註冊一個使用者帳號以進行後續動作。
 <br/> 
 
-範例:
-	POST http://localhost:8088/api/v1/users/register
-<br/>	Request Body
+**範例:**
+	**POST** http://localhost:8088/api/v1/users/register
+<br/>	Request Body :
 <br/>
  	```
 	 {
 	    "name": "Nick",
-		"email": "nick123@example.com", // 信箱
-		"username":"nick123@example.com", // 帳號
+	    "email": "nick123@example.com", // 信箱
+	    "username":"nick123@example.com", // 帳號與信箱同(以利後續使用)
 	    "password":"password123", // 密碼
-		"address":"台北市內湖區"	
+	    "address":"台北市內湖區"	
 	}
  	```
 
