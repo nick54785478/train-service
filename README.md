@@ -30,10 +30,13 @@ https://github.com/nick54785478/reactive-system-demo 	 <br/>
 8. 到 auth-service 資料夾內點擊 run.sh，即容器化完成。 <br/>
 9. 在該 MySQL 中建立 auth 庫，並將 schema.sql 和 data.sql 的內容執行(新增資料表及資料)。 <br/>
 10. 註冊一個使用者帳號以進行後續動作，因需要通過 JWToken 驗證，且相關功能可能會用使用者帳號。 <br/>
-<br/> 
+<br/>
+
 **範例:**
+
 <br/>
 **POST**  http://localhost:8088/api/v1/users/register <br/>
+
 Request Body :
 <br/>
  ```
