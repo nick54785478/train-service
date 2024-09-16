@@ -33,45 +33,31 @@ https://github.com/nick54785478/reactive-system-demo
 8. 到裡面點擊 run.sh，即容器化完成。
 9. 在該 MySQL 中建立 auth 庫，並將 init-schema.sql 的內容執行(新增資料表及資料)
 10. 註冊一個使用者帳號以進行後續動作。
+<br/> 
 
-11. 
+範例:
+	POST http://localhost:8088/api/v1/users/register
+<br/>	Request Body
+ 	```
+	 {
+	    "name": "Nick",
+		"email": "nick123@example.com", // 信箱
+		"username":"nick123@example.com", // 帳號
+	    "password":"password123", // 密碼
+		"address":"台北市內湖區"	
+	}
+ 	```
 
 <br/> 
+
+
 
 
 
 <br/>
 
 
-```
-version: "3"
-services:
-  db:
-    image: mysql:8.0
-    container_name: local-mysql
-    restart: always
-    environment:
-      TZ: Asia/Taipei
-      MYSQL_ROOT_PASSWORD: root 
-    command:
-      --max_connections=1000
-      --character-set-server=utf8mb4
-      --collation-server=utf8mb4_unicode_ci
-      --default-authentication-plugin=mysql_native_password
-    ports:
-      - 3306:3306
-    volumes:
-      - ./data:/var/lib/mysql
-      - ./conf:/etc/mysql/conf.d
-    networks:
-        mysql:
-          aliases:
-            - mysql
-networks:
-  mysql:
-    name: mysql
-    driver: bridge
-```
+
 <br/>
 
 
