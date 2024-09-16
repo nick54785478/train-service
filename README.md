@@ -32,12 +32,12 @@ https://github.com/nick54785478/reactive-system-demo 	 <br/>
 10. 註冊一個使用者帳號以進行後續動作，因需要通過 JWToken 驗證，且相關功能可能會用使用者帳號。 <br/>
 <br/>
 
-**範例:**
+**範例:** <br/>
 
-<br/>
-**POST**  http://localhost:8088/api/v1/users/register <br/>
+**POST**  http://localhost:8088/api/v1/users/register  <br/>
 
 Request Body :
+
 <br/>
  ```
 	 {
