@@ -57,7 +57,7 @@ Request Body :
 
 <h3>第二步: Clone train-demo</h3>
 
-透過 Docker 或 本地安裝，安裝 MYSQL 資料庫，以下為 yml 檔供參考:
+&emsp;透過 Docker 或 本地安裝，安裝 MYSQL 資料庫，以下為 yml 檔供參考:
 ```
 version: "3"
 services:
