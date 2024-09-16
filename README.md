@@ -28,9 +28,8 @@ https://github.com/nick54785478/reactive-system-demo
 3. 使用時在 Run As 中選中 Maven build 即可。
 4. console 出現 BUILD SUCCESS 即打包完成。
 5. 透過命令列(CMD) 進入 Dockerfile 所在目錄(我放在專案內那一層)
-6. 輸入 **docker build -t {image 名稱} .**
-註. 可透過 docker images 看是否有打包成功。 <br/>
-
+6. 輸入 **docker build -t {image 名稱} .**  <br/>
+註. 可透過 docker images 看是否有打包成功。
 
 <br/> 
 
