@@ -31,7 +31,9 @@ https://github.com/nick54785478/reactive-system-demo
 9. 在該 MySQL 中建立 auth 庫，並將 schema.sql 和 data.sql 的內容執行(新增資料表及資料)。 <br/>
 10. 註冊一個使用者帳號以進行後續動作，因需要通過 JWToken 驗證，且相關功能可能會用使用者帳號。 <br/>
 
-**註. auth-service 占用 8088 port； MySQL 占用 3307 port**
+**註. 
+>* auth-service 占用 8088 port，所以須在 application.properties 中設置 server.port=8088； 
+>* MySQL 占用 3307 port**
 
 <br/>
 
