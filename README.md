@@ -21,7 +21,7 @@
 https://github.com/nick54785478/reactive-system-demo 	
 
 **註.** 
->* **auth-service 占用 8088 port，所以須在 application.properties 中設置 server.port=8088，在執行打包** 
+>* **auth-service 占用 8088 port，所以須在 application.properties 中設置 server.port=8088，再執行以下打包動作** 
 >* **MySQL 占用 3307 port**
 
 1. 在Maven項目或者pom.xml上右鍵 -->  Run As --> "Maven Build... " 或 Run Configuration --> "Maven Build"。 <br/>
