@@ -43,6 +43,16 @@ public class JwtTokenService {
 	}
 
 	/**
+	 * 取得使用者信箱
+	 * 
+	 * @param token
+	 * @return 使用者信箱
+	 */
+	public String getEmail(String token) {
+		return (String) getTokenBody(token).get(JwtConstants.JWT_CLAIMS_KEY_EMAIL.getValue());
+	}
+
+	/**
 	 * 取得使用者角色
 	 * 
 	 * @param token
