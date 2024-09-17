@@ -24,6 +24,9 @@ public class JsonParseUtil {
 
 	/**
 	 * 序列化物件 為 JSON
+	 * 
+	 * @param target
+	 * @return 序列化 JSON 字串
 	 */
 	public static String serialize(Object target) {
 		try {
@@ -39,9 +42,9 @@ public class JsonParseUtil {
 	/**
 	 * 反序列化 JSON 回 物件
 	 * 
-	 * @return
-	 * @throws JsonProcessingException
-	 * @throws JsonMappingException
+	 * @param target  目標 序列化 JSON 字串
+	 * @param 欲轉換物件類型
+	 * @return 反序列化物件
 	 */
 	public static <T> T unserialize(String target, Class<T> clazz) {
 		try {

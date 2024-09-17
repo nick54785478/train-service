@@ -33,10 +33,10 @@ public class TicketBooking extends BaseEntity {
 	private String uuid;
 
 	@Column(name = "USERNAME")
-	private String username; // 乘客名
+	private String username; // 使用者帳號
 
 	@Column(name = "EMAIL")
-	private String email;
+	private String email;	// Email
 
 	@Column(name = "TICKET_UUID")
 	private String ticketUuid; // 對應車票班次

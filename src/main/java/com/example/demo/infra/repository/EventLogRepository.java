@@ -1,5 +1,6 @@
 package com.example.demo.infra.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,7 @@ import com.example.demo.base.event.EventLog;
 public interface EventLogRepository extends JpaRepository<EventLog, Long> {
 
 	EventLog findByUuid(String uuid);
+	
+	List<EventLog> findByStatusAndOccuredAtBefore(EventLogSendQueueStatus status, Date time);
 
-	List<EventLog> findByTopicAndStatus(String topic, EventLogSendQueueStatus status);
 }

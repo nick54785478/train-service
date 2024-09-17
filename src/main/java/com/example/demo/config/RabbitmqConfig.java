@@ -22,6 +22,9 @@ public class RabbitmqConfig {
 
 	@Value("${rabbitmq.book-topic-queue.name}")
 	private String bookingQueueName;
+	
+	@Value("${rabbitmq.register-topic-queue.name}")
+	private String registerUserQueueName;
 
 	@Value("${rabbitmq.exchange.name}")
 	private String exchangeName;
@@ -70,6 +73,16 @@ public class RabbitmqConfig {
 	public Queue bookingQueue() {
 		return new Queue(bookingQueueName, true);
 	}
+	
+	/**
+	 * create Rabbit user Registering Queue
+	 * 
+	 * @return bookingQueue
+	 */
+	@Bean
+	public Queue registeringQueue() {
+		return new Queue(registerUserQueueName, true);
+	}
 
 	/**
 	 * 將佇列 (Test Queue) 綁定到主題交換器 (TopicExchange)，並指定路由鍵模式。
@@ -92,6 +105,19 @@ public class RabbitmqConfig {
 		// * ：有且僅有一個
 		// #：匹配0個或者多個
 		return BindingBuilder.bind(bookingQueue).to(exchange).with(bookingQueueName); // 註. bind 需與上方 Queue 名稱一致
+//		return BindingBuilder.bind(testQueue()).to(topicExchange()).with("*.test.#"); //所有符合 "*.test.#" 这种模式的消息，都会被路由到 testQueue 队列。
+
+	}
+	
+	/**
+	 * 將佇列 (Registering Queue) 綁定到主題交換器 (TopicExchange)，並指定路由鍵模式。
+	 */
+	@Bean
+	public Binding registeringTopicQueueBinding(Queue registeringQueue, TopicExchange exchange) {
+		// 結合設定檔設定的匹配規則
+		// * ：有且僅有一個
+		// #：匹配0個或者多個
+		return BindingBuilder.bind(registeringQueue).to(exchange).with(registerUserQueueName); // 註. bind 需與上方 Queue 名稱一致
 //		return BindingBuilder.bind(testQueue()).to(topicExchange()).with("*.test.#"); //所有符合 "*.test.#" 这种模式的消息，都会被路由到 testQueue 队列。
 
 	}
