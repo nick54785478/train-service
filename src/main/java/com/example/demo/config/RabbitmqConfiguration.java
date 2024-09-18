@@ -28,6 +28,9 @@ public class RabbitmqConfiguration {
 
 	@Value("${rabbitmq.exchange.name}")
 	private String exchangeName;
+	
+	@Value("${rabbitmq.acount-tx-topic-queue.name}")
+	private String accountTxName;
 
 	/**
 	 * 將自定義的消息類序列化成json格式，再轉成byte構造 Message，在接收消息時，會將接收到的 Message 再反序列化成自定義的類。
@@ -75,7 +78,7 @@ public class RabbitmqConfiguration {
 	}
 	
 	/**
-	 * create Rabbit user Registering Queue
+	 * create Rabbit User Registering Queue
 	 * 
 	 * @return bookingQueue
 	 */
@@ -83,6 +86,17 @@ public class RabbitmqConfiguration {
 	public Queue registeringQueue() {
 		return new Queue(registerUserQueueName, true);
 	}
+	
+	/**
+	 * create Rabbit Account Transaction Queue
+	 * 
+	 * @return accountTxQueue
+	 */
+	@Bean
+	public Queue accountTxQueue() {
+		return new Queue(accountTxName, true);
+	}
+
 
 	/**
 	 * 將佇列 (Test Queue) 綁定到主題交換器 (TopicExchange)，並指定路由鍵模式。
@@ -118,6 +132,19 @@ public class RabbitmqConfiguration {
 		// * ：有且僅有一個
 		// #：匹配0個或者多個
 		return BindingBuilder.bind(registeringQueue).to(exchange).with(registerUserQueueName); // 註. bind 需與上方 Queue 名稱一致
+//		return BindingBuilder.bind(testQueue()).to(topicExchange()).with("*.test.#"); //所有符合 "*.test.#" 这种模式的消息，都会被路由到 testQueue 队列。
+
+	}
+	
+	/**
+	 * 將佇列 (Account Transaction Queue) 綁定到主題交換器 (TopicExchange)，並指定路由鍵模式。
+	 */
+	@Bean
+	public Binding accountTxTopicQueueBinding(Queue accountTxQueue, TopicExchange exchange) {
+		// 結合設定檔設定的匹配規則
+		// * ：有且僅有一個
+		// #：匹配0個或者多個
+		return BindingBuilder.bind(accountTxQueue).to(exchange).with(registerUserQueueName); // 註. bind 需與上方 Queue 名稱一致
 //		return BindingBuilder.bind(testQueue()).to(topicExchange()).with("*.test.#"); //所有符合 "*.test.#" 这种模式的消息，都会被路由到 testQueue 队列。
 
 	}

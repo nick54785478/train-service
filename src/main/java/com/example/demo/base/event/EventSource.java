@@ -31,8 +31,8 @@ public class EventSource {
 	@Column(name = "UUID")
 	private String uuid;
 
-	@Column(name = "TARGET_ID")
-	private String targetId; // 目標UUID
+	@Column(name = "AGGREGATE_ID")
+	private String targetId; // 目標 UUID
 
 	@Column(name = "USER_ID")
 	private String userId; // 使用者帳號
