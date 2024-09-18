@@ -13,6 +13,7 @@ import com.example.demo.base.BaseApplicationService;
 import com.example.demo.base.event.BaseEvent;
 import com.example.demo.base.event.EventLog;
 import com.example.demo.base.exception.ValidationException;
+import com.example.demo.base.repository.EventLogRepository;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
 import com.example.demo.domain.account.command.DepositMoneyCommand;
@@ -20,7 +21,6 @@ import com.example.demo.domain.account.outbound.RegisterUserEvent;
 import com.example.demo.domain.account.service.MoneyAccountService;
 import com.example.demo.domain.share.dto.MoneyAccountRegisteredData;
 import com.example.demo.domain.share.dto.MoneyDepositedRegisteredData;
-import com.example.demo.infra.repository.EventLogRepository;
 import com.example.demo.infra.repository.MoneyAccountRepository;
 import com.example.demo.util.JsonParseUtil;
 

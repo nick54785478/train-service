@@ -32,7 +32,7 @@ public enum JwtConstants {
 	 * */
 	JWT_CLAIMS_KEY_EMAIL("email");
 	
-    private final String value;
+    private String value;
 
     /**
      * 建構函數，設定對應的常數值。

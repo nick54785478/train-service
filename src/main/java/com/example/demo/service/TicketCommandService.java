@@ -13,6 +13,7 @@ import com.example.demo.base.context.ContextHolder;
 import com.example.demo.base.enums.YesNo;
 import com.example.demo.base.event.EventLog;
 import com.example.demo.base.exception.ValidationException;
+import com.example.demo.base.repository.EventLogRepository;
 import com.example.demo.domain.booking.command.BookTicketCommand;
 import com.example.demo.domain.booking.service.TicketBookingService;
 import com.example.demo.domain.seat.aggregate.TrainSeat;
@@ -20,7 +21,6 @@ import com.example.demo.domain.share.dto.TicketBookedData;
 import com.example.demo.domain.share.dto.TicketCreatedData;
 import com.example.demo.domain.ticket.command.CreateTicketCommand;
 import com.example.demo.domain.ticket.service.TicketService;
-import com.example.demo.infra.repository.EventLogRepository;
 import com.example.demo.infra.repository.TrainSeatRepository;
 
 import lombok.RequiredArgsConstructor;

@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 
 import com.example.demo.base.event.BaseEventHandler;
 import com.example.demo.base.event.EventLog;
+import com.example.demo.base.repository.EventLogRepository;
 import com.example.demo.domain.booking.outbound.BookTicketEvent;
 import com.example.demo.domain.seat.aggregate.TrainSeat;
-import com.example.demo.infra.repository.EventLogRepository;
 import com.example.demo.infra.repository.TicketBookingRepository;
 import com.example.demo.infra.repository.TrainSeatRepository;
 import com.example.demo.util.DateTransformUtil;

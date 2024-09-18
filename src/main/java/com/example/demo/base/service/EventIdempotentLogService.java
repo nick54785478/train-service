@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.base.event.BaseEvent;
 import com.example.demo.base.event.EventIdempotentLog;
-import com.example.demo.infra.repository.EventIdempotentLogRepository;
+import com.example.demo.base.repository.EventIdempotentLogRepository;
 
 /**
  * Event Idempotent Service

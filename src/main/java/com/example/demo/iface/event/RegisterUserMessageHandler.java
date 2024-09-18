@@ -11,10 +11,12 @@ import org.springframework.stereotype.Component;
 
 import com.example.demo.base.event.BaseEventHandler;
 import com.example.demo.base.event.EventLog;
+import com.example.demo.base.repository.EventLogRepository;
 import com.example.demo.client.AuthFeignClient;
 import com.example.demo.domain.account.outbound.RegisterUserEvent;
 import com.example.demo.iface.dto.RegisterUserResource;
-import com.example.demo.infra.repository.EventLogRepository;
+import com.example.demo.iface.dto.UserInfoResource;
+import com.example.demo.iface.dto.UserRegisteredResource;
 import com.rabbitmq.client.Channel;
 
 import lombok.extern.slf4j.Slf4j;
@@ -46,10 +48,14 @@ public class RegisterUserMessageHandler extends BaseEventHandler {
 
 		RegisterUserResource resource = this.transformData(event, RegisterUserResource.class);
 
-		// 呼叫外部 API，註冊使用者
-		String response = authFeignClient.register(resource);
-		log.debug(response);
-		
+		// 透過 Email 查詢此用戶是否已註冊在 AuthService
+		UserInfoResource responseData = authFeignClient.getUserByEmail(event.getEmail());
+		if (Objects.isNull(responseData)) {
+			// 呼叫外部 API，註冊使用者
+			UserRegisteredResource response = authFeignClient.register(resource);
+			log.debug("code:{}, message:{}", response.getCode(), response.getMessage());
+		}
+
 		// 查詢 EventLog
 		EventLog eventLog = eventLogRepository.findByUuid(event.getEventLogUuid());
 		eventLog.consume(); // 更改狀態為: 已消費
@@ -58,4 +64,5 @@ public class RegisterUserMessageHandler extends BaseEventHandler {
 		// TODO 若發生錯誤處理情況
 
 	}
+
 }

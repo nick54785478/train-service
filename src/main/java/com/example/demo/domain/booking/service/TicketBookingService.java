@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 import com.example.demo.base.BaseDomainService;
 import com.example.demo.base.context.ContextHolder;
 import com.example.demo.base.event.EventLog;
+import com.example.demo.base.repository.EventLogRepository;
 import com.example.demo.domain.booking.aggregate.TicketBooking;
 import com.example.demo.domain.booking.command.BookTicketCommand;
 import com.example.demo.domain.share.dto.TicketBookedData;
-import com.example.demo.infra.repository.EventLogRepository;
 import com.example.demo.infra.repository.TicketBookingRepository;
 import com.example.demo.util.JsonParseUtil;
 
