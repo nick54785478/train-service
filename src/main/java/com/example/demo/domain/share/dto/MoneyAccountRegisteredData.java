@@ -15,6 +15,8 @@ public class MoneyAccountRegisteredData {
 
 	private String username; // 使用者名稱
 	
+	private String email;
+	
 	private BigDecimal balance;	// 餘額
 	
 }

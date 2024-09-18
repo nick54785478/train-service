@@ -46,7 +46,7 @@ public class EventRePublishSchedule {
 					
 					// Event 重發佈
 					rabbitmqService.publish(exchangeName, eventLog.getTopic(), event);
-					eventLog.publish(); // 變更狀態為: 已發布
+					eventLog.publish(eventLog.getBody()); // 變更狀態為: 已發布
 
 				} catch (ClassNotFoundException e) {
 					log.error("Class 轉換發生錯誤 ", e);

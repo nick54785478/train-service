@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import java.util.Objects;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -10,6 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.base.BaseApplicationService;
+import com.example.demo.base.context.ContextHolder;
 import com.example.demo.base.event.BaseEvent;
 import com.example.demo.base.event.EventLog;
 import com.example.demo.base.exception.ValidationException;
@@ -17,7 +17,6 @@ import com.example.demo.base.repository.EventLogRepository;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
 import com.example.demo.domain.account.command.DepositMoneyCommand;
-import com.example.demo.domain.account.outbound.RegisterUserEvent;
 import com.example.demo.domain.account.service.MoneyAccountService;
 import com.example.demo.domain.share.dto.MoneyAccountRegisteredData;
 import com.example.demo.domain.share.dto.MoneyDepositedRegisteredData;
@@ -60,19 +59,16 @@ public class MoneyAccountCommandService extends BaseApplicationService {
 		// 發布 Event 到 AuthService 進行註冊
 		MoneyAccountRegisteredData saved = moneyAccountService.register(command);
 
-		// 建立 Event
-		BaseEvent event = this.transformData(command, RegisterUserEvent.class);
+		// 從 ContextHolder 取出 Event
+		BaseEvent event = ContextHolder.getEvent();
 
-		// 建立 EventLog
-		EventLog eventLog = EventLog.builder().uuid(UUID.randomUUID().toString()).topic(registerQueueName)
-				.targetId(saved.getUuid()).className(event.getClass().getName()).body(JsonParseUtil.serialize(event))
-				.userId("SYSTEM").build();
-		event.setEventLogUuid(eventLog.getUuid());
-		event.setTargetId(saved.getUuid()); //
-		eventLogRepository.save(eventLog);
-
+		// 紀錄 Message 狀態
+		EventLog eventLog = this.generateEventLog(registerQueueName, saved.getUuid(), event);
 		// 發布註冊使用者事件 (到 AuthService 進行註冊)
 		this.publishEvent(exchangeName, registerQueueName, event);
+		eventLog.publish(JsonParseUtil.serialize(event)); // 更改狀態為:已發布
+		eventLogRepository.save(eventLog);
+
 		return saved;
 	}
 

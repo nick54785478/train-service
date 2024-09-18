@@ -82,7 +82,7 @@ public class TicketCommandService extends BaseApplicationService {
 
 		// 查詢 EventLog
 		EventLog eventLog = eventLogRepository.findByUuid(event.getEventLogUuid());
-		eventLog.publish(); // 更改狀態為: 已發布
+		eventLog.publish(eventLog.getBody()); // 更改狀態為: 已發布
 		eventLogRepository.save(eventLog);
 
 		return resource;

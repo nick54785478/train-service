@@ -37,9 +37,6 @@ public class EventSource {
 	@Column(name = "USER_ID")
 	private String userId; // 使用者帳號
 
-	@Column(name = "TOPIC")
-	private String topic;
-
 	@Column(name = "EVENT_CLASS_NAME")
 	private String className; // Event 類型
 

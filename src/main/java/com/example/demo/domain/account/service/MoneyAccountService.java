@@ -7,16 +7,20 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.base.BaseDomainService;
 import com.example.demo.base.exception.ValidationException;
+import com.example.demo.base.repository.EventSourceRepository;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
 import com.example.demo.domain.account.command.DepositMoneyCommand;
 import com.example.demo.domain.share.dto.MoneyAccountRegisteredData;
 import com.example.demo.domain.share.dto.MoneyDepositedRegisteredData;
 import com.example.demo.infra.repository.MoneyAccountRepository;
+import com.example.demo.util.JsonParseUtil;
 
 @Service
 public class MoneyAccountService extends BaseDomainService {
 
+	@Autowired
+	EventSourceRepository eventSourceRepository;
 	@Autowired
 	MoneyAccountRepository moneyAccountRepository;
 
@@ -29,24 +33,29 @@ public class MoneyAccountService extends BaseDomainService {
 		MoneyAccount moneyAccount = new MoneyAccount();
 		moneyAccount.create(command);
 		MoneyAccount saved = moneyAccountRepository.save(moneyAccount);
+
+		// event stream id
+		String eventStreamId = saved.getClass().getSimpleName() + "-" + saved.getUuid();
+		this.addEventSource(eventStreamId, JsonParseUtil.serialize(saved));
+
 		return this.transformEntityToData(saved, MoneyAccountRegisteredData.class);
 	}
-	
+
 	/**
 	 * 儲值金額
 	 * 
 	 * @param command
-	 * */
+	 */
 	public MoneyDepositedRegisteredData deposit(DepositMoneyCommand command) {
 		Optional<MoneyAccount> op = moneyAccountRepository.findById(command.getUuid());
-		
+
 		if (op.isPresent()) {
 			MoneyAccount account = op.get();
 			account.deposit(command.getMoney());
 			MoneyAccount saved = moneyAccountRepository.save(account);
 			return this.transformEntityToData(saved, MoneyDepositedRegisteredData.class);
 		}
-		
-		throw new ValidationException("VALIDATE_FAILED", "加值失敗，拋出例外");		
+
+		throw new ValidationException("VALIDATE_FAILED", "加值失敗，拋出例外");
 	}
 }

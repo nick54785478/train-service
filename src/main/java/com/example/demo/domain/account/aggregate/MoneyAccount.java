@@ -4,8 +4,12 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.example.demo.base.context.ContextHolder;
 import com.example.demo.base.entity.BaseEntity;
+import com.example.demo.base.event.BaseEvent;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
+import com.example.demo.domain.account.outbound.RegisterUserEvent;
+import com.example.demo.util.BaseDataTransformer;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,16 +42,6 @@ public class MoneyAccount extends BaseEntity {
 	@Column(name = "BALANCE")
 	private BigDecimal balance = new BigDecimal("0"); // 餘額
 
-	/**
-	 * 在持久化之前執行的方法。
-	 */
-	@PrePersist
-	public void prePersist() {
-		// 新增時沒有 UUID，設置 UUID
-		if (Objects.isNull(this.uuid)) {
-			this.uuid = UUID.randomUUID().toString();
-		}
-	}
 
 	/**
 	 * 新增帳戶訊息
@@ -55,9 +49,15 @@ public class MoneyAccount extends BaseEntity {
 	 * @param command
 	 */
 	public void create(CreateMoneyAccountCommand command) {
+		this.uuid = UUID.randomUUID().toString();
 		this.username = command.getName();
 		this.email = command.getEmail();
 		this.balance = this.balance.add(command.getMoney()); // 加上去
+
+		// 建立 Event
+		BaseEvent event = RegisterUserEvent.builder().targetId(this.uuid).eventLogUuid(UUID.randomUUID().toString())
+				.username(this.username).email(this.email).build();
+		ContextHolder.setBaseEvent(event);
 	}
 
 	/**

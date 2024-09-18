@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.base.BaseEventHandler;
-import com.example.demo.base.event.EventLog;
-import com.example.demo.base.repository.EventLogRepository;
 import com.example.demo.client.AuthFeignClient;
 import com.example.demo.domain.account.outbound.RegisterUserEvent;
 import com.example.demo.iface.dto.RegisterUserResource;
@@ -26,8 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 @RabbitListener(queues = "${rabbitmq.register-topic-queue.name}")
 public class RegisterUserMessageHandler extends BaseEventHandler {
 
-	@Autowired
-	private EventLogRepository eventLogRepository;
 	@Autowired
 	private AuthFeignClient authFeignClient;
 
@@ -56,12 +52,10 @@ public class RegisterUserMessageHandler extends BaseEventHandler {
 			log.debug("code:{}, message:{}", response.getCode(), response.getMessage());
 		}
 
-		// 查詢 EventLog
-		EventLog eventLog = eventLogRepository.findByUuid(event.getEventLogUuid());
-		eventLog.consume(); // 更改狀態為: 已消費
-		eventLogRepository.save(eventLog);
-
-		// TODO 若發生錯誤處理情況
+		// 更改狀態為: 已消費
+		this.consumeEvent(event.getEventLogUuid());
+		
+		
 
 	}
 

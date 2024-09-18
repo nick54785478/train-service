@@ -56,7 +56,7 @@ public class EventLog {
 
 	@Column(name = "BODY")
 	private String body;
-	
+
 	@Column(name = "TOPIC")
 	private String topic;
 
@@ -79,8 +79,11 @@ public class EventLog {
 
 	/**
 	 * 確認 Event 已發布後更新
+	 * 
+	 * @param 發布的實體
 	 */
-	public void publish() {
+	public void publish(String body) {
+		this.body = body;
 		this.status = EventLogSendQueueStatus.SENT;
 	}
 
