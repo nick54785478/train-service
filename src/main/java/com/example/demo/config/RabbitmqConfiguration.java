@@ -30,7 +30,7 @@ public class RabbitmqConfiguration {
 	private String exchangeName;
 	
 	@Value("${rabbitmq.acount-tx-topic-queue.name}")
-	private String accountTxName;
+	private String accountQueueTxName;
 
 	/**
 	 * 將自定義的消息類序列化成json格式，再轉成byte構造 Message，在接收消息時，會將接收到的 Message 再反序列化成自定義的類。
@@ -94,7 +94,7 @@ public class RabbitmqConfiguration {
 	 */
 	@Bean
 	public Queue accountTxQueue() {
-		return new Queue(accountTxName, true);
+		return new Queue(accountQueueTxName, true);
 	}
 
 
@@ -144,7 +144,7 @@ public class RabbitmqConfiguration {
 		// 結合設定檔設定的匹配規則
 		// * ：有且僅有一個
 		// #：匹配0個或者多個
-		return BindingBuilder.bind(accountTxQueue).to(exchange).with(registerUserQueueName); // 註. bind 需與上方 Queue 名稱一致
+		return BindingBuilder.bind(accountTxQueue).to(exchange).with(accountQueueTxName); // 註. bind 需與上方 Queue 名稱一致
 //		return BindingBuilder.bind(testQueue()).to(topicExchange()).with("*.test.#"); //所有符合 "*.test.#" 这种模式的消息，都会被路由到 testQueue 队列。
 
 	}

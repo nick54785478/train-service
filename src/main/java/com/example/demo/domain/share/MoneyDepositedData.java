@@ -1,4 +1,4 @@
-package com.example.demo.domain.share.dto;
+package com.example.demo.domain.share;
 
 import java.math.BigDecimal;
 
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MoneyDepositedRegisteredData {
+public class MoneyDepositedData {
 	
 	private String uuid;
 

@@ -5,7 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.base.event.EventSource;
 
-@Repository
-public interface EventSourceRepository extends JpaRepository<EventSource, String> {
 
+@Repository
+public interface EventSourceRepository extends JpaRepository<EventSource, Long> {
+
+	EventSource findTopByUuidOrderByVersionDesc(String uuid);
 }

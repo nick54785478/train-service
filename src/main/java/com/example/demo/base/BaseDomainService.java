@@ -1,7 +1,8 @@
 package com.example.demo.base;
 
+import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,11 +12,13 @@ import com.example.demo.base.event.BaseEvent;
 import com.example.demo.base.event.EventSource;
 import com.example.demo.base.repository.EventSourceRepository;
 import com.example.demo.util.BaseDataTransformer;
-import com.example.demo.util.JsonParseUtil;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Base Domain Service
  */
+@Slf4j
 @Service
 public abstract class BaseDomainService {
 
@@ -57,11 +60,24 @@ public abstract class BaseDomainService {
 	public void addEventSource(String eventStreamId, String body) {
 		// 取得 Event
 		BaseEvent event = ContextHolder.getEvent();
+		
+		EventSource eventSource = eventSourceRepository.findTopByUuidOrderByVersionDesc(eventStreamId);
+		
+		if (Objects.isNull(eventSource)) {
+			// 紀錄 EventSourcing
+			eventSource = EventSource.builder().uuid(eventStreamId).targetId(event.getTargetId())
+					.className(event.getClass().getName()).body(body).userId("SYSTEM").occuredAt(new Date()).version(0L)
+					.build();
+			eventSourceRepository.save(eventSource);
+		} else {
+			EventSource entity = EventSource.builder().uuid(eventStreamId).targetId(event.getTargetId())
+			.className(event.getClass().getName()).body(body).userId("SYSTEM").occuredAt(new Date()).version(eventSource.getVersion()+1)
+			.build();
+			eventSourceRepository.save(entity);
 
-		// 紀錄 EventSourcing
-		EventSource eventSource = EventSource.builder().uuid(eventStreamId).targetId(event.getTargetId())
-				.className(event.getClass().getName()).body(body).userId("SYSTEM").version(1L)
-				.build();
-		eventSourceRepository.save(eventSource);
+		}
+		
+
+		log.debug("[Add Event Sourcing] event:{}, eventSource:{}", event, eventSource);
 	}
 }

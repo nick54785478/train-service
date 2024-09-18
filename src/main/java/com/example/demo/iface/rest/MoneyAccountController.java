@@ -42,9 +42,9 @@ public class MoneyAccountController {
 	}
 
 	@PostMapping("/deposit")
-	public ResponseEntity<MoneyDepositedResource> register(@RequestBody DepositMoneyResource resource) {
+	public ResponseEntity<MoneyDepositedResource> deposit(@RequestBody DepositMoneyResource resource) {
 		DepositMoneyCommand command = BaseDataTransformer.transformData(resource, DepositMoneyCommand.class);
-		return new ResponseEntity<>(BaseDataTransformer.transformData(moneyAccountCommandService.deposit(command),
+		return new ResponseEntity<>(BaseDataTransformer.transformData(moneyAccountCommandService.publishDepositEvent(command),
 				MoneyDepositedResource.class), HttpStatus.OK);
 	}
 

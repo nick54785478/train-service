@@ -10,27 +10,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.base.BaseEventHandler;
-import com.example.demo.base.event.BaseEvent;
-import com.example.demo.base.event.EventLog;
-import com.example.demo.base.event.EventSource;
-import com.example.demo.base.repository.EventLogRepository;
-import com.example.demo.base.repository.EventSourceRepository;
+import com.example.demo.base.context.ContextHolder;
+import com.example.demo.domain.account.command.DepositMoneyCommand;
+import com.example.demo.domain.account.outbound.AccountTxEvent;
+import com.example.demo.service.MoneyAccountCommandService;
 import com.rabbitmq.client.Channel;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component 
+@Component
 @RabbitListener(queues = "${rabbitmq.acount-tx-topic-queue.name}")
 public class AccountTxTopicMessageHandler extends BaseEventHandler {
 
 	@Autowired
-	private EventSourceRepository eventSourceRepository;
-	@Autowired
-	private EventLogRepository eventLogRepository;
+	MoneyAccountCommandService moneyAccountCommandService;
 
 	@RabbitHandler
-	public void handle(BaseEvent event, Channel channel, Message message) throws IOException {
+	public void handle(AccountTxEvent event, Channel channel, Message message) throws IOException {
 		log.info("Account Transaction Topic Queue -- 接收到消息： {}", event);
 
 		if (Objects.isNull(event)) {
@@ -43,13 +40,19 @@ public class AccountTxTopicMessageHandler extends BaseEventHandler {
 			log.warn("Consume repeated: {}", event);
 			return;
 		}
+		
+		ContextHolder.setBaseEvent(event); // 將 Event 存入上下文供取用。
 
-		EventSource eventSource = new EventSource();
 
-		// 查詢 EventLog
-		EventLog eventLog = eventLogRepository.findByUuid(event.getEventLogUuid());
-		eventLog.consume(); // 更改狀態為: 已消費
-		eventLogRepository.save(eventLog);
+		// 呼叫 Application Service 進行儲值處理
+		DepositMoneyCommand command = new DepositMoneyCommand();
+		command.setUuid(event.getTargetId());
+		command.setMoney(event.getMoney());
+		
+		moneyAccountCommandService.deposit(command);
+
+		// 進行消費
+		this.consumeEvent(event.getEventLogUuid());
 
 	}
 }

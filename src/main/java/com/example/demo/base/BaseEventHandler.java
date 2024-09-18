@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.example.demo.base.event.BaseEvent;
 import com.example.demo.base.event.EventLog;
 import com.example.demo.base.repository.EventLogRepository;
+import com.example.demo.base.repository.EventSourceRepository;
 import com.example.demo.base.service.EventIdempotentLogService;
 import com.example.demo.infra.event.RabbitmqService;
 import com.example.demo.util.BaseDataTransformer;
@@ -24,6 +25,8 @@ public class BaseEventHandler {
 	RabbitmqService rabbitmqService;
 	@Autowired
 	EventLogRepository eventLogRepository;
+	@Autowired
+	EventSourceRepository eventSourceRepository;
 
 	/**
 	 * 檢查冪等
@@ -103,6 +106,7 @@ public class BaseEventHandler {
 		}
 		
 	}
+	
 	
 
 }

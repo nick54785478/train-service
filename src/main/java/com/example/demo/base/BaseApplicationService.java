@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.base.event.BaseEvent;
 import com.example.demo.base.event.EventLog;
-import com.example.demo.base.event.EventSource;
 import com.example.demo.base.repository.EventLogRepository;
-import com.example.demo.base.repository.EventSourceRepository;
 import com.example.demo.infra.event.RabbitmqService;
 import com.example.demo.util.BaseDataTransformer;
 import com.example.demo.util.JsonParseUtil;
@@ -25,8 +23,6 @@ public abstract class BaseApplicationService {
 	private RabbitmqService rabbitmqService;
 	@Autowired
 	private EventLogRepository eventLogRepository;
-	@Autowired
-	private EventSourceRepository eventSourceRepository;
 
 	/**
 	 * 呼叫 BaseDataTransformer 進行資料轉換
@@ -67,33 +63,18 @@ public abstract class BaseApplicationService {
 	 * 建立 EventLog
 	 * 
 	 * @param topicQueue Topic 通道
+	 * @param eventLogUuid EventLog 的 UUID
 	 * @param targetId   目標物 UUID
 	 * @param event      事件
 	 * @param body       事件發生變動內容
 	 */
-	public EventLog generateEventLog(String topicQueue, String targetId, BaseEvent event) {
-		// 建立 EventLog UUID
-		String eventLogUuid = UUID.randomUUID().toString();
+	public EventLog generateEventLog(String topicQueue, String eventLogUuid, String targetId, BaseEvent event) {
 
 		// 建立 EventLog
 		EventLog eventLog = EventLog.builder().uuid(eventLogUuid).topic(topicQueue).targetId(targetId)
 				.className(event.getClass().getName()).body(JsonParseUtil.serialize(event)).userId("SYSTEM").build();
-		event.setEventLogUuid(eventLogUuid);
 
 		return eventLogRepository.save(eventLog);
 	}
 
-	/**
-	 * 紀錄 EventSource
-	 * 
-	 * @param aggregateId 聚合ID
-	 * @param event       事件
-	 * @param body        事件發生變動內容
-	 */
-	public void saveEventSource(String aggregateId, BaseEvent event, String body) {
-		// 紀錄 EventSourcing
-		EventSource eventSource = EventSource.builder().uuid(aggregateId).className(event.getClass().getName())
-				.body(body).userId("SYSTEM").version(1L).build();
-		eventSourceRepository.save(eventSource);
-	}
 }

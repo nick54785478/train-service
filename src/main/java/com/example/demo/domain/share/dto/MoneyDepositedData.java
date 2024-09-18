@@ -1,4 +1,4 @@
-package com.example.demo.domain.account.command;
+package com.example.demo.domain.share.dto;
 
 import java.math.BigDecimal;
 
@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DepositMoneyCommand {
-
+public class MoneyDepositedData {
+	
 	private String uuid;
 
-	private BigDecimal money; // 金額
+	private String username; // 使用者名稱
+	
+	private BigDecimal balance;	// 餘額
 }

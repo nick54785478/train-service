@@ -1,5 +1,7 @@
 package com.example.demo.domain.account.outbound;
 
+import java.math.BigDecimal;
+
 import com.example.demo.base.event.BaseEvent;
 
 import lombok.AllArgsConstructor;
@@ -13,15 +15,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class RegisterUserEvent extends BaseEvent {
+public class AccountTxEvent extends BaseEvent {
 
-//	private String name;
-
-	private String email; // 信箱
-
-	private String username; // 帳號
-
-//	private String password; // 密碼
-
-//	private String address;
+	private BigDecimal money; // 金額
 }

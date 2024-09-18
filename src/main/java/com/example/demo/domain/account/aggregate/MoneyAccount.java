@@ -1,7 +1,6 @@
 package com.example.demo.domain.account.aggregate;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 import java.util.UUID;
 
 import com.example.demo.base.context.ContextHolder;
@@ -9,12 +8,10 @@ import com.example.demo.base.entity.BaseEntity;
 import com.example.demo.base.event.BaseEvent;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
 import com.example.demo.domain.account.outbound.RegisterUserEvent;
-import com.example.demo.util.BaseDataTransformer;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -63,10 +60,10 @@ public class MoneyAccount extends BaseEntity {
 	/**
 	 * 儲值
 	 * 
-	 * @param command
+	 * @param balance 加總後的總合
 	 */
-	public void deposit(BigDecimal money) {
-		this.balance = this.balance.add(money);
+	public void deposit(BigDecimal balance) {
+		this.balance = balance;
 	}
 
 }

@@ -1,18 +1,14 @@
 package com.example.demo.domain.account.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.base.BaseDomainService;
-import com.example.demo.base.exception.ValidationException;
 import com.example.demo.base.repository.EventSourceRepository;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
 import com.example.demo.domain.account.command.DepositMoneyCommand;
 import com.example.demo.domain.share.dto.MoneyAccountRegisteredData;
-import com.example.demo.domain.share.dto.MoneyDepositedRegisteredData;
 import com.example.demo.infra.repository.MoneyAccountRepository;
 import com.example.demo.util.JsonParseUtil;
 
@@ -46,16 +42,18 @@ public class MoneyAccountService extends BaseDomainService {
 	 * 
 	 * @param command
 	 */
-	public MoneyDepositedRegisteredData deposit(DepositMoneyCommand command) {
-		Optional<MoneyAccount> op = moneyAccountRepository.findById(command.getUuid());
+	public void deposit(DepositMoneyCommand command) {
+		System.out.println("command:" + command);
 
-		if (op.isPresent()) {
-			MoneyAccount account = op.get();
-			account.deposit(command.getMoney());
-			MoneyAccount saved = moneyAccountRepository.save(account);
-			return this.transformEntityToData(saved, MoneyDepositedRegisteredData.class);
-		}
+		moneyAccountRepository.findById(command.getUuid()).ifPresent(e -> {
+			e.deposit(command.getMoney());
 
-		throw new ValidationException("VALIDATE_FAILED", "加值失敗，拋出例外");
+			// 紀錄 EventSource
+			String eventStreamId = e.getClass().getSimpleName() + "-" + e.getUuid();
+			this.addEventSource(eventStreamId, JsonParseUtil.serialize(e));
+
+			moneyAccountRepository.save(e);
+		});
+
 	}
 }
