@@ -1,10 +1,11 @@
-package com.example.demo.base.event;
+package com.example.demo.base;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.base.event.BaseEvent;
 import com.example.demo.base.service.EventIdempotentLogService;
 import com.example.demo.util.BaseDataTransformer;
 

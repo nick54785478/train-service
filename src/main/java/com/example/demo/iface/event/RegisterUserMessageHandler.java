@@ -9,7 +9,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.base.event.BaseEventHandler;
+import com.example.demo.base.BaseEventHandler;
 import com.example.demo.base.event.EventLog;
 import com.example.demo.base.repository.EventLogRepository;
 import com.example.demo.client.AuthFeignClient;
