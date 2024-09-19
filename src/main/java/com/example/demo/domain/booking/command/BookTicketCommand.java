@@ -20,4 +20,5 @@ public class BookTicketCommand {
 	private String seatNo; // 座號
 
 	private LocalDate takeDate; // 乘車日期
+	
 }

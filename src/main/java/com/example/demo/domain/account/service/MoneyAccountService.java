@@ -4,19 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.base.BaseDomainService;
-import com.example.demo.base.repository.EventSourceRepository;
+import com.example.demo.base.context.ContextHolder;
+import com.example.demo.base.event.BaseEvent;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
 import com.example.demo.domain.account.command.DepositMoneyCommand;
 import com.example.demo.domain.share.dto.MoneyAccountRegisteredData;
 import com.example.demo.infra.repository.MoneyAccountRepository;
-import com.example.demo.util.JsonParseUtil;
 
 @Service
 public class MoneyAccountService extends BaseDomainService {
 
-	@Autowired
-	EventSourceRepository eventSourceRepository;
 	@Autowired
 	MoneyAccountRepository moneyAccountRepository;
 
@@ -24,16 +22,12 @@ public class MoneyAccountService extends BaseDomainService {
 	 * 註冊儲值帳號
 	 * 
 	 * @param command
+	 * @return MoneyAccountRegisteredData
 	 */
 	public MoneyAccountRegisteredData register(CreateMoneyAccountCommand command) {
 		MoneyAccount moneyAccount = new MoneyAccount();
 		moneyAccount.create(command);
 		MoneyAccount saved = moneyAccountRepository.save(moneyAccount);
-
-		// event stream id
-		String eventStreamId = saved.getClass().getSimpleName() + "-" + saved.getUuid();
-		this.addEventSource(eventStreamId, JsonParseUtil.serialize(saved));
-
 		return this.transformEntityToData(saved, MoneyAccountRegisteredData.class);
 	}
 
@@ -43,16 +37,11 @@ public class MoneyAccountService extends BaseDomainService {
 	 * @param command
 	 */
 	public void deposit(DepositMoneyCommand command) {
-		System.out.println("command:" + command);
-
-		moneyAccountRepository.findById(command.getUuid()).ifPresent(e -> {
-			e.deposit(command.getMoney());
-
-			// 紀錄 EventSource
-			String eventStreamId = e.getClass().getSimpleName() + "-" + e.getUuid();
-			this.addEventSource(eventStreamId, JsonParseUtil.serialize(e));
-
-			moneyAccountRepository.save(e);
+		moneyAccountRepository.findById(command.getUuid()).ifPresent(moneyAccount -> {
+			BaseEvent event = ContextHolder.getEvent();
+			System.out.println(event);
+			moneyAccount.deposit(command.getMoney());
+			moneyAccountRepository.save(moneyAccount);
 		});
 
 	}

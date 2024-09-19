@@ -18,4 +18,5 @@ public class BookTicketResource {
 	private String seatNo; // 座號
 
 	private String takeDate; // 乘車日期
+	
 }

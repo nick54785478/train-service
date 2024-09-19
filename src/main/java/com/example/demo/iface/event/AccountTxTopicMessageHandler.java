@@ -43,11 +43,11 @@ public class AccountTxTopicMessageHandler extends BaseEventHandler {
 		
 		ContextHolder.setBaseEvent(event); // 將 Event 存入上下文供取用。
 
-
 		// 呼叫 Application Service 進行儲值處理
 		DepositMoneyCommand command = new DepositMoneyCommand();
 		command.setUuid(event.getTargetId());
 		command.setMoney(event.getMoney());
+		
 		
 		moneyAccountCommandService.deposit(command);
 

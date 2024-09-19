@@ -36,7 +36,7 @@ public class TicketBooking extends BaseEntity {
 	private String username; // 使用者帳號
 
 	@Column(name = "EMAIL")
-	private String email;	// Email
+	private String email; // Email
 
 	@Column(name = "TICKET_UUID")
 	private String ticketUuid; // 對應車票班次
@@ -58,7 +58,8 @@ public class TicketBooking extends BaseEntity {
 
 		// 建立一個 Event
 		BookTicketEvent event = BookTicketEvent.builder().eventLogUuid(UUID.randomUUID().toString()).targetId(this.uuid)
-				.takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate())).seatNo(command.getSeatNo()).build();
+				.takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
+				.seatNo(command.getSeatNo()).build();
 		// 設置進 Context 上下文
 		ContextHolder.setBaseEvent(event);
 	}

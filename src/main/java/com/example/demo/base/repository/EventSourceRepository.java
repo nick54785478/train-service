@@ -10,4 +10,5 @@ import com.example.demo.base.event.EventSource;
 public interface EventSourceRepository extends JpaRepository<EventSource, Long> {
 
 	EventSource findTopByUuidOrderByVersionDesc(String uuid);
+	
 }

@@ -79,7 +79,7 @@ public class TicketCommandService extends BaseApplicationService {
 		// 發布事件
 		var event = ContextHolder.getEvent();
 		this.publishEvent(exchangeName, bookingQueueName, event);
-
+		
 		// 查詢 EventLog
 		EventLog eventLog = eventLogRepository.findByUuid(event.getEventLogUuid());
 		eventLog.publish(eventLog.getBody()); // 更改狀態為: 已發布
