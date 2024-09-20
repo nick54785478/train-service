@@ -1,23 +1,30 @@
 package com.example.demo.iface.event;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.base.BaseEventHandler;
-import com.example.demo.base.event.EventLog;
-import com.example.demo.base.repository.EventLogRepository;
-import com.example.demo.domain.booking.aggregate.vo.TicketStatus;
+import com.example.demo.domain.account.aggregate.MoneyAccount;
+import com.example.demo.domain.account.outbound.AccountTxEvent;
+import com.example.demo.domain.booking.aggregate.TicketBooking;
 import com.example.demo.domain.booking.outbound.TicketBookingEvent;
 import com.example.demo.domain.seat.aggregate.TrainSeat;
 import com.example.demo.domain.share.enums.TicketAction;
+import com.example.demo.domain.ticket.aggregate.Ticket;
+import com.example.demo.infra.repository.MoneyAccountRepository;
 import com.example.demo.infra.repository.TicketBookingRepository;
+import com.example.demo.infra.repository.TicketRepository;
 import com.example.demo.infra.repository.TrainSeatRepository;
 import com.example.demo.util.DateTransformUtil;
 import com.rabbitmq.client.Channel;
@@ -29,12 +36,20 @@ import lombok.extern.slf4j.Slf4j;
 @RabbitListener(queues = "${rabbitmq.book-topic-queue.name}")
 public class BookTopicMessageHandler extends BaseEventHandler {
 
+	@Value("${rabbitmq.acount-tx-topic-queue.name}")
+	private String txQueueName;
+
+	@Value("${rabbitmq.exchange.name}")
+	private String exchangeName;
+
 	@Autowired
 	private TicketBookingRepository ticketBookingRepository;
 	@Autowired
 	private TrainSeatRepository trainSeatRepository;
 	@Autowired
-	private EventLogRepository eventLogRepository;
+	private MoneyAccountRepository moneyAccountRepository;
+	@Autowired
+	private TicketRepository ticketRepository;
 
 	@RabbitHandler
 	public void handle(TicketBookingEvent event, Channel channel, Message message) throws IOException {
@@ -52,26 +67,79 @@ public class BookTopicMessageHandler extends BaseEventHandler {
 		}
 
 		ticketBookingRepository.findById(event.getTargetId()).ifPresent(booking -> {
+
 			// Book
 			if (StringUtils.equals(event.getAction(), TicketAction.BOOK.getName())) {
-				TrainSeat trainSeat = new TrainSeat();
-				trainSeat.create(booking.getTicketUuid(), booking.getTrainUuid(), booking.getUuid(),
-						DateTransformUtil.transformStringToLocalDate(event.getTakeDate()), event.getSeatNo());
-				trainSeatRepository.save(trainSeat);
+				this.book(booking, event);
 
-			// Check In
+				// Check In
 			} else if (StringUtils.equals(event.getAction(), TicketAction.CHECK_IN.getName())) {
+				this.checkIn(event);
+
+				// Refund
+			} else if (StringUtils.equals(event.getAction(), TicketAction.REFUNDED.getName())) {
 				TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndTakeDateAndSeatNo(event.getTargetId(),
 						DateTransformUtil.transformStringToLocalDate(event.getTakeDate()), event.getSeatNo());
-				trainSeat.checkIn();
+				trainSeat.refund();
 				trainSeatRepository.save(trainSeat);
+
+				// 先查該票價
+				Ticket ticket = ticketRepository.findByTicketNo(booking.getTicketUuid());
+
+				Optional<MoneyAccount> option = moneyAccountRepository.findById(booking.getAccountUuid());
+
+				if (option.isEmpty()) {
+					log.error("發生錯誤，查詢帳號資訊失敗。");
+					return;
+				} else {
+
+					MoneyAccount moneyAccount = option.get();
+					// 取出票價加總
+					BigDecimal balance = moneyAccount.getBalance().add(ticket.getPrice());
+
+					// 建立 Event
+					AccountTxEvent txEvent = AccountTxEvent.builder().money(balance).eventLogUuid(UUID.randomUUID().toString())
+							.targetId(booking.getAccountUuid()).build();
+
+					// 建立 EventLog
+					this.generateEventLog(txQueueName, txEvent);
+
+					// 發布 Event 進行退費動作
+					this.publishEvent(exchangeName, txQueueName, txEvent);
+				}
 			}
 		});
 
-		// 查詢 EventLog
-		EventLog eventLog = eventLogRepository.findByUuid(event.getEventLogUuid());
-		eventLog.consume(); // 更改狀態為: 已消費
-		eventLogRepository.save(eventLog);
+		// 進行消費
+		this.consumeEvent(event.getEventLogUuid());
 
 	}
+
+	/**
+	 * 劃位
+	 * 
+	 * @param booking Booking 資訊
+	 * @param event   Event 資料
+	 */
+	private void book(TicketBooking booking, TicketBookingEvent event) {
+		TrainSeat trainSeat = new TrainSeat();
+		trainSeat.create(booking.getTicketUuid(), booking.getTrainUuid(), booking.getUuid(),
+				DateTransformUtil.transformStringToLocalDate(event.getTakeDate()), event.getSeatNo());
+		trainSeatRepository.save(trainSeat);
+	}
+
+	/**
+	 * check in
+	 * 
+	 * @param booking Booking 資訊
+	 * @param event   Event 資料
+	 */
+	private void checkIn(TicketBookingEvent event) {
+		TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndTakeDateAndSeatNo(event.getTargetId(),
+				DateTransformUtil.transformStringToLocalDate(event.getTakeDate()), event.getSeatNo());
+		trainSeat.checkIn();
+		trainSeatRepository.save(trainSeat);
+
+	}
+
 }

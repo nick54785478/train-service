@@ -41,11 +41,17 @@ public class MoneyAccountController {
 				moneyAccountCommandService.register(command), MoneyAccountRegisteredResource.class), HttpStatus.OK);
 	}
 
+	/**
+	 * 儲值
+	 * 
+	 * @param resource
+	 * @return 成功訊息
+	 */
 	@PostMapping("/deposit")
 	public ResponseEntity<MoneyDepositedResource> deposit(@RequestBody DepositMoneyResource resource) {
 		DepositMoneyCommand command = BaseDataTransformer.transformData(resource, DepositMoneyCommand.class);
-		return new ResponseEntity<>(BaseDataTransformer.transformData(moneyAccountCommandService.publishDepositEvent(command),
-				MoneyDepositedResource.class), HttpStatus.OK);
+		return new ResponseEntity<>(BaseDataTransformer.transformData(
+				moneyAccountCommandService.publishDepositEvent(command), MoneyDepositedResource.class), HttpStatus.OK);
 	}
 
 }

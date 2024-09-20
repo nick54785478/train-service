@@ -29,9 +29,12 @@ public class MoneyAccount extends BaseEntity {
 	@Id
 	@Column(name = "UUID")
 	private String uuid;
+	
+	@Column(name = "NAME")
+	private String name; // 人名
 
 	@Column(name = "USERNAME")
-	private String username; // 人名
+	private String username; // 帳號
 
 	@Column(name = "EMAIL")
 	private String email; // email
@@ -47,7 +50,8 @@ public class MoneyAccount extends BaseEntity {
 	 */
 	public void create(CreateMoneyAccountCommand command) {
 		this.uuid = UUID.randomUUID().toString();
-		this.username = command.getName();
+		this.username = command.getUsername();
+		this.name = command.getName();
 		this.email = command.getEmail();
 		this.balance = this.balance.add(command.getMoney()); // 加上去
 
@@ -62,8 +66,9 @@ public class MoneyAccount extends BaseEntity {
 	 * 
 	 * @param balance 加總後的總合
 	 */
-	public void deposit(BigDecimal balance) {
+	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
 	}
+	
 
 }

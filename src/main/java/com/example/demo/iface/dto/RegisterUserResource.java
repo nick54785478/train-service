@@ -17,5 +17,5 @@ public class RegisterUserResource {
 
 	private String password; // 密碼
 
-	private String address;
+	private String address;	// 地址
 }

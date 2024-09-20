@@ -15,13 +15,13 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class RegisterUserEvent extends BaseEvent {
 
-//	private String name;
+	private String name; // 使用者名稱
 
 	private String email; // 信箱
 
 	private String username; // 帳號
 
-//	private String password; // 密碼
+	private String password; // 密碼
 
-//	private String address;
+	private String address;	// 地址
 }

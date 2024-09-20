@@ -13,7 +13,9 @@ import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.booking.aggregate.TicketBooking;
 import com.example.demo.domain.booking.command.BookTicketCommand;
 import com.example.demo.domain.booking.command.CheckInTicketCommand;
+import com.example.demo.domain.booking.command.RefundTicketCommand;
 import com.example.demo.domain.share.TicketCheckedInData;
+import com.example.demo.domain.share.TicketRefundedData;
 import com.example.demo.domain.share.dto.TicketBookedData;
 import com.example.demo.infra.repository.TicketBookingRepository;
 
@@ -71,6 +73,25 @@ public class TicketBookingService extends BaseDomainService {
 		}
 		log.error("發生錯誤，查無此預約");
 		throw new ValidationException("VALIDATION_EXCEPTION", "發生錯誤，查無此預約");
-
+	}
+	
+	/**
+	 * 退費取消訂票
+	 * 
+	 * */
+	public TicketRefundedData refund(RefundTicketCommand command) {
+		Optional<TicketBooking> option = ticketBookingRepository.findById(command.getUuid());
+		if (option.isPresent()) {
+			TicketBooking booking = option.get();
+			booking.refund(command);
+			TicketBooking saved = ticketBookingRepository.save(booking);
+			
+			BaseEvent event = ContextHolder.getEvent();
+			this.generateEventLog(bookingQueueName, event.getEventLogUuid(), event.getTargetId(), event);
+			return new TicketRefundedData(saved.getTrainUuid(), saved.getCreatedDate(), "Refunded Successfully");
+		}
+		log.error("發生錯誤，查無此預約");
+		throw new ValidationException("VALIDATION_EXCEPTION", "發生錯誤，查無此預約");
+		
 	}
 }

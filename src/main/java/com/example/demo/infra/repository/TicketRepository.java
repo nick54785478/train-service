@@ -9,6 +9,8 @@ import java.util.List;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
+	
+	Ticket findByTicketNo(String ticketNo);
 
 	List<Ticket> findByFromStopAndToStop(String fromStop, String toStop);
 	

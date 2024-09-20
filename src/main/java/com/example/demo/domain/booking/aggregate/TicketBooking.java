@@ -10,6 +10,7 @@ import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.booking.aggregate.vo.TicketStatus;
 import com.example.demo.domain.booking.command.BookTicketCommand;
 import com.example.demo.domain.booking.command.CheckInTicketCommand;
+import com.example.demo.domain.booking.command.RefundTicketCommand;
 import com.example.demo.domain.booking.outbound.TicketBookingEvent;
 import com.example.demo.domain.share.enums.TicketAction;
 import com.example.demo.util.DateTransformUtil;
@@ -60,6 +61,9 @@ public class TicketBooking extends BaseEntity {
 	@Column(name = "ACTIVE_FLAG")
 	private YesNo activeFlag; // 是否失效 (過期、取消訂位)
 
+	/**
+	 * book
+	 */
 	public void create(BookTicketCommand command, MoneyAccount account) {
 		this.uuid = UUID.randomUUID().toString();
 		this.trainUuid = command.getTrainUuid();
@@ -71,22 +75,45 @@ public class TicketBooking extends BaseEntity {
 		this.activeFlag = YesNo.Y;
 
 		// 建立一個 Event
-		TicketBookingEvent event = TicketBookingEvent.builder().eventLogUuid(UUID.randomUUID().toString()).targetId(this.uuid)
-				.takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate())).action(TicketAction.BOOK.getName())
-				.seatNo(command.getSeatNo()).build();
+		TicketBookingEvent event = TicketBookingEvent.builder().eventLogUuid(UUID.randomUUID().toString())
+				.targetId(this.uuid).takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
+				.action(TicketAction.BOOK.getName()).seatNo(command.getSeatNo()).build();
 		// 設置進 Context 上下文
 		ContextHolder.setBaseEvent(event);
 	}
 
+	/**
+	 * check in
+	 * 
+	 * @param command
+	 */
 	public void checkIn(CheckInTicketCommand command) {
 		this.status = TicketStatus.TAKEN;
 		this.activeFlag = YesNo.N;
 
 		// 建立一個 Event
-		TicketBookingEvent event = TicketBookingEvent.builder().eventLogUuid(UUID.randomUUID().toString()).targetId(this.uuid)
-				.takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate())).action(TicketAction.CHECK_IN.getName())
-				.seatNo(command.getSeatNo()).build();
+		TicketBookingEvent event = TicketBookingEvent.builder().eventLogUuid(UUID.randomUUID().toString())
+				.targetId(this.uuid).takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
+				.action(TicketAction.CHECK_IN.getName()).seatNo(command.getSeatNo()).build();
 		// 設置進 Context 上下文
 		ContextHolder.setBaseEvent(event);
+	}
+
+	/**
+	 * refund
+	 * 
+	 * @param command
+	 */
+	public void refund(RefundTicketCommand command) {
+		this.status = TicketStatus.REFUNDED;
+		this.activeFlag = YesNo.N;
+
+		// 建立一個 Event
+		TicketBookingEvent event = TicketBookingEvent.builder().eventLogUuid(UUID.randomUUID().toString())
+				.targetId(this.uuid).takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
+				.action(TicketAction.REFUNDED.getName()).seatNo(command.getSeatNo()).build();
+		// 設置進 Context 上下文
+		ContextHolder.setBaseEvent(event);
+
 	}
 }

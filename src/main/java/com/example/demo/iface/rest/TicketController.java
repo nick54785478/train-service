@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.booking.command.BookTicketCommand;
 import com.example.demo.domain.booking.command.CheckInTicketCommand;
+import com.example.demo.domain.booking.command.RefundTicketCommand;
 import com.example.demo.domain.ticket.command.CreateTicketCommand;
 import com.example.demo.iface.dto.BookTicketResource;
 import com.example.demo.iface.dto.CheckInTicketResource;
 import com.example.demo.iface.dto.CreateTicketResource;
+import com.example.demo.iface.dto.RefundTicketResource;
 import com.example.demo.iface.dto.TicketBookedResource;
 import com.example.demo.iface.dto.TicketCheckedInResource;
 import com.example.demo.iface.dto.TicketCreatedResource;
@@ -68,6 +70,19 @@ public class TicketController {
 	public ResponseEntity<TicketCheckedInResource> bookTicket(@RequestBody CheckInTicketResource resource) {
 		CheckInTicketCommand command = BaseDataTransformer.transformData(resource, CheckInTicketCommand.class);
 		return new ResponseEntity<>(BaseDataTransformer.transformData(ticketCommandService.checkInTicket(command),
+				TicketCheckedInResource.class), HttpStatus.OK);
+	}
+
+	/**
+	 * 退票
+	 * 
+	 * @param resource
+	 * @return ResponseEntity
+	 */
+	@PostMapping("/refund")
+	public ResponseEntity<TicketCheckedInResource> refund(@RequestBody RefundTicketResource resource) {
+		RefundTicketCommand command = BaseDataTransformer.transformData(resource, RefundTicketCommand.class);
+		return new ResponseEntity<>(BaseDataTransformer.transformData(ticketCommandService.refundTicket(command),
 				TicketCheckedInResource.class), HttpStatus.OK);
 	}
 

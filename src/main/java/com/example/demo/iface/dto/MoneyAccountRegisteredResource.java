@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MoneyAccountRegisteredResource {
+	
+	private String uuid;
 
 	private String username; // 使用者名稱
 	

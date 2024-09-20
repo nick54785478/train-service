@@ -16,7 +16,6 @@ import com.example.demo.base.context.ContextHolder;
 import com.example.demo.base.event.BaseEvent;
 import com.example.demo.base.event.EventLog;
 import com.example.demo.base.exception.ValidationException;
-import com.example.demo.base.repository.EventLogRepository;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
 import com.example.demo.domain.account.command.DepositMoneyCommand;

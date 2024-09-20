@@ -20,13 +20,13 @@ import com.example.demo.util.JsonParseUtil;
 public class BaseEventHandler {
 
 	@Autowired
-	EventIdempotentLogService eventIdempotentLogService;
+	protected EventIdempotentLogService eventIdempotentLogService;
 	@Autowired
-	RabbitmqService rabbitmqService;
+	protected RabbitmqService rabbitmqService;
 	@Autowired
-	EventLogRepository eventLogRepository;
+	protected EventLogRepository eventLogRepository;
 	@Autowired
-	EventSourceRepository eventSourceRepository;
+	protected EventSourceRepository eventSourceRepository;
 
 	/**
 	 * 檢查冪等
@@ -78,17 +78,12 @@ public class BaseEventHandler {
 	 * 建立 EventLog
 	 * 
 	 * @param topicQueue Topic 通道
-	 * @param targetId   目標物 UUID
 	 * @param event      事件
 	 */
-	public EventLog generateEventLog(String topicQueue, String targetId, BaseEvent event) {
-		// 建立 EventLog UUID
-		String eventLogUuid = UUID.randomUUID().toString();
-
+	public EventLog generateEventLog(String topicQueue, BaseEvent event) {
 		// 建立 EventLog
-		EventLog eventLog = EventLog.builder().uuid(eventLogUuid).topic(topicQueue).targetId(targetId)
+		EventLog eventLog = EventLog.builder().uuid(event.getEventLogUuid()).topic(topicQueue).targetId(event.getTargetId())
 				.className(event.getClass().getName()).body(JsonParseUtil.serialize(event)).userId("SYSTEM").build();
-		event.setEventLogUuid(eventLogUuid);
 		return eventLogRepository.save(eventLog);
 	}
 

@@ -14,7 +14,7 @@ public class CreateMoneyAccountCommand {
 	private String name;
 
 	private String email; // 信箱
-
+	
 	private String username; // 帳號
 
 	private String password; // 密碼

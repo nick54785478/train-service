@@ -40,7 +40,7 @@ public class MoneyAccountService extends BaseDomainService {
 		moneyAccountRepository.findById(command.getUuid()).ifPresent(moneyAccount -> {
 			BaseEvent event = ContextHolder.getEvent();
 			System.out.println(event);
-			moneyAccount.deposit(command.getMoney());
+			moneyAccount.setBalance(command.getMoney());
 			moneyAccountRepository.save(moneyAccount);
 		});
 
