@@ -35,11 +35,13 @@ import com.example.demo.infra.repository.TrainSeatRepository;
 import com.example.demo.util.JsonParseUtil;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Application Service
  * 
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, timeout = 36000, rollbackFor = Exception.class)
@@ -130,6 +132,13 @@ public class TicketCommandService extends BaseApplicationService {
 	public TicketCheckedInData checkInTicket(CheckInTicketCommand command) {
 		TicketCheckedInData checkIn = ticketBookingService.checkIn(command);
 
+		TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndSeatNoAndTakeDateAndActiveFlag(command.getUuid(),
+				command.getSeatNo(), command.getTakeDate(), YesNo.N);
+		if (!Objects.isNull(trainSeat)) {
+			log.error("該票券已失效");
+			throw new ValidationException("VALIDATION_EXCEPTION", "該票券已失效");
+		}
+
 		// 發布事件
 		BaseEvent event = ContextHolder.getEvent();
 		this.publishEvent(exchangeName, bookingQueueName, event);
@@ -147,6 +156,13 @@ public class TicketCommandService extends BaseApplicationService {
 	 * @param TicketCheckedInResource
 	 */
 	public TicketRefundedData refundTicket(RefundTicketCommand command) {
+		TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndSeatNoAndTakeDateAndActiveFlag(command.getUuid(),
+				command.getSeatNo(), command.getTakeDate(), YesNo.N);
+		if (!Objects.isNull(trainSeat)) {
+			log.error("該票券已失效");
+			throw new ValidationException("VALIDATION_EXCEPTION", "該票券已失效");
+		}
+
 		TicketRefundedData refundedData = ticketBookingService.refund(command);
 
 		// 發布事件

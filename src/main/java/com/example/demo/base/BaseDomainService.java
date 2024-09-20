@@ -33,7 +33,7 @@ public abstract class BaseDomainService {
 	protected EventSourceRepository eventSourceRepository;
 	@Autowired
 	protected EventLogRepository eventLogRepository;
-
+	
 	/**
 	 * 呼叫 BaseDataTransformer 進行資料轉換
 	 * 
@@ -74,12 +74,13 @@ public abstract class BaseDomainService {
 		EventSource eventSource = eventSourceRepository.findTopByUuidOrderByVersionDesc(eventStreamId);
 
 		if (Objects.isNull(eventSource)) {
-			// 紀錄 EventSourcing
+			// 若沒有 EventSourcing 紀錄，新增第一筆
 			eventSource = EventSource.builder().uuid(eventStreamId).targetId(event.getTargetId())
 					.className(event.getClass().getName()).body(body).userId("SYSTEM").occuredAt(new Date()).version(1L)
 					.status(StatusCode.SUCCESS).build();
 			eventSourceRepository.save(eventSource);
 		} else {
+			// 紀錄 EventSourcing (VERSION+1)
 			EventSource entity = EventSource.builder().uuid(eventStreamId).targetId(event.getTargetId())
 					.className(event.getClass().getName()).body(body).userId("SYSTEM").occuredAt(new Date())
 					.status(StatusCode.SUCCESS).version(eventSource.getVersion() + 1).build();

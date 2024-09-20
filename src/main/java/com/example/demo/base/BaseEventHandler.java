@@ -2,7 +2,6 @@ package com.example.demo.base;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -82,8 +81,9 @@ public class BaseEventHandler {
 	 */
 	public EventLog generateEventLog(String topicQueue, BaseEvent event) {
 		// 建立 EventLog
-		EventLog eventLog = EventLog.builder().uuid(event.getEventLogUuid()).topic(topicQueue).targetId(event.getTargetId())
-				.className(event.getClass().getName()).body(JsonParseUtil.serialize(event)).userId("SYSTEM").build();
+		EventLog eventLog = EventLog.builder().uuid(event.getEventLogUuid()).topic(topicQueue)
+				.targetId(event.getTargetId()).className(event.getClass().getName())
+				.body(JsonParseUtil.serialize(event)).userId("SYSTEM").build();
 		return eventLogRepository.save(eventLog);
 	}
 
@@ -91,7 +91,7 @@ public class BaseEventHandler {
 	 * 進行消費
 	 * 
 	 * @param eventLogUuid
-	 * */
+	 */
 	public void consumeEvent(String eventLogUuid) {
 		// 查詢 EventLog
 		EventLog eventLog = eventLogRepository.findByUuid(eventLogUuid);
@@ -99,9 +99,7 @@ public class BaseEventHandler {
 			eventLog.consume(); // 更改狀態為: 已消費
 			eventLogRepository.save(eventLog);
 		}
-		
+
 	}
-	
-	
 
 }

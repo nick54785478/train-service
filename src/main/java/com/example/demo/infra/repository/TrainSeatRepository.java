@@ -11,10 +11,13 @@ import java.time.LocalDate;
 @Repository
 public interface TrainSeatRepository extends JpaRepository<TrainSeat, Long> {
 
+	TrainSeat findByBookUuidAndSeatNoAndTakeDateAndActiveFlag(String uuid, String seatNo, LocalDate takeDate,
+			YesNo activeFlag);
+
 	List<TrainSeat> findBySeatNoAndTakeDate(String seatNo, LocalDate takeDate);
-	
+
 	TrainSeat findByBookUuidAndTakeDateAndSeatNo(String bookUuid, LocalDate takeDate, String seatNo);
-	
+
 	TrainSeat findByTakeDateAndSeatNoAndTrainUuidAndBooked(LocalDate takeDate, String seatNo, String trainUuid,
 			YesNo yesNo);
 }

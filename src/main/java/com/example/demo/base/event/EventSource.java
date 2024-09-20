@@ -63,8 +63,12 @@ public class EventSource {
 	@Column(name = "STATUS")
 	private StatusCode status;
 	
-	public void setError() {
+	public void setRollback() {
 		this.status = StatusCode.ERROR;
+	}
+	
+	public void setVersion(Long num) {
+		this.version += num;
 	}
 	
 }

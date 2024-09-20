@@ -13,6 +13,7 @@ import com.example.demo.base.BaseEventHandler;
 import com.example.demo.base.context.ContextHolder;
 import com.example.demo.domain.account.command.DepositMoneyCommand;
 import com.example.demo.domain.account.outbound.AccountTxEvent;
+import com.example.demo.infra.repository.MoneyAccountRepository;
 import com.example.demo.service.MoneyAccountCommandService;
 import com.rabbitmq.client.Channel;
 
@@ -25,6 +26,8 @@ public class AccountTxTopicMessageHandler extends BaseEventHandler {
 
 	@Autowired
 	MoneyAccountCommandService moneyAccountCommandService;
+	@Autowired
+	MoneyAccountRepository moneyAccountRepository;
 
 	@RabbitHandler
 	public void handle(AccountTxEvent event, Channel channel, Message message) throws IOException {
@@ -40,17 +43,14 @@ public class AccountTxTopicMessageHandler extends BaseEventHandler {
 			log.warn("Consume repeated: {}", event);
 			return;
 		}
-		
+
 		ContextHolder.setBaseEvent(event); // 將 Event 存入上下文供取用。
 
 		// 呼叫 Application Service 進行儲值處理
 		DepositMoneyCommand command = new DepositMoneyCommand();
 		command.setUuid(event.getTargetId());
 		command.setMoney(event.getMoney());
-		
-		
 		moneyAccountCommandService.deposit(command);
-
 		// 進行消費
 		this.consumeEvent(event.getEventLogUuid());
 

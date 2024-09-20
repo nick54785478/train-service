@@ -94,4 +94,5 @@ public class TicketBookingService extends BaseDomainService {
 		throw new ValidationException("VALIDATION_EXCEPTION", "發生錯誤，查無此預約");
 		
 	}
+
 }
