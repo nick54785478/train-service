@@ -1,12 +1,17 @@
 package com.example.demo.domain.booking.aggregate;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import com.example.demo.base.context.ContextHolder;
 import com.example.demo.base.entity.BaseEntity;
 import com.example.demo.base.enums.YesNo;
+import com.example.demo.domain.account.aggregate.MoneyAccount;
+import com.example.demo.domain.booking.aggregate.vo.TicketStatus;
 import com.example.demo.domain.booking.command.BookTicketCommand;
-import com.example.demo.domain.booking.outbound.BookTicketEvent;
+import com.example.demo.domain.booking.command.CheckInTicketCommand;
+import com.example.demo.domain.booking.outbound.TicketBookingEvent;
+import com.example.demo.domain.share.enums.TicketAction;
 import com.example.demo.util.DateTransformUtil;
 
 import jakarta.persistence.Column;
@@ -44,21 +49,42 @@ public class TicketBooking extends BaseEntity {
 	@Column(name = "TRAIN_UUID")
 	private String trainUuid; // 該車次對應的 UUID
 
+	@Column(name = "ACCOUNT_UUID")
+	private String accountUuid; // 帳號 UUID
+
+	@Column(name = "STATUS")
+	@Enumerated(EnumType.STRING)
+	private TicketStatus status; // 座位狀態
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "ACTIVE_FLAG")
 	private YesNo activeFlag; // 是否失效 (過期、取消訂位)
 
-	public void create(BookTicketCommand command) {
+	public void create(BookTicketCommand command, MoneyAccount account) {
 		this.uuid = UUID.randomUUID().toString();
 		this.trainUuid = command.getTrainUuid();
 		this.ticketUuid = command.getTicketUuid();
 		this.username = ContextHolder.getUsername();
-		this.email = ContextHolder.getUsername();
+		this.email = ContextHolder.getUserEmail();
+		this.status = TicketStatus.UNTAKEN;
+		this.accountUuid = (Objects.isNull(account)) ? null : account.getUuid();
 		this.activeFlag = YesNo.Y;
 
 		// 建立一個 Event
-		BookTicketEvent event = BookTicketEvent.builder().eventLogUuid(UUID.randomUUID().toString()).targetId(this.uuid)
-				.takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
+		TicketBookingEvent event = TicketBookingEvent.builder().eventLogUuid(UUID.randomUUID().toString()).targetId(this.uuid)
+				.takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate())).action(TicketAction.BOOK.getName())
+				.seatNo(command.getSeatNo()).build();
+		// 設置進 Context 上下文
+		ContextHolder.setBaseEvent(event);
+	}
+
+	public void checkIn(CheckInTicketCommand command) {
+		this.status = TicketStatus.TAKEN;
+		this.activeFlag = YesNo.N;
+
+		// 建立一個 Event
+		TicketBookingEvent event = TicketBookingEvent.builder().eventLogUuid(UUID.randomUUID().toString()).targetId(this.uuid)
+				.takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate())).action(TicketAction.CHECK_IN.getName())
 				.seatNo(command.getSeatNo()).build();
 		// 設置進 Context 上下文
 		ContextHolder.setBaseEvent(event);

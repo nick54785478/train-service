@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.booking.command.BookTicketCommand;
+import com.example.demo.domain.booking.command.CheckInTicketCommand;
 import com.example.demo.domain.ticket.command.CreateTicketCommand;
 import com.example.demo.iface.dto.BookTicketResource;
+import com.example.demo.iface.dto.CheckInTicketResource;
 import com.example.demo.iface.dto.CreateTicketResource;
 import com.example.demo.iface.dto.TicketBookedResource;
+import com.example.demo.iface.dto.TicketCheckedInResource;
 import com.example.demo.iface.dto.TicketCreatedResource;
 import com.example.demo.service.TicketCommandService;
 import com.example.demo.util.BaseDataTransformer;
@@ -32,6 +35,7 @@ public class TicketController {
 	 * 建立 車票資料
 	 * 
 	 * @param resource
+	 * @return ResponseEntity
 	 */
 	@PostMapping("")
 	public ResponseEntity<TicketCreatedResource> createTicket(@Valid @RequestBody CreateTicketResource resource) {
@@ -44,6 +48,7 @@ public class TicketController {
 	 * 預定 車票資料
 	 * 
 	 * @param resource
+	 * @return ResponseEntity
 	 */
 	@PostMapping("/booking")
 	public ResponseEntity<TicketBookedResource> bookTicket(@RequestBody BookTicketResource resource) {
@@ -52,4 +57,18 @@ public class TicketController {
 				BaseDataTransformer.transformData(ticketCommandService.bookTicket(command), TicketBookedResource.class),
 				HttpStatus.OK);
 	}
+
+	/**
+	 * Check in 車票
+	 * 
+	 * @param resource
+	 * @return ResponseEntity
+	 */
+	@PostMapping("/checkIn")
+	public ResponseEntity<TicketCheckedInResource> bookTicket(@RequestBody CheckInTicketResource resource) {
+		CheckInTicketCommand command = BaseDataTransformer.transformData(resource, CheckInTicketCommand.class);
+		return new ResponseEntity<>(BaseDataTransformer.transformData(ticketCommandService.checkInTicket(command),
+				TicketCheckedInResource.class), HttpStatus.OK);
+	}
+
 }

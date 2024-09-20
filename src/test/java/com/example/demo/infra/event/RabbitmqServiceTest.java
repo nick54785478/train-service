@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.demo.base.repository.EventLogRepository;
-import com.example.demo.domain.booking.outbound.BookTicketEvent;
+import com.example.demo.domain.booking.outbound.TicketBookingEvent;
 import com.example.demo.util.DateTransformUtil;
 
 @SpringBootTest
@@ -28,7 +28,7 @@ class RabbitmqServiceTest {
 
 	@Test
 	void testPublish() {
-		BookTicketEvent event = BookTicketEvent.builder().eventLogUuid("EventLogUuid").targetId("Booking UUID")
+		TicketBookingEvent event = TicketBookingEvent.builder().eventLogUuid("EventLogUuid").targetId("Booking UUID")
 				.seatNo("4A").takeDate(DateTransformUtil.transformLocalDateToString(LocalDate.now())).build();
 
 //		EventLog eventLog = EventLog.builder().uuid(uuid).targetId("火車UUID").className(testQueueName).userId("Nick123")

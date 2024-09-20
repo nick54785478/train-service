@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.example.demo.domain.booking.outbound.BookTicketEvent;
+import com.example.demo.domain.booking.outbound.TicketBookingEvent;
 import com.example.demo.util.DateTransformUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +43,7 @@ class EventIdempotentLogServiceTest {
 
 	@Test
 	void testHandleIdempotency() {
-		BookTicketEvent event = BookTicketEvent.builder().eventLogUuid("EventLogUuid").targetId("Booking UUID")
+		TicketBookingEvent event = TicketBookingEvent.builder().eventLogUuid("EventLogUuid").targetId("Booking UUID")
 				.seatNo("4A").takeDate(DateTransformUtil.transformLocalDateToString(LocalDate.now())).build();
 
 		// 冪等機制，防止重覆消費所帶來的副作用
@@ -57,7 +57,7 @@ class EventIdempotentLogServiceTest {
 
 	@Test
 	void testHandleIdempotency2() {
-		BookTicketEvent event = BookTicketEvent.builder().eventLogUuid("EventLogUuid").targetId("Booking UUID")
+		TicketBookingEvent event = TicketBookingEvent.builder().eventLogUuid("EventLogUuid").targetId("Booking UUID")
 				.seatNo("4A").takeDate(DateTransformUtil.transformLocalDateToString(LocalDate.now())).build();
 		// 冪等機制，防止重覆消費所帶來的副作用
 		if (!eventIdempotentLogService.handleIdempotency(event)) {

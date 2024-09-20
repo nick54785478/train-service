@@ -61,7 +61,7 @@ public class JwtTokenService {
 	public List<String> getRoleList(String token) {
 		return (List<String>) getTokenBody(token).get(JwtConstants.JWT_CLAIMS_KEY_ROLE.getValue());
 	}
-
+	
 	/**
 	 * 取得簽發日
 	 * 

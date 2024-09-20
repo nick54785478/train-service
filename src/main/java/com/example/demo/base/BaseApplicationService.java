@@ -19,9 +19,9 @@ import com.example.demo.util.JsonParseUtil;
 public abstract class BaseApplicationService {
 
 	@Autowired
-	private RabbitmqService rabbitmqService;
+	protected RabbitmqService rabbitmqService;
 	@Autowired
-	private EventLogRepository eventLogRepository;
+	protected EventLogRepository eventLogRepository;
 
 	/**
 	 * 呼叫 BaseDataTransformer 進行資料轉換

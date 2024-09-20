@@ -13,7 +13,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class BookTicketEvent extends BaseEvent {
+public class TicketBookingEvent extends BaseEvent {
+	
+	private String action; // 動作
 
 	private String seatNo; // 座號
 

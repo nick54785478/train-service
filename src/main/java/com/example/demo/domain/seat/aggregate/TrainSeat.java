@@ -48,7 +48,7 @@ public class TrainSeat extends BaseEntity {
 	@Column(name = "BOOKED")
 	@Enumerated(EnumType.STRING)
 	private YesNo booked; // 是否已預定
-
+	
 	@Column(name = "ACTIVE_FLAG")
 	@Enumerated(EnumType.STRING)
 	private YesNo activeFlag; // 是否已失效
@@ -61,6 +61,10 @@ public class TrainSeat extends BaseEntity {
 		this.seatNo = seatNo;
 		this.booked = YesNo.Y;
 		this.activeFlag = YesNo.Y;
+	}
+	
+	public void checkIn() {
+		this.activeFlag = YesNo.N;
 	}
 
 }

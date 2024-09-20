@@ -45,7 +45,6 @@ public class MoneyAccountCommandService extends BaseApplicationService {
 	@Value("${rabbitmq.exchange.name}")
 	private String exchangeName;
 
-	private final EventLogRepository eventLogRepository;
 	private final MoneyAccountService moneyAccountService;
 	private final MoneyAccountRepository moneyAccountRepository;
 

@@ -60,6 +60,9 @@ public class Ticket extends BaseEntity {
 
 	/**
 	 * 建立 票券資料
+	 * 
+	 * @param command
+	 * @param train   火車實體
 	 */
 	public void create(CreateTicketCommand command, Train train) {
 		this.price = command.getPrice();
