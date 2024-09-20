@@ -1,4 +1,4 @@
-package com.example.demo.domain.share.dto;
+package com.example.demo.domain.share;
 
 import java.math.BigDecimal;
 
@@ -9,11 +9,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MoneyDepositedData {
+public class MoneyAccountRegisteredData {
 	
 	private String uuid;
 
 	private String username; // 使用者名稱
 	
+	private String email;
+	
 	private BigDecimal balance;	// 餘額
+	
 }

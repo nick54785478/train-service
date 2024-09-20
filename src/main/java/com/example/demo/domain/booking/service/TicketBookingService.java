@@ -14,9 +14,9 @@ import com.example.demo.domain.booking.aggregate.TicketBooking;
 import com.example.demo.domain.booking.command.BookTicketCommand;
 import com.example.demo.domain.booking.command.CheckInTicketCommand;
 import com.example.demo.domain.booking.command.RefundTicketCommand;
+import com.example.demo.domain.share.TicketBookedData;
 import com.example.demo.domain.share.TicketCheckedInData;
 import com.example.demo.domain.share.TicketRefundedData;
-import com.example.demo.domain.share.dto.TicketBookedData;
 import com.example.demo.infra.repository.TicketBookingRepository;
 
 import lombok.RequiredArgsConstructor;

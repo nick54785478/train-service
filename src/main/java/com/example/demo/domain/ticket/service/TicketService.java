@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.base.BaseDomainService;
 import com.example.demo.base.exception.ValidationException;
-import com.example.demo.domain.share.dto.TicketCreatedData;
+import com.example.demo.domain.share.TicketCreatedData;
 import com.example.demo.domain.ticket.aggregate.Ticket;
 import com.example.demo.domain.ticket.command.CreateTicketCommand;
 import com.example.demo.domain.train.aggregate.Train;

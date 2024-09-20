@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.base.BaseApplicationService;
-import com.example.demo.domain.share.dto.TrainDetailQueriedData;
-import com.example.demo.domain.share.dto.TrainQueriedData;
+import com.example.demo.domain.share.TrainDetailQueriedData;
+import com.example.demo.domain.share.TrainQueriedData;
 import com.example.demo.domain.train.command.QueryTrainCommand;
 import com.example.demo.domain.train.service.TrainService;
 

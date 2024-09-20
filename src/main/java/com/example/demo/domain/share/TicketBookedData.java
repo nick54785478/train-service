@@ -1,4 +1,4 @@
-package com.example.demo.domain.share.dto;
+package com.example.demo.domain.share;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TicketCreatedData {
+public class TicketBookedData {
 
-	private String uuid;
+	private String uuid; // Booking UUID
+
 }

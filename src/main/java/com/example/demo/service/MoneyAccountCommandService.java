@@ -21,8 +21,8 @@ import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
 import com.example.demo.domain.account.command.DepositMoneyCommand;
 import com.example.demo.domain.account.outbound.AccountTxEvent;
 import com.example.demo.domain.account.service.MoneyAccountService;
-import com.example.demo.domain.share.dto.MoneyAccountRegisteredData;
-import com.example.demo.domain.share.dto.MoneyDepositedData;
+import com.example.demo.domain.share.MoneyAccountRegisteredData;
+import com.example.demo.domain.share.MoneyDepositedData;
 import com.example.demo.infra.repository.MoneyAccountRepository;
 import com.example.demo.util.JsonParseUtil;
 

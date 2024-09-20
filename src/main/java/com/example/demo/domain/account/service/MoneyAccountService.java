@@ -9,7 +9,7 @@ import com.example.demo.base.event.BaseEvent;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
 import com.example.demo.domain.account.command.DepositMoneyCommand;
-import com.example.demo.domain.share.dto.MoneyAccountRegisteredData;
+import com.example.demo.domain.share.MoneyAccountRegisteredData;
 import com.example.demo.infra.repository.MoneyAccountRepository;
 
 @Service
