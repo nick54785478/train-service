@@ -33,7 +33,7 @@ public class RabbitmqConfiguration {
 	private String accountQueueTxName;
 
 	/**
-	 * 將自定義的消息類序列化成json格式，再轉成byte構造 Message，在接收消息時，會將接收到的 Message 再反序列化成自定義的類。
+	 * 將自定義的消息類序列化成 json 格式，再轉成 byte構造 Message，在接收消息時，會將接收到的 Message 再反序列化成自定義的類。
 	 * 
 	 * @param objectMapper
 	 * @return MessageConverter
