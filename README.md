@@ -109,16 +109,17 @@ networks:
 <br/>
 
 
-<h3>第三步: 建立表及新增相關資料</h3>
+<h3>第三步: 建立表及相關外部依賴</h3>
 
->* 準備一個 MySQL (不論是 容器 或 本地端資料庫)。
+>* **準備 MySQL (不論是 容器 或 本地端資料庫)。**
 >* 執行專案目錄下的 init-schema.sql 進行。
 >* 可執行 data.sql (我的測試資料)。
+>* **準備 RabbitMQ (不論是 容器 或 本地端)。**
 
 <br />
 
 
-<h3>第四步: 使用Postman 對其進行測試</h3>
+<h3>第四步: 使用 Postman 對其進行測試</h3>
 
 train-demo.postman_collection.json
 <br />
