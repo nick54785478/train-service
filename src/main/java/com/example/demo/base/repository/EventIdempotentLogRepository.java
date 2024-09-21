@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.base.event.EventIdempotentLog;
-import com.example.demo.base.event.EventIdempotentLogId;
+import com.example.demo.base.entity.EventIdempotentLog;
+import com.example.demo.base.entity.EventIdempotentLogId;
 
 import jakarta.persistence.LockModeType;
 

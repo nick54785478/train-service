@@ -1,4 +1,4 @@
-package com.example.demo.base.security;
+package com.example.demo.base.config.security;
 
 public enum JwtConstants {
 

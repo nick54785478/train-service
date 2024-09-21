@@ -1,4 +1,4 @@
-package com.example.demo.base;
+package com.example.demo.base.service;
 
 import java.util.Date;
 import java.util.List;
@@ -10,11 +10,11 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.base.context.ContextHolder;
+import com.example.demo.base.config.context.ContextHolder;
+import com.example.demo.base.entity.EventLog;
+import com.example.demo.base.entity.EventSource;
 import com.example.demo.base.enums.StatusCode;
 import com.example.demo.base.event.BaseEvent;
-import com.example.demo.base.event.EventLog;
-import com.example.demo.base.event.EventSource;
 import com.example.demo.base.repository.EventLogRepository;
 import com.example.demo.base.repository.EventSourceRepository;
 import com.example.demo.util.BaseDataTransformer;

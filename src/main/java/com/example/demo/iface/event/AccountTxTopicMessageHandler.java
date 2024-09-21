@@ -9,8 +9,8 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.base.BaseEventHandler;
-import com.example.demo.base.context.ContextHolder;
+import com.example.demo.base.config.context.ContextHolder;
+import com.example.demo.base.service.BaseEventHandler;
 import com.example.demo.domain.account.command.DepositMoneyCommand;
 import com.example.demo.domain.account.outbound.AccountTxEvent;
 import com.example.demo.infra.repository.MoneyAccountRepository;

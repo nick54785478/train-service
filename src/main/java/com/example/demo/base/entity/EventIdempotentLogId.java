@@ -1,4 +1,4 @@
-package com.example.demo.base.event;
+package com.example.demo.base.entity;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

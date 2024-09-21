@@ -11,12 +11,12 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.base.BaseApplicationService;
-import com.example.demo.base.context.ContextHolder;
+import com.example.demo.base.config.context.ContextHolder;
+import com.example.demo.base.entity.EventLog;
 import com.example.demo.base.enums.YesNo;
 import com.example.demo.base.event.BaseEvent;
-import com.example.demo.base.event.EventLog;
 import com.example.demo.base.exception.ValidationException;
+import com.example.demo.base.service.BaseApplicationService;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.account.outbound.AccountTxEvent;
 import com.example.demo.domain.booking.command.BookTicketCommand;

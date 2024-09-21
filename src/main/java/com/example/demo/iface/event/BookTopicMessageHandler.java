@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.base.BaseEventHandler;
+import com.example.demo.base.service.BaseEventHandler;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.account.outbound.AccountTxEvent;
 import com.example.demo.domain.booking.aggregate.TicketBooking;

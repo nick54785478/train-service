@@ -3,9 +3,9 @@ package com.example.demo.domain.account.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.base.BaseDomainService;
-import com.example.demo.base.context.ContextHolder;
+import com.example.demo.base.config.context.ContextHolder;
 import com.example.demo.base.event.BaseEvent;
+import com.example.demo.base.service.BaseDomainService;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
 import com.example.demo.domain.account.command.DepositMoneyCommand;

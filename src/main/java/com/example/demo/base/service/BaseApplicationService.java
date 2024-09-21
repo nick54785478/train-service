@@ -1,41 +1,27 @@
-package com.example.demo.base;
+package com.example.demo.base.service;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import com.example.demo.base.entity.EventLog;
 import com.example.demo.base.event.BaseEvent;
-import com.example.demo.base.event.EventLog;
 import com.example.demo.base.repository.EventLogRepository;
-import com.example.demo.base.repository.EventSourceRepository;
-import com.example.demo.base.service.EventIdempotentLogService;
 import com.example.demo.infra.event.RabbitmqService;
 import com.example.demo.util.BaseDataTransformer;
 import com.example.demo.util.JsonParseUtil;
 
-@Component
-public class BaseEventHandler {
+/**
+ * Base Application Service
+ */
+@Service
+public abstract class BaseApplicationService {
 
-	@Autowired
-	protected EventIdempotentLogService eventIdempotentLogService;
 	@Autowired
 	protected RabbitmqService rabbitmqService;
 	@Autowired
 	protected EventLogRepository eventLogRepository;
-	@Autowired
-	protected EventSourceRepository eventSourceRepository;
-
-	/**
-	 * 檢查冪等
-	 * 
-	 * @param event
-	 * @return boolean
-	 */
-	public boolean checkEventIdempotency(BaseEvent event) {
-		return eventIdempotentLogService.handleIdempotency(event);
-	}
 
 	/**
 	 * 呼叫 BaseDataTransformer 進行資料轉換
@@ -70,36 +56,24 @@ public class BaseEventHandler {
 	 */
 	public void publishEvent(String exchangeName, String topicQueue, BaseEvent event) {
 		rabbitmqService.publish(exchangeName, topicQueue, event);
-		// 建立 EventLog
 	}
 
 	/**
 	 * 建立 EventLog
 	 * 
 	 * @param topicQueue Topic 通道
+	 * @param eventLogUuid EventLog 的 UUID
+	 * @param targetId   目標物 UUID
 	 * @param event      事件
+	 * @param body       事件發生變動內容
 	 */
-	public EventLog generateEventLog(String topicQueue, BaseEvent event) {
+	public EventLog generateEventLog(String topicQueue, String eventLogUuid, String targetId, BaseEvent event) {
+
 		// 建立 EventLog
-		EventLog eventLog = EventLog.builder().uuid(event.getEventLogUuid()).topic(topicQueue)
-				.targetId(event.getTargetId()).className(event.getClass().getName())
-				.body(JsonParseUtil.serialize(event)).userId("SYSTEM").build();
+		EventLog eventLog = EventLog.builder().uuid(eventLogUuid).topic(topicQueue).targetId(targetId)
+				.className(event.getClass().getName()).body(JsonParseUtil.serialize(event)).userId("SYSTEM").build();
+
 		return eventLogRepository.save(eventLog);
-	}
-
-	/**
-	 * 進行消費
-	 * 
-	 * @param eventLogUuid
-	 */
-	public void consumeEvent(String eventLogUuid) {
-		// 查詢 EventLog
-		EventLog eventLog = eventLogRepository.findByUuid(eventLogUuid);
-		if (!Objects.isNull(eventLog)) {
-			eventLog.consume(); // 更改狀態為: 已消費
-			eventLogRepository.save(eventLog);
-		}
-
 	}
 
 }

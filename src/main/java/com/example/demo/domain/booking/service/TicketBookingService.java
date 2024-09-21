@@ -5,10 +5,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.base.BaseDomainService;
-import com.example.demo.base.context.ContextHolder;
+import com.example.demo.base.config.context.ContextHolder;
 import com.example.demo.base.event.BaseEvent;
 import com.example.demo.base.exception.ValidationException;
+import com.example.demo.base.service.BaseDomainService;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.booking.aggregate.TicketBooking;
 import com.example.demo.domain.booking.command.BookTicketCommand;

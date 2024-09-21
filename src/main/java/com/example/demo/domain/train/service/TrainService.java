@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.base.BaseDomainService;
 import com.example.demo.base.exception.ValidationException;
+import com.example.demo.base.service.BaseDomainService;
 import com.example.demo.domain.share.StopQueriedData;
 import com.example.demo.domain.share.TrainCreatedData;
 import com.example.demo.domain.share.TrainDetailQueriedData;

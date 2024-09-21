@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.base.entity.EventLog;
 import com.example.demo.base.enums.EventLogSendQueueStatus;
 import com.example.demo.base.event.BaseEvent;
-import com.example.demo.base.event.EventLog;
 import com.example.demo.base.repository.EventLogRepository;
 import com.example.demo.infra.event.RabbitmqService;
 import com.example.demo.util.JsonParseUtil;

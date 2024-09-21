@@ -1,7 +1,5 @@
 package com.example.demo.base.service;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.AfterAll;

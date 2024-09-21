@@ -1,4 +1,4 @@
-package com.example.demo.base.security;
+package com.example.demo.base.config.security;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.demo.base.context.ContextHolder;
+import com.example.demo.base.config.context.ContextHolder;
 import com.example.demo.base.service.JwtTokenService;
 
 import io.jsonwebtoken.Claims;
