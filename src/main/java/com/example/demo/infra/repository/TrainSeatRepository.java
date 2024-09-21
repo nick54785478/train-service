@@ -10,6 +10,8 @@ import java.time.LocalDate;
 
 @Repository
 public interface TrainSeatRepository extends JpaRepository<TrainSeat, Long> {
+	
+	List<TrainSeat> findByActiveFlagAndTakeDateBefore(YesNo activeFlag, LocalDate takeDate);
 
 	TrainSeat findByBookUuidAndSeatNoAndTakeDateAndActiveFlag(String uuid, String seatNo, LocalDate takeDate,
 			YesNo activeFlag);

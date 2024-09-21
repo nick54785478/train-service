@@ -64,17 +64,29 @@ public class DateTransformUtil {
 	/**
 	 * 將 LocalDateTime 轉換為 Date
 	 */
-	private static Date transformLocalDateTimeToDate(LocalDateTime date) {
+	public static Date transformLocalDateTimeToDate(LocalDateTime date) {
 		if (Objects.isNull(date)) {
 			return null;
 		}
 		return Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
 	}
+	
+	/**
+	 * 將 Date 轉換為 LocalDate
+	 */
+	public static LocalDate transformDateToLocalDate(Date date) {
+		if (Objects.isNull(date)) {
+			return null;
+		}
+		Instant instant = date.toInstant();
+		return instant.atZone(ZoneId.systemDefault()).toLocalDate();
+	}
+	
 
 	/**
 	 * 將 Date 轉換為 LocalDateTime
 	 */
-	private static LocalDateTime transformDateToLocalDateTime(Date date) {
+	public static LocalDateTime transformDateToLocalDateTime(Date date) {
 		if (Objects.isNull(date)) {
 			return null;
 		}

@@ -81,4 +81,11 @@ public class TrainSeat extends BaseEntity {
 		this.booked = YesNo.N;
 	}
 
+	/**
+	 * 使票券失效
+	 */
+	public void inactive() {
+		this.activeFlag = YesNo.N;
+	}
+
 }
