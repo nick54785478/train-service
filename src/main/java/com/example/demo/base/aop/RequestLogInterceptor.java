@@ -15,7 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * AOP 切面，用於日誌紀錄與性能監控。
+ * 用於日誌紀錄與性能監控的攔截器
  */
 @Aspect
 @Component

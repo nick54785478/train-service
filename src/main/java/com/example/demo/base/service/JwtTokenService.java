@@ -61,7 +61,7 @@ public class JwtTokenService {
 	public List<String> getRoleList(String token) {
 		return (List<String>) getTokenBody(token).get(JwtConstants.JWT_CLAIMS_KEY_ROLE.getValue());
 	}
-	
+
 	/**
 	 * 取得簽發日
 	 * 
@@ -100,7 +100,6 @@ public class JwtTokenService {
 	 */
 	public Claims getTokenBody(String token) {
 		// 使用 Jwts.parser() 建立 JwtParser 實例
-
 		return Jwts.parser().verifyWith(getSigningKey()) // 用於設定金鑰，該金鑰用於驗證 JWT 令牌的簽名
 				.build() // 建置 JwtParser 實例
 				.parseSignedClaims(token).getPayload();

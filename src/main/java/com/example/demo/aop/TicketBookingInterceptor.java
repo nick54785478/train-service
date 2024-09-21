@@ -15,6 +15,9 @@ import com.example.demo.util.JsonParseUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 針對 TicketBooking 領域的攔截器，用於紀錄 Event Source
+ */
 @Aspect
 @Component
 @Slf4j

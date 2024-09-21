@@ -14,6 +14,9 @@ import com.example.demo.infra.event.RabbitmqService;
 import com.example.demo.util.BaseDataTransformer;
 import com.example.demo.util.JsonParseUtil;
 
+/**
+ * Base Event Handler
+ * */
 @Component
 public class BaseEventHandler {
 
