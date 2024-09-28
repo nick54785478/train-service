@@ -12,6 +12,9 @@ import com.example.demo.domain.account.command.DepositMoneyCommand;
 import com.example.demo.domain.share.MoneyAccountRegisteredData;
 import com.example.demo.infra.repository.MoneyAccountRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class MoneyAccountService extends BaseDomainService {
 
@@ -39,7 +42,7 @@ public class MoneyAccountService extends BaseDomainService {
 	public void deposit(DepositMoneyCommand command) {
 		moneyAccountRepository.findById(command.getUuid()).ifPresent(moneyAccount -> {
 			BaseEvent event = ContextHolder.getEvent();
-			System.out.println(event);
+			log.debug("Event : {}", event);
 			moneyAccount.setBalance(command.getMoney());
 			moneyAccountRepository.save(moneyAccount);
 
