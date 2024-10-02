@@ -54,7 +54,13 @@ public class TrainSeat extends BaseEntity {
 	private YesNo activeFlag; // 是否已失效
 
 	/**
-	 * book
+	 * create book
+	 * 
+	 * @param ticketUuid
+	 * @param trainUuid
+	 * @param bookUuid
+	 * @param takeDate
+	 * @param seatNo
 	 */
 	public void create(String ticketUuid, String trainUuid, String bookUuid, LocalDate takeDate, String seatNo) {
 		this.ticketUuid = ticketUuid;

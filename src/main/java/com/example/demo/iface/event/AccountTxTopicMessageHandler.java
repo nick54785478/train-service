@@ -34,7 +34,7 @@ public class AccountTxTopicMessageHandler extends BaseEventHandler {
 		log.info("Account Transaction Topic Queue -- 接收到消息： {}", event);
 
 		if (Objects.isNull(event)) {
-			log.error("Consumer 接收到的 Message 有問題, 內容:{}", event);
+			log.error("Consumer 接收到的 Message 有問題, 內容: {}", event);
 			return;
 		}
 

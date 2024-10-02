@@ -16,6 +16,8 @@ public interface TrainRepository extends JpaRepository<Train, String> {
 	Train findByNumber(Integer number);
 
 	List<Train> findByNumberIn(List<Integer> numberList);
+	
+	List<Train> findByUuidIn(List<String> uuidList);
 
 	@Query(value = QUERY, nativeQuery = true)
 	List<Train> findByCondition(@Param("trainNo") Integer trainNo,

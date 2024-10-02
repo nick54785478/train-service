@@ -45,6 +45,8 @@ public class TicketController {
 		return new ResponseEntity<>(BaseDataTransformer.transformData(ticketCommandService.createTicket(command),
 				TicketCreatedResource.class), HttpStatus.OK);
 	}
+	
+
 
 	/**
 	 * 預定 車票資料

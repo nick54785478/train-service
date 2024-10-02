@@ -25,6 +25,5 @@ public class RabbitmqService {
 	public void publish(String exchangeName, String topicQueue, BaseEvent event) {
 		log.debug("Exchange:{}, Topic:{}, Event Body:{}", exchangeName, topicQueue, event);
 		rabbitTemplate.convertAndSend(exchangeName, topicQueue, event);
-
 	}
 }
