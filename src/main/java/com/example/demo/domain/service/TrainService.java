@@ -1,4 +1,4 @@
-package com.example.demo.domain.train.service;
+package com.example.demo.domain.service;
 
 import java.util.ArrayList;
 import java.util.Comparator;

@@ -6,9 +6,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.base.service.BaseApplicationService;
+import com.example.demo.domain.service.TrainService;
 import com.example.demo.domain.share.TrainCreatedData;
 import com.example.demo.domain.train.command.CreateTrainCommand;
-import com.example.demo.domain.train.service.TrainService;
 
 import lombok.AllArgsConstructor;
 

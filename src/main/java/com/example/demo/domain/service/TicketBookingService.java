@@ -1,4 +1,4 @@
-package com.example.demo.domain.booking.service;
+package com.example.demo.domain.service;
 
 import java.time.LocalTime;
 import java.util.ArrayList;

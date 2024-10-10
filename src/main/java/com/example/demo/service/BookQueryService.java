@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.domain.booking.service.TicketBookingService;
+import com.example.demo.domain.service.TicketBookingService;
 import com.example.demo.domain.share.BookingQueriedData;
 
 import lombok.AllArgsConstructor;

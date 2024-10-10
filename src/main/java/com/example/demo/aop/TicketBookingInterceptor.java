@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import com.example.demo.base.config.context.ContextHolder;
 import com.example.demo.base.event.BaseEvent;
 import com.example.demo.domain.booking.aggregate.TicketBooking;
-import com.example.demo.domain.booking.service.TicketBookingService;
+import com.example.demo.domain.service.TicketBookingService;
 import com.example.demo.util.JsonParseUtil;
 
 import lombok.extern.slf4j.Slf4j;

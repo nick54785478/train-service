@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import com.example.demo.base.config.context.ContextHolder;
 import com.example.demo.base.event.BaseEvent;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
-import com.example.demo.domain.account.service.MoneyAccountService;
+import com.example.demo.domain.service.MoneyAccountService;
 import com.example.demo.util.JsonParseUtil;
 
 import lombok.extern.slf4j.Slf4j;

@@ -20,7 +20,7 @@ import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
 import com.example.demo.domain.account.command.DepositMoneyCommand;
 import com.example.demo.domain.account.outbound.AccountTxEvent;
-import com.example.demo.domain.account.service.MoneyAccountService;
+import com.example.demo.domain.service.MoneyAccountService;
 import com.example.demo.domain.share.MoneyAccountRegisteredData;
 import com.example.demo.domain.share.MoneyDepositedData;
 import com.example.demo.infra.repository.MoneyAccountRepository;

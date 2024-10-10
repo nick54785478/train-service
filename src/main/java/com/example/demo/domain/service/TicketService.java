@@ -1,4 +1,4 @@
-package com.example.demo.domain.ticket.service;
+package com.example.demo.domain.service;
 
 import java.util.Objects;
 
