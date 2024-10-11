@@ -10,12 +10,12 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.base.config.security.JwtConstants;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -136,6 +136,47 @@ public class JwtTokenService {
 	public boolean validateToken(String token) {
 		Claims claims = this.getTokenBody(token);
 		return claims != null;
+	}
+
+	/**
+	 * JWToken 應用常數
+	 */
+	@AllArgsConstructor
+	public enum JwtConstants {
+
+		/**
+		 * HTTP 請求 Header 中用於攜帶 JWT 的名稱。
+		 */
+		JWT_HEADER("Authorization"),
+
+		/**
+		 * JWT 的前綴。
+		 */
+		JWT_PREFIX("Bearer "),
+
+		/**
+		 * JWT 中用於標識主體的索引鍵。
+		 */
+		JWT_CLAIM_KEY_SUB("sub"),
+
+		/**
+		 * JWT 在程式碼中統一引用 JWT 中角色資訊的欄位名稱
+		 */
+		JWT_CLAIMS_KEY_ROLE("roles"),
+
+		/**
+		 * JWT 在程式碼中統一引用 JWT 中使用者帳號
+		 */
+		JWT_CLAIMS_KEY_USER("username"),
+
+		/**
+		 * JWT 在程式碼中統一引用 JWT 中使用者信箱
+		 */
+		JWT_CLAIMS_KEY_EMAIL("email");
+
+		@Getter
+		private String value;
+
 	}
 
 }

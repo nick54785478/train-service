@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.example.demo.base.config.security.JwtConstants;
+import com.example.demo.base.service.JwtTokenService.JwtConstants;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

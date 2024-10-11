@@ -10,6 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.demo.base.config.context.ContextHolder;
 import com.example.demo.base.service.JwtTokenService;
+import com.example.demo.base.service.JwtTokenService.JwtConstants;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
