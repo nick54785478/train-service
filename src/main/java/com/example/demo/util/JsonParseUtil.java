@@ -36,7 +36,6 @@ public class JsonParseUtil {
 			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 			return mapper.writeValueAsString(target);
 		} catch (JsonProcessingException e) {
-			ExceptionUtils.getStackTrace(e);
 			log.error("Occurred JsonMapping Exception", e);
 			return "";
 		}
