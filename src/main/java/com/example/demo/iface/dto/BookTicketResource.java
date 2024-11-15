@@ -2,6 +2,7 @@ package com.example.demo.iface.dto;
 
 import java.math.BigDecimal;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,20 +10,28 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "車票預定資訊")
 public class BookTicketResource {
 
+	@Schema(description = "火車代號 uuid")
 	private String trainUuid; // 火車 UUID
 
+	@Schema(description = "車票代號 uuid")
 	private String ticketUuid; // 車票 UUID
 
+	@Schema(description = "火車號次")
 	private Integer trainNo; // 火車號次
 	
+	@Schema(description = "價格")
 	private BigDecimal price; // 價格
 
+	@Schema(description = "座號")
 	private String seatNo; // 座號
 
+	@Schema(description = "乘車日期")
 	private String takeDate; // 乘車日期
 	
+	@Schema(description = "付款方式是否透過 帳號扣款")
 	private String payByAccount; // 付款方式是否透過 帳號扣款
 	
 }

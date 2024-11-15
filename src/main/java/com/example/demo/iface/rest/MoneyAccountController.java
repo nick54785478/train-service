@@ -16,11 +16,15 @@ import com.example.demo.iface.dto.MoneyDepositedResource;
 import com.example.demo.service.MoneyAccountCommandService;
 import com.example.demo.util.BaseDataTransformer;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/account")
+@Tag(name = "Money Account API", description = "進行與儲值帳戶領域相關動作")
 public class MoneyAccountController {
 
 	private MoneyAccountCommandService moneyAccountCommandService;
@@ -32,7 +36,10 @@ public class MoneyAccountController {
 	 * @return 成功訊息
 	 */
 	@PostMapping("/register")
-	public ResponseEntity<MoneyAccountRegisteredResource> register(@RequestBody CreateMoneyAccountResource resource) {
+	@Operation(summary = "API - 註冊使用者儲值帳號", description = "註冊使用者儲值帳號。")
+	public ResponseEntity<MoneyAccountRegisteredResource> register(
+			@Parameter(description = "使用者儲值帳號資訊")
+			@RequestBody CreateMoneyAccountResource resource) {
 		// DTO 轉換
 		CreateMoneyAccountCommand command = BaseDataTransformer.transformData(resource,
 				CreateMoneyAccountCommand.class);
@@ -42,13 +49,16 @@ public class MoneyAccountController {
 	}
 
 	/**
-	 * 儲值
+	 * 進行儲值動作
 	 * 
 	 * @param resource
 	 * @return 成功訊息
 	 */
 	@PostMapping("/deposit")
-	public ResponseEntity<MoneyDepositedResource> deposit(@RequestBody DepositMoneyResource resource) {
+	@Operation(summary = "API - 進行儲值動作", description = "進行儲值動作。")
+	public ResponseEntity<MoneyDepositedResource> deposit(
+			@Parameter(description = "儲值資訊")
+			@RequestBody DepositMoneyResource resource) {
 		DepositMoneyCommand command = BaseDataTransformer.transformData(resource, DepositMoneyCommand.class);
 		return new ResponseEntity<>(BaseDataTransformer.transformData(
 				moneyAccountCommandService.publishDepositEvent(command), MoneyDepositedResource.class), HttpStatus.OK);

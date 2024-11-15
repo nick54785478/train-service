@@ -1,5 +1,6 @@
 package com.example.demo.iface.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,11 +8,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "停靠站資訊")
 public class CreateStopResource {
 
-	private Integer seq;  // 停站順序
-	
-	private String stopName;	// 站名
-	
-	private String stopTime;	// 停靠時間
+	@Schema(description = "停站順序")
+	private Integer seq; // 停站順序
+
+	@Schema(description = "站名")
+	private String stopName; // 站名
+
+	@Schema(description = "停靠時間")
+	private String stopTime; // 停靠時間
 }

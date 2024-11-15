@@ -23,13 +23,17 @@ import com.example.demo.service.TrainCommandService;
 import com.example.demo.service.TrainQueryService;
 import com.example.demo.util.BaseDataTransformer;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 
 @Validated
-@RequestMapping("/api/v1/train")
 @RestController
 @AllArgsConstructor
+@RequestMapping("/api/v1/train")
+@Tag(name = "Train API", description = "進行與火車領域相關動作")
 public class TrainController {
 
 	TrainQueryService trainQueryService;
@@ -42,7 +46,9 @@ public class TrainController {
 	 * @return 成功訊息
 	 */
 	@PostMapping("")
-	public ResponseEntity<TrainCreatedResource> create(@RequestBody CreateTrainResource resource) {
+	@Operation(summary = "API - 新增火車車次", description = "新增火車車次。")
+	public ResponseEntity<TrainCreatedResource> create(
+			@Parameter(description = "火車車次資訊") @RequestBody CreateTrainResource resource) {
 		// DTO 轉換
 		CreateTrainCommand command = BaseDataTransformer.transformData(resource, CreateTrainCommand.class);
 		return new ResponseEntity<TrainCreatedResource>(
@@ -58,8 +64,9 @@ public class TrainController {
 	 */
 	@Validated
 	@GetMapping("/{trainNo}/stops")
+	@Operation(summary = "API - 取得該火車車次的資訊", description = "取得該火車車次的資訊。")
 	public ResponseEntity<TrainQueriedResource> query(
-			@Validated @PathVariable @Min(value = 1, message = "車次必須為正整數") Integer trainNo) {
+			@Parameter(description = "火車車次") @Validated @PathVariable @Min(value = 1, message = "車次必須為正整數") Integer trainNo) {
 		return new ResponseEntity<>(BaseDataTransformer.transformData(trainQueryService.queryTrainData(trainNo),
 				TrainQueriedResource.class), HttpStatus.OK);
 	}
@@ -75,9 +82,13 @@ public class TrainController {
 	 * @return 該火車車次的停靠站資訊
 	 */
 	@GetMapping("")
+	@Operation(summary = "API - 查詢符合條件的火車資訊", description = "查詢符合條件的火車資訊。")
 	public ResponseEntity<List<TrainDetailQueriedResource>> getTrainListBetweenStopSection(
-			@RequestParam(required = false) Integer trainNo, @RequestParam String fromStop, @RequestParam String toStop,
-			@RequestParam String takeDate, @RequestParam String time) {
+			@Parameter(description = "火車代號") @RequestParam(required = false) Integer trainNo,
+			@Parameter(description = "起站") @RequestParam String fromStop,
+			@Parameter(description = "迄站") @RequestParam String toStop,
+			@Parameter(description = "搭乘日期") @RequestParam String takeDate,
+			@Parameter(description = "搭乘時間") @RequestParam String time) {
 		QueryTrainCommand command = new QueryTrainCommand(trainNo, fromStop, toStop, takeDate, time);
 		return new ResponseEntity<>(BaseDataTransformer.transformData(
 				trainQueryService.queryTrainDataByCondition(command), TrainDetailQueriedResource.class), HttpStatus.OK);

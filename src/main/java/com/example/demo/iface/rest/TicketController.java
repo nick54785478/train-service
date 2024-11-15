@@ -22,40 +22,48 @@ import com.example.demo.iface.dto.TicketCreatedResource;
 import com.example.demo.service.TicketCommandService;
 import com.example.demo.util.BaseDataTransformer;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @Validated
-@RequestMapping("/api/v1/ticket")
 @RestController
 @AllArgsConstructor
+@RequestMapping("/api/v1/ticket")
+@Tag(name = "Ticket API", description = "進行與車票領域相關動作")
 public class TicketController {
 
 	private TicketCommandService ticketCommandService;
 
 	/**
-	 * 建立 車票資料
+	 * 建立車票資料
 	 * 
 	 * @param resource
 	 * @return ResponseEntity
 	 */
 	@PostMapping("")
-	public ResponseEntity<TicketCreatedResource> createTicket(@Valid @RequestBody CreateTicketResource resource) {
+	@Operation(summary = "API - 建立車票資料", description = "建立車票資料。")
+	public ResponseEntity<TicketCreatedResource> createTicket(
+			@Parameter(description = "車票資訊")
+			@Valid @RequestBody CreateTicketResource resource) {
 		CreateTicketCommand command = BaseDataTransformer.transformData(resource, CreateTicketCommand.class);
 		return new ResponseEntity<>(BaseDataTransformer.transformData(ticketCommandService.createTicket(command),
 				TicketCreatedResource.class), HttpStatus.OK);
 	}
-	
-
 
 	/**
-	 * 預定 車票資料
+	 * 預定車票資料
 	 * 
 	 * @param resource
 	 * @return ResponseEntity
 	 */
 	@PostMapping("/booking")
-	public ResponseEntity<TicketBookedResource> bookTicket(@RequestBody BookTicketResource resource) {
+	@Operation(summary = "API - 預定車票資料", description = "預定車票資料。")
+	public ResponseEntity<TicketBookedResource> bookTicket(
+			@Parameter(description = "車票預定資訊")
+			@RequestBody BookTicketResource resource) {
 		BookTicketCommand command = BaseDataTransformer.transformData(resource, BookTicketCommand.class);
 		return new ResponseEntity<>(
 				BaseDataTransformer.transformData(ticketCommandService.bookTicket(command), TicketBookedResource.class),
@@ -63,26 +71,32 @@ public class TicketController {
 	}
 
 	/**
-	 * Check in 車票
+	 * 進行車票 Check in 動作
 	 * 
 	 * @param resource
 	 * @return ResponseEntity
 	 */
 	@PostMapping("/checkIn")
-	public ResponseEntity<TicketCheckedInResource> bookTicket(@RequestBody CheckInTicketResource resource) {
+	@Operation(summary = "API - 進行車票 Check in 動作", description = "進行車票 Check in 動作。")
+	public ResponseEntity<TicketCheckedInResource> bookTicket(
+			@Parameter(description = "車票 Check IN 資訊")
+			@RequestBody CheckInTicketResource resource) {
 		CheckInTicketCommand command = BaseDataTransformer.transformData(resource, CheckInTicketCommand.class);
 		return new ResponseEntity<>(BaseDataTransformer.transformData(ticketCommandService.checkInTicket(command),
 				TicketCheckedInResource.class), HttpStatus.OK);
 	}
 
 	/**
-	 * 退票
+	 * 進行退票動作
 	 * 
 	 * @param resource
 	 * @return ResponseEntity
 	 */
 	@PostMapping("/refund")
-	public ResponseEntity<TicketCheckedInResource> refund(@RequestBody RefundTicketResource resource) {
+	@Operation(summary = "API - 退票", description = "Check in 車票。")
+	public ResponseEntity<TicketCheckedInResource> refund(
+			@Parameter(description = "車票退票資訊")
+			@RequestBody RefundTicketResource resource) {
 		RefundTicketCommand command = BaseDataTransformer.transformData(resource, RefundTicketCommand.class);
 		return new ResponseEntity<>(BaseDataTransformer.transformData(ticketCommandService.refundTicket(command),
 				TicketCheckedInResource.class), HttpStatus.OK);
