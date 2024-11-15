@@ -87,13 +87,13 @@ public class TicketController {
 	}
 
 	/**
-	 * 進行退票動作
+	 * 進行車票退票動作
 	 * 
 	 * @param resource
 	 * @return ResponseEntity
 	 */
 	@PostMapping("/refund")
-	@Operation(summary = "API - 退票", description = "Check in 車票。")
+	@Operation(summary = "API - 進行車票退票動作", description = "進行車票退票動作。")
 	public ResponseEntity<TicketCheckedInResource> refund(
 			@Parameter(description = "車票退票資訊")
 			@RequestBody RefundTicketResource resource) {
