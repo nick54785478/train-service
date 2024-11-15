@@ -41,10 +41,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	/**
 	 * 公開的路徑列表，不需要進行 JWT 驗證的路徑。
 	 */
-	private static final String[] PUBLIC_PATHS = { 
-			"/health", "/favicon.ico", "**/swagger-ui**", "**/swagger-ui/**",
-			"/api-docs/**", "/train/**", "/account/**", "/actuator/**" };
+	private static final String[] PUBLIC_PATHS = { "/health", "/favicon.ico", "**/api-docs/**", "**/swagger-ui**",
+			"/swagger-ui/**", "/train/**", "/account/**", "/actuator/**", "/v3/api-docs/**" };
 
+//"**/swagger-ui**",
 	/**
 	 * 過濾器的核心方法，用於處理 Request 中的授權資訊。
 	 * 
@@ -60,6 +60,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 		log.debug("AuthenticationTokenFilter doFilterInternal");
 
+		// 如果該 Request 不需要 JWT 驗證，則直接放行
+		if (!requiresJwtValidation(request)) {
+			chain.doFilter(request, response);
+			return;
+		}
+
 		// 未開直接放行
 		if (!jwtAuthEnabled) {
 			// 測試用: 10 年的 Token
@@ -67,12 +73,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			Claims tokenBody = jwtTokenService.getTokenBody(token);
 			ContextHolder.setJwtClaims(tokenBody);
 			ContextHolder.setJwtToken(token);
-			chain.doFilter(request, response);
-			return;
-		}
-
-		// 如果該 Request 不需要 JWT 驗證，則直接放行
-		if (!requiresJwtValidation(request)) {
 			chain.doFilter(request, response);
 			return;
 		}
@@ -107,8 +107,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		String requestPath = request.getRequestURI();
 		// 檢查 Request 的 URL 是否在公開路徑列表中，如果是則不需要進行 JWT 驗證
 		for (String publicPath : PUBLIC_PATHS) {
-			log.info("publicPath:{}, requestPath:{}", publicPath, requestPath);
-			if (pathMatcher.match(apiPrefix + publicPath, requestPath)) {
+			System.out.println("publicPath:" + requestPath);
+			if (pathMatcher.match(publicPath, requestPath)) {
+				log.info("publicPath:{}, requestPath:{}", publicPath, requestPath);
 				return false;
 			}
 		}
