@@ -9,5 +9,7 @@ import com.example.demo.domain.account.aggregate.MoneyAccount;
 public interface MoneyAccountRepository extends JpaRepository<MoneyAccount, String> {
 
 	MoneyAccount findByEmail(String email);
-	
+
+	MoneyAccount findByUsername(String username);
+
 }
