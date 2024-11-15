@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.config.AuthFeignConfiguration;
+import com.example.demo.domain.share.UserLoginCommand;
+import com.example.demo.iface.dto.JwtTokenGettenResource;
 import com.example.demo.iface.dto.RegisterUserResource;
 import com.example.demo.iface.dto.UserInfoResource;
 import com.example.demo.iface.dto.UserRegisteredResource;
@@ -23,7 +25,14 @@ public interface AuthFeignClient {
 	@PostMapping(value = "/api/v1/users/register")
 	public UserRegisteredResource register(@RequestBody RegisterUserResource resource);
 	
-	
+	/**
+	 * 登入功能
+	 * 
+	 * @param resource
+	 * @return JwToken
+	 * */
+	@PostMapping(value = "/api/v1/login")
+	public JwtTokenGettenResource login(@RequestBody UserLoginCommand command);
 
 	/**
 	 * 透過 email 取得 User 資料
