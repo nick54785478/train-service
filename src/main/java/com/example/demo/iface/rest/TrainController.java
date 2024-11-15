@@ -84,11 +84,11 @@ public class TrainController {
 	@GetMapping("")
 	@Operation(summary = "API - 查詢符合條件的火車資訊", description = "查詢符合條件的火車資訊。")
 	public ResponseEntity<List<TrainDetailQueriedResource>> getTrainListBetweenStopSection(
-			@Parameter(description = "火車代號") @RequestParam(required = false) Integer trainNo,
+			@Parameter(description = "火車車次") @RequestParam(required = false) Integer trainNo,
 			@Parameter(description = "起站") @RequestParam String fromStop,
 			@Parameter(description = "迄站") @RequestParam String toStop,
-			@Parameter(description = "搭乘日期") @RequestParam String takeDate,
-			@Parameter(description = "搭乘時間") @RequestParam String time) {
+			@Parameter(description = "搭乘日期 (yyyy/mm/dd)") @RequestParam String takeDate,
+			@Parameter(description = "搭乘時間 (hh:mm)") @RequestParam String time) {
 		QueryTrainCommand command = new QueryTrainCommand(trainNo, fromStop, toStop, takeDate, time);
 		return new ResponseEntity<>(BaseDataTransformer.transformData(
 				trainQueryService.queryTrainDataByCondition(command), TrainDetailQueriedResource.class), HttpStatus.OK);

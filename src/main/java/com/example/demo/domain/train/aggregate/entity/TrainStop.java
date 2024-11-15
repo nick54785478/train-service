@@ -33,7 +33,7 @@ public class TrainStop extends BaseEntity {
 	@Id
 	@Column(name = "UUID")
 	private String uuid;
-	
+
 	@Transient
 	private String u;
 
@@ -52,7 +52,7 @@ public class TrainStop extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "DELETE_FLAG")
 	private YesNo deleteFlag; // 是否失效
-	
+
 	/**
 	 * 在持久化之前執行的方法。
 	 */
@@ -60,21 +60,34 @@ public class TrainStop extends BaseEntity {
 	public void prePersist() {
 		// 新增時沒有 UUID，設置 UUID
 		if (Objects.isNull(this.uuid)) {
-			this.uuid = UUID.randomUUID().toString();
+			this.uuid = this.u;
 		}
 	}
-	
+
+	/**
+	 * 設置火車代碼
+	 * 
+	 * @param trainUuid
+	 */
 	public void setTrainUuid(String trainUuid) {
 		this.trainUuid = trainUuid;
 	}
 
+	/**
+	 * 建立停靠站資料
+	 * 
+	 * @param trainUuid
+	 * @param seq
+	 * @param name
+	 * @param time
+	 */
 	public void create(String trainUuid, Integer seq, String name, String time) {
+		this.u = UUID.randomUUID().toString();
 		this.trainUuid = trainUuid;
 		this.seq = seq;
 		this.name = name;
 		this.time = LocalTime.parse(time);
 		this.deleteFlag = YesNo.N;
 	}
-	
-	
+
 }

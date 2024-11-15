@@ -17,6 +17,9 @@ import com.example.demo.util.JsonParseUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Event Republish 排程
+ * */
 @Slf4j
 @Component
 public class EventRePublishSchedule {

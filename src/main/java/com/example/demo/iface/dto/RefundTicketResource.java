@@ -17,7 +17,7 @@ public class RefundTicketResource {
 	@Schema(description = "座號")
 	private String seatNo; // 座號
 
-	@Schema(description = "搭乘日期")
+	@Schema(description = "搭乘日期 (yyyy/mm/dd)")
 	private String takeDate; // 搭乘日期
 
 }

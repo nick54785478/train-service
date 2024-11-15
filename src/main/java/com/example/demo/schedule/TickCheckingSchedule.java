@@ -16,7 +16,7 @@ import com.example.demo.util.DateTransformUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 檢查失效票券
+ * 檢查失效票券排程
  * */
 @Slf4j
 @Component
@@ -39,7 +39,6 @@ public class TickCheckingSchedule {
 		});
 		
 		trainSeatRepository.saveAll(trainSeatList);
-		
 	}
 
 }
