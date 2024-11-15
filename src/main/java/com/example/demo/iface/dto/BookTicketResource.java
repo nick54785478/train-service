@@ -28,7 +28,7 @@ public class BookTicketResource {
 	@Schema(description = "座號")
 	private String seatNo; // 座號
 
-	@Schema(description = "乘車日期")
+	@Schema(description = "乘車日期 (yyyy/mm/dd)")
 	private String takeDate; // 乘車日期
 	
 	@Schema(description = "付款方式是否透過 帳號扣款")

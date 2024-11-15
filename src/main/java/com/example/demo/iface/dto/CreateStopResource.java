@@ -17,6 +17,6 @@ public class CreateStopResource {
 	@Schema(description = "站名")
 	private String stopName; // 站名
 
-	@Schema(description = "停靠時間")
+	@Schema(description = "停靠時間 (hh:mm)")
 	private String stopTime; // 停靠時間
 }

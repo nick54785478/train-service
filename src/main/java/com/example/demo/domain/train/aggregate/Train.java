@@ -63,7 +63,7 @@ public class Train extends BaseEntity {
 	@PrePersist
 	public void prePersist() {
 		if (Objects.isNull(this.uuid)) {
-			this.uuid = UUID.randomUUID().toString();
+			this.uuid = this.u;
 			// 將 Train UUID 設置進 Stop
 			for (TrainStop stop : stops) {
 				stop.setTrainUuid(this.uuid);
@@ -77,6 +77,7 @@ public class Train extends BaseEntity {
 	 * 用途: 新增車次
 	 */
 	public void create(CreateTrainCommand command) {
+		this.u = UUID.randomUUID().toString();
 		this.number = command.getTrainNo();
 		this.kind = TrainKind.fromLabel(command.getTrainKind());
 		// 將 Stop 資訊進行設置

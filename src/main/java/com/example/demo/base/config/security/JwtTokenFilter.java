@@ -102,13 +102,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	 * @return 是否需要進行 JWT 驗證
 	 */
 	private boolean requiresJwtValidation(HttpServletRequest request) {
-		String apiPrefix = "/api/v1";
 		String requestPath = request.getRequestURI();
 		// 檢查 Request 的 URL 是否在公開路徑列表中，如果是則不需要進行 JWT 驗證
 		for (String publicPath : PUBLIC_PATHS) {
-			System.out.println("publicPath:" + requestPath);
+			log.info("publicPath:{}, requestPath:{}", publicPath, requestPath);
 			if (pathMatcher.match(publicPath, requestPath)) {
-				log.info("publicPath:{}, requestPath:{}", publicPath, requestPath);
 				return false;
 			}
 		}
