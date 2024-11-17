@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-@Tag(name = "Login API", description = "進行會員登入")
+@Tag(name = "Authority Login API", description = "進行會員登入")
 @RequestMapping("/login")
 public class AuthController {
 

@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -68,6 +69,17 @@ public class TicketCommandService extends BaseApplicationService {
 	 */
 	public TicketCreatedData createTicket(CreateTicketCommand command) {
 		return ticketService.create(command);
+	}
+
+	/**
+	 * 批次新增車票資訊
+	 * 
+	 * @param trainNo 車次
+	 * @param command
+	 * @return TicketCreatedData
+	 */
+	public TicketCreatedData createTickets(Integer trainNo, List<CreateTicketCommand> command) {
+		return ticketService.create(trainNo, command);
 	}
 
 	/**

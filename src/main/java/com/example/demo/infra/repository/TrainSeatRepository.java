@@ -23,5 +23,8 @@ public interface TrainSeatRepository extends JpaRepository<TrainSeat, Long> {
 	TrainSeat findByTakeDateAndSeatNoAndTrainUuidAndBooked(LocalDate takeDate, String seatNo, String trainUuid,
 			YesNo yesNo);
 	
+	List<TrainSeat> findByTakeDateAndTrainUuidAndBookedAndActiveFlag(LocalDate takeDate, String trainUuid,
+			YesNo booked, YesNo activeFlag);
+	
 	List<TrainSeat> findByBookUuidIn(List<String> bookingList);
 }

@@ -54,7 +54,7 @@ public class TrainSeat extends BaseEntity {
 	private YesNo activeFlag; // 是否已失效
 
 	/**
-	 * create book
+	 * create seat
 	 * 
 	 * @param ticketUuid
 	 * @param trainUuid

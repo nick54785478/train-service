@@ -1,6 +1,9 @@
 package com.example.demo.domain.service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,12 @@ public class TicketService extends BaseDomainService {
 	private TrainRepository trainRepository;
 	private TicketRepository ticketRepository;
 
+	/**
+	 * 新增車票資料
+	 * 
+	 * @param command
+	 * @return TicketCreatedData
+	 */
 	public TicketCreatedData create(CreateTicketCommand command) {
 		Train train = trainRepository.findByNumber(command.getTrainNo());
 
@@ -37,6 +46,29 @@ public class TicketService extends BaseDomainService {
 		Ticket savedEntity = ticketRepository.save(ticket); // 將ticket資料存入資料庫
 
 		return new TicketCreatedData(savedEntity.getTicketNo());
+	}
+
+	/**
+	 * 批次新增車票資料
+	 * 
+	 * @param command
+	 * @return TicketCreatedData
+	 */
+	public TicketCreatedData create(Integer trainNo, List<CreateTicketCommand> commands) {
+		Train train = trainRepository.findByNumber(trainNo);
+
+		// 領域檢核 檢查車次是否存在(車次存在才可以新增)
+		if (Objects.isNull(train)) {
+			throw new ValidationException("VALIDATE_FAILED", "該車次不存在");
+		}
+		List<Ticket> ticketList = commands.stream().map(command -> {
+			Ticket ticket = new Ticket();
+			ticket.create(command, train);
+			return ticket;
+		}).collect(Collectors.toList());
+		ticketRepository.saveAll(ticketList); // 將ticket資料存入資料庫
+
+		return new TicketCreatedData(train.getUuid());
 
 	}
 

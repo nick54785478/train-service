@@ -15,8 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateTrainCommand {
 
-	private Integer seq;
-
 	private Integer trainNo; // 火車代號
 
 	private String trainKind;

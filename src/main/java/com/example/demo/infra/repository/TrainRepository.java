@@ -12,7 +12,6 @@ import com.example.demo.domain.train.aggregate.Train;
 @Repository
 public interface TrainRepository extends JpaRepository<Train, String> {
 
-
 	Train findByNumber(Integer number);
 
 	List<Train> findByNumberIn(List<Integer> numberList);

@@ -37,7 +37,7 @@ public class BaseDataTransformer {
 			@Override
 			public String convert(MappingContext<LocalDate, String> context) {
 				return context.getSource() == null ? null
-						: context.getSource().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+						: context.getSource().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 			}
 		});
 
@@ -45,7 +45,7 @@ public class BaseDataTransformer {
 		modelMapper.addConverter(new Converter<String, LocalDate>() {
 			@Override
 			public LocalDate convert(MappingContext<String, LocalDate> context) {
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 				return context.getSource() == null ? null : LocalDate.parse(context.getSource(), formatter);
 			}
 		});

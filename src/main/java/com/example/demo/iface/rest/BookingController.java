@@ -20,10 +20,10 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/booking")
-@Tag(name = "Booking API", description = "進行票券預訂領域相關動作")
+@Tag(name = "Booking API", description = "進行車票預訂領域相關動作")
 public class BookingController {
 
-	BookQueryService bookQueryService;
+	private BookQueryService bookQueryService;
 
 	/**
 	 * 查詢該使用者的訂票資訊

@@ -72,8 +72,7 @@ public class TrainService extends BaseDomainService {
 	@Transactional // 確保在整個方法執行期間 Session 是打開的，保持懶加載(否則會報錯)
 	public List<TrainDetailQueriedData> filterTrainData(QueryTrainCommand command) {
 		List<TrainDetailQueriedData> resList = new ArrayList<>();
-		List<Train> trainList = trainRepository.findByCondition(command.getTrainNo(), command.getTime(),
-				command.getFromStop(), command.getToStop());
+		List<Train> trainList = trainRepository.findByCondition(command.getTrainNo(), command.getTime(),				command.getFromStop(), command.getToStop());
 
 		// 透過起迄站取得 Ticket 資料
 		List<Ticket> ticketList = ticketRepository.findByFromStopAndToStop(command.getFromStop(), command.getToStop());
