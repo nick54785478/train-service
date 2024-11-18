@@ -31,7 +31,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
-@Validated
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/ticket")
@@ -49,7 +48,7 @@ public class TicketController {
 	@PostMapping("")
 	@Operation(summary = "API - 建立車票資料", description = "建立車票資料。")
 	public ResponseEntity<TicketCreatedResource> createTicket(
-			@Parameter(description = "車票資訊") @Valid @RequestBody CreateTicketResource resource) {
+			@Parameter(description = "車票資訊") @RequestBody CreateTicketResource resource) {
 		CreateTicketCommand command = BaseDataTransformer.transformData(resource, CreateTicketCommand.class);
 		return new ResponseEntity<>(BaseDataTransformer.transformData(ticketCommandService.createTicket(command),
 				TicketCreatedResource.class), HttpStatus.OK);
@@ -65,7 +64,7 @@ public class TicketController {
 	@Operation(summary = "API - 針對某車次批次建立車票資料", description = "針對某車次批次建立車票資料。")
 	public ResponseEntity<TicketCreatedResource> createTicket(
 			@Parameter(description = "車次") @PathVariable Integer trainNo,
-			@Parameter(description = "車票資訊") @Valid @RequestBody List<CreateTicketResource> resources) {
+			@Parameter(description = "車票資訊") @RequestBody List<CreateTicketResource> resources) {
 
 		// 將 train No 設置進該resource
 		resources.stream().forEach(e -> e.setTrainNo(trainNo));
