@@ -21,7 +21,7 @@ public class AuthFeignConfiguration {
 	 * @return 請求攔截器
 	 */
 	@Bean
-	public RequestInterceptor requestCpqCommonTokenInterceptor() {
+	public RequestInterceptor requestTokenInterceptor() {
 
 		return new RequestInterceptor() {
 			@Override

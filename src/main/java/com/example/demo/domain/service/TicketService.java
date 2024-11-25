@@ -2,7 +2,6 @@ package com.example.demo.domain.service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -51,7 +50,8 @@ public class TicketService extends BaseDomainService {
 	/**
 	 * 批次新增車票資料
 	 * 
-	 * @param command
+	 * @param trainNo
+	 * @param commands
 	 * @return TicketCreatedData
 	 */
 	public TicketCreatedData create(Integer trainNo, List<CreateTicketCommand> commands) {
