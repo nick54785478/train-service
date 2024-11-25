@@ -41,9 +41,9 @@
 					"response": []
 				},
 				{
-					"name": "檢查ContextHolder",
+					"name": "ContextHolder 測試",
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"url": {
 							"raw": "http://localhost:8080/api/v1/test/checkContextHolder",
@@ -71,7 +71,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\":\"nick123@example.com\",\r\n    \"password\":\"password123\"\r\n}",
+					"raw": "// {\r\n//     \"username\":\"system\",\r\n//     \"password\":\"system123\"\r\n// }\r\n{\r\n    \"username\":\"nick123@example.com\",\r\n    \"password\":\"password123\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -79,15 +79,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8088/api/v1/login",
+					"raw": "http://localhost:8080/login",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8088",
+					"port": "8080",
 					"path": [
-						"api",
-						"v1",
 						"login"
 					]
 				}
@@ -97,11 +95,14 @@
 		{
 			"name": "新增火車車次",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "// {\r\n//     \"trainNo\": 224,\r\n//     \"trainKind\": \"吉祥號\",\r\n//     \"stops\": [\r\n//         {\r\n//             \"seq\": 1,\r\n//             \"stopName\": \"屏東\",\r\n//             \"stopTime\": \"17:04\"\r\n//         },\r\n//         {\r\n//             \"seq\": 2,\r\n//             \"stopName\": \"歸來\",\r\n//             \"stopTime\": \"17:08\"\r\n//         },\r\n//          {\r\n//             \"seq\": 3,\r\n//             \"stopName\": \"麟洛\",\r\n//             \"stopTime\": \"17:11\"\r\n//         },\r\n//         {\r\n//             \"seq\": 4,\r\n//             \"stopName\": \"西勢\",\r\n//             \"stopTime\": \"17:14\"\r\n//         },\r\n//         {\r\n//             \"seq\": 5,\r\n//             \"stopName\": \"竹田\",\r\n//             \"stopTime\": \"17:18\"\r\n//         },\r\n//         {\r\n//             \"seq\": 6,\r\n//             \"stopName\": \"潮州\",\r\n//             \"stopTime\": \"17:24\"\r\n//         }\r\n//     ]\r\n// }\r\n\r\n\r\n\r\n// {\r\n//     \"trainNo\": 223,\r\n//     \"trainKind\": \"吉祥號\",\r\n//     \"stops\": [\r\n//         {\r\n//             \"seq\": 1,\r\n//             \"stopName\": \"潮州\",\r\n//             \"stopTime\": \"14:40\"\r\n//         },\r\n//         {\r\n//             \"seq\": 2,\r\n//             \"stopName\": \"竹田\",\r\n//             \"stopTime\": \"14:46\"\r\n//         },\r\n//          {\r\n//             \"seq\": 3,\r\n//             \"stopName\": \"西勢\",\r\n//             \"stopTime\": \"14:50\"\r\n//         },\r\n//         {\r\n//             \"seq\": 4,\r\n//             \"stopName\": \"麟洛\",\r\n//             \"stopTime\": \"14:53\"\r\n//         },\r\n//         {\r\n//             \"seq\": 5,\r\n//             \"stopName\": \"歸來\",\r\n//             \"stopTime\": \"14:56\"\r\n//         },\r\n//         {\r\n//             \"seq\": 6,\r\n//             \"stopName\": \"屏東\",\r\n//             \"stopTime\": \"15:00\"\r\n//         }\r\n//     ]\r\n// }\r\n\r\n{\r\n    \"trainNo\": 1102,\r\n    \"trainKind\": \"如意號\",\r\n    \"stops\": [\r\n        {\r\n            \"seq\": 3,\r\n            \"stopName\": \"潮州\",\r\n            \"stopTime\": \"11:09\"\r\n        },\r\n        {\r\n            \"seq\": 2,\r\n            \"stopName\": \"西勢\",\r\n            \"stopTime\": \"11:01\"\r\n        },\r\n        {\r\n            \"seq\": 1,\r\n            \"stopName\": \"屏東\",\r\n            \"stopTime\": \"10:52\"\r\n        }\r\n    ]\r\n}",
+					"raw": "// {\r\n//     \"trainNo\": 224,\r\n//     \"trainKind\": \"吉祥號\",\r\n//     \"stops\": [\r\n//         {\r\n//             \"seq\": 1,\r\n//             \"stopName\": \"屏東\",\r\n//             \"stopTime\": \"06:12\"\r\n//         },\r\n//         {\r\n//             \"seq\": 2,\r\n//             \"stopName\": \"歸來\",\r\n//             \"stopTime\": \"06:16\"\r\n//         },\r\n//          {\r\n//             \"seq\": 3,\r\n//             \"stopName\": \"麟洛\",\r\n//             \"stopTime\": \"06:19\"\r\n//         },\r\n//         {\r\n//             \"seq\": 4,\r\n//             \"stopName\": \"西勢\",\r\n//             \"stopTime\": \"06:22\"\r\n//         },\r\n//         {\r\n//             \"seq\": 5,\r\n//             \"stopName\": \"竹田\",\r\n//             \"stopTime\": \"06:26\"\r\n//         },\r\n//         {\r\n//             \"seq\": 6,\r\n//             \"stopName\": \"潮州\",\r\n//             \"stopTime\": \"06:31\"\r\n//         }\r\n//     ]\r\n// }\r\n\r\n\r\n\r\n// {\r\n//     \"trainNo\": 223,\r\n//     \"trainKind\": \"吉祥號\",\r\n//     \"stops\": [\r\n//         {\r\n//             \"seq\": 1,\r\n//             \"stopName\": \"潮州\",\r\n//             \"stopTime\": \"14:40\"\r\n//         },\r\n//         {\r\n//             \"seq\": 2,\r\n//             \"stopName\": \"竹田\",\r\n//             \"stopTime\": \"14:46\"\r\n//         },\r\n//          {\r\n//             \"seq\": 3,\r\n//             \"stopName\": \"西勢\",\r\n//             \"stopTime\": \"14:50\"\r\n//         },\r\n//         {\r\n//             \"seq\": 4,\r\n//             \"stopName\": \"麟洛\",\r\n//             \"stopTime\": \"14:53\"\r\n//         },\r\n//         {\r\n//             \"seq\": 5,\r\n//             \"stopName\": \"歸來\",\r\n//             \"stopTime\": \"14:56\"\r\n//         },\r\n//         {\r\n//             \"seq\": 6,\r\n//             \"stopName\": \"屏東\",\r\n//             \"stopTime\": \"15:00\"\r\n//         }\r\n//     ]\r\n// }\r\n\r\n{\r\n    \"trainNo\": 1003,\r\n    \"trainKind\": \"如意號\",\r\n    \"stops\": [\r\n        {\r\n            \"seq\": 1,\r\n            \"stopName\": \"潮州\",\r\n            \"stopTime\": \"08:09\"\r\n        },\r\n        {\r\n            \"seq\": 2,\r\n            \"stopName\": \"西勢\",\r\n            \"stopTime\": \"08:17\"\r\n        },\r\n        {\r\n            \"seq\": 3,\r\n            \"stopName\": \"屏東\",\r\n            \"stopTime\": \"08:24\"\r\n        }\r\n        \r\n    ]\r\n}\r\n\r\n// {\r\n//     \"trainNo\": 1002,\r\n//     \"trainKind\": \"如意號\",\r\n//     \"stops\": [\r\n//         {\r\n//             \"seq\": 1,\r\n//             \"stopName\": \"屏東\",\r\n//             \"stopTime\": \"07:02\"\r\n//         },\r\n//         {\r\n//             \"seq\": 2,\r\n//             \"stopName\": \"潮州\",\r\n//             \"stopTime\": \"07:14\"\r\n//         }\r\n        \r\n//     ]\r\n// }\r\n\r\n// {\r\n//     \"trainNo\": 1102,\r\n//     \"trainKind\": \"如意號\",\r\n//     \"stops\": [\r\n//         {\r\n//             \"seq\": 3,\r\n//             \"stopName\": \"潮州\",\r\n//             \"stopTime\": \"11:09\"\r\n//         },\r\n//         {\r\n//             \"seq\": 2,\r\n//             \"stopName\": \"西勢\",\r\n//             \"stopTime\": \"11:01\"\r\n//         },\r\n//         {\r\n//             \"seq\": 1,\r\n//             \"stopName\": \"屏東\",\r\n//             \"stopTime\": \"10:52\"\r\n//         }\r\n//     ]\r\n// }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -125,13 +126,100 @@
 			"response": []
 		},
 		{
+			"name": "取得該火車車次的停靠站",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/train/220/stops",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"train",
+						"220",
+						"stops"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "新增車票資訊",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "// 奇數是北上；偶數是南下\r\n\r\n\r\n\r\n\r\n\r\n\r\n// {\r\n//     \"trainNo\":223,\r\n//     \"fromStop\":\"潮州\",\r\n//     \"toStop\":\"屏東\", \r\n//     \"price\":22\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":223,\r\n//     \"fromStop\":\"竹田\",\r\n//     \"toStop\":\"西勢\", \r\n//     \"price\":15\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":223,\r\n//     \"fromStop\":\"潮州\",\r\n//     \"toStop\":\"歸來\", \r\n//     \"price\":18\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":223,\r\n//     \"fromStop\":\"潮州\",\r\n//     \"toStop\":\"西勢\", \r\n//     \"price\":15\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":223,\r\n//     \"fromStop\":\"潮州\",\r\n//     \"toStop\":\"竹田\", \r\n//     \"price\":15\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":1101,\r\n//     \"fromStop\":\"潮州\",\r\n//     \"toStop\":\"屏東\", \r\n//     \"price\":22\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":1101,\r\n//     \"fromStop\":\"潮州\",\r\n//     \"toStop\":\"竹田\", \r\n//     \"price\":15\r\n// }\r\n\r\n\r\n// {\r\n//     \"trainNo\":224,\r\n//     \"fromStop\":\"屏東\",\r\n//     \"toStop\":\"潮州\", \r\n//     \"price\":22\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":224,\r\n//     \"fromStop\":\"屏東\",\r\n//     \"toStop\":\"竹田\", \r\n//     \"price\":16\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":224,\r\n//     \"fromStop\":\"屏東\",\r\n//     \"toStop\":\"麟洛\", \r\n//     \"price\":15\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":224,\r\n//     \"fromStop\":\"屏東\",\r\n//     \"toStop\":\"歸來\", \r\n//     \"price\":15\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":224,\r\n//     \"fromStop\":\"歸來\",\r\n//     \"toStop\":\"潮州\", \r\n//     \"price\":18\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":224,\r\n//     \"fromStop\":\"竹田\",\r\n//     \"toStop\":\"潮州\", \r\n//     \"price\":15\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":1102,\r\n//     \"fromStop\":\"西勢\",\r\n//     \"toStop\":\"潮州\", \r\n//     \"price\":15\r\n// }\r\n\r\n{\r\n    \"trainNo\":1002,\r\n    \"fromStop\":\"屏東\",\r\n    \"toStop\":\"潮州\", \r\n    \"price\":22\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/ticket",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"ticket"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "針對某車次批次建立車票資料",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "// 奇數是北上；偶數是南下\r\n[\r\n    {\r\n        \"fromStop\": \"屏東\",\r\n        \"toStop\": \"潮州\",\r\n        \"price\": 22\r\n    },\r\n    {\r\n        \"fromStop\": \"屏東\",\r\n        \"toStop\": \"竹田\",\r\n        \"price\": 16\r\n    },\r\n    {\r\n        \"fromStop\": \"屏東\",\r\n        \"toStop\": \"西勢\",\r\n        \"price\": 15\r\n    },\r\n    {\r\n        \"fromStop\": \"屏東\",\r\n        \"toStop\": \"麟洛\",\r\n        \"price\": 15\r\n    },\r\n    {\r\n        \"fromStop\": \"屏東\",\r\n        \"toStop\": \"歸來\",\r\n        \"price\": 15\r\n    },\r\n    {\r\n        \"fromStop\": \"歸來\",\r\n        \"toStop\": \"潮州\",\r\n        \"price\": 18\r\n    },\r\n    {\r\n        \"fromStop\": \"歸來\",\r\n        \"toStop\": \"竹田\",\r\n        \"price\": 15\r\n    },\r\n    {\r\n        \"fromStop\": \"歸來\",\r\n        \"toStop\": \"西勢\",\r\n        \"price\": 15\r\n    },\r\n    {\r\n        \"fromStop\": \"歸來\",\r\n        \"toStop\": \"麟洛\",\r\n        \"price\": 15\r\n    },\r\n    {\r\n        \"fromStop\": \"麟洛\",\r\n        \"toStop\": \"潮州\",\r\n        \"price\": 15\r\n    },\r\n    {\r\n        \"fromStop\": \"麟洛\",\r\n        \"toStop\": \"竹田\",\r\n        \"price\": 15\r\n    },\r\n    {\r\n        \"fromStop\": \"麟洛\",\r\n        \"toStop\": \"西勢\",\r\n        \"price\": 15\r\n    },\r\n    {\r\n        \"fromStop\": \"西勢\",\r\n        \"toStop\": \"潮州\",\r\n        \"price\": 15\r\n    },\r\n    {\r\n        \"fromStop\": \"西勢\",\r\n        \"toStop\": \"竹田\",\r\n        \"price\": 15\r\n    },\r\n    {\r\n        \"fromStop\": \"竹田\",\r\n        \"toStop\": \"潮州\",\r\n        \"price\": 15\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/ticket/220",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"ticket",
+						"220"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "註冊使用者儲值帳號",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Nick\",\r\n\t\"email\": \"nick123@example.com\", // 信箱\r\n\t\"username\":\"nick123@example.com\", // 帳號\r\n    \"password\":\"password123\", // 密碼\r\n\t\"address\":\"新北市淡水區\",\r\n    \"money\":200\t\r\n}",
+					"raw": "{\r\n    \"name\": \"Nick\",\r\n\t\"email\": \"nick123@example.com\", // 信箱\r\n\t\"username\":\"nick123@example.com\", // 帳號\r\n    \"password\":\"password123\", // 密碼\r\n\t\"address\":\"新北市淡水區\",\r\n    \"money\":200\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -162,7 +250,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"uuid\": \"55146d67-d830-47e9-b6cf-2c494a232b4d\",\r\n    \"money\":200\r\n}",
+					"raw": "{\r\n    \"uuid\": \"504327e3-6c12-4672-9c6f-1280a10f3736\",\r\n    \"money\":200\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -189,21 +277,11 @@
 		{
 			"name": "預定 車票資料",
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W10sImVtYWlsIjoibmljazEyM0BleGFtcGxlLmNvbSIsImlzcyI6IlNZU1RFTSIsInN1YiI6Im5pY2sxMjNAZXhhbXBsZS5jb20iLCJpYXQiOjE3MjY4Mjc4NDcsImV4cCI6MTcyNjgzMTQ0N30.tO0Zlbmi-IOxGTaIkAlz-qGT7Ucfey5z4PuxhY4oxqg",
-							"type": "string"
-						}
-					]
-				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"trainUuid\": \"b302f86f-1c40-4e16-900f-d630e082400b\",\r\n    \"ticketUuid\": \"19eeb272-dca1-4cba-a653-2c193fbb0c23\",\r\n    \"trainNo\": 1102,\r\n    \"price\": 15.00,\r\n    \"seatNo\":\"1A\",\r\n    \"takeDate\":\"2024/09/28\",\r\n    \"payByAccount\":\"Y\"\r\n}",
+					"raw": "{\r\n    \"trainUuid\": \"b302f86f-1c40-4e16-900f-d630e082400b\",\r\n    \"ticketUuid\": \"50c02b75-41eb-4bb0-9673-5d7de17f4cad\",\r\n    \"trainNo\": 1101,\r\n    \"price\": 22,\r\n    \"seatNo\":\"9C\",\r\n    \"takeDate\":\"2024-12-31\",\r\n    \"payByAccount\":\"Y\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -211,7 +289,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/ticket/booking",
+					"raw": "http://localhost:8080/api/v1/booking",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -220,7 +298,6 @@
 					"path": [
 						"api",
 						"v1",
-						"ticket",
 						"booking"
 					]
 				}
@@ -234,7 +311,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"uuid\": \"69d79f50-b011-4bea-85a2-a3e4c1db179a\",\r\n    \"seatNo\":\"1A\",\r\n    \"takeDate\":\"2024/09/28\"\r\n}",
+					"raw": "{\r\n    \"uuid\": \"b9960f2b-7890-439e-935f-e30dcb6c6d04\",\r\n    \"seatNo\":\"2A\",\r\n    \"takeDate\":\"2024-12-31\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -242,7 +319,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/ticket/checkIn",
+					"raw": "http://localhost:8080/api/v1/booking/checkIn",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -251,7 +328,7 @@
 					"path": [
 						"api",
 						"v1",
-						"ticket",
+						"booking",
 						"checkIn"
 					]
 				}
@@ -265,7 +342,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"uuid\": \"3b4bbb0e-8b10-446e-bdd8-d5110a787fd4\",\r\n    \"seatNo\":\"1A\",\r\n    \"takeDate\":\"2024/09/28\"\r\n}",
+					"raw": "{\r\n    \"uuid\": \"b9960f2b-7890-439e-935f-e30dcb6c6d04\",\r\n    \"seatNo\":\"2A\",\r\n    \"takeDate\":\"2024-12-31\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -273,7 +350,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/ticket/refund",
+					"raw": "http://localhost:8080/api/v1/booking/refund",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -282,7 +359,7 @@
 					"path": [
 						"api",
 						"v1",
-						"ticket",
+						"booking",
 						"refund"
 					]
 				}
@@ -290,21 +367,12 @@
 			"response": []
 		},
 		{
-			"name": "新增車票資訊",
+			"name": "查詢該使用者的訂票資訊",
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "// 奇數是北上；偶數是南下\r\n\r\n// {\r\n//     \"trainNo\":223,\r\n//     \"fromStop\":\"潮州\",\r\n//     \"toStop\":\"屏東\", \r\n//     \"price\":22\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":223,\r\n//     \"fromStop\":\"竹田\",\r\n//     \"toStop\":\"西勢\", \r\n//     \"price\":15\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":223,\r\n//     \"fromStop\":\"潮州\",\r\n//     \"toStop\":\"歸來\", \r\n//     \"price\":18\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":223,\r\n//     \"fromStop\":\"潮州\",\r\n//     \"toStop\":\"西勢\", \r\n//     \"price\":15\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":223,\r\n//     \"fromStop\":\"潮州\",\r\n//     \"toStop\":\"竹田\", \r\n//     \"price\":15\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":1101,\r\n//     \"fromStop\":\"潮州\",\r\n//     \"toStop\":\"屏東\", \r\n//     \"price\":22\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":1101,\r\n//     \"fromStop\":\"潮州\",\r\n//     \"toStop\":\"竹田\", \r\n//     \"price\":15\r\n// }\r\n\r\n\r\n// {\r\n//     \"trainNo\":224,\r\n//     \"fromStop\":\"屏東\",\r\n//     \"toStop\":\"潮州\", \r\n//     \"price\":22\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":224,\r\n//     \"fromStop\":\"屏東\",\r\n//     \"toStop\":\"竹田\", \r\n//     \"price\":16\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":224,\r\n//     \"fromStop\":\"屏東\",\r\n//     \"toStop\":\"麟洛\", \r\n//     \"price\":15\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":224,\r\n//     \"fromStop\":\"屏東\",\r\n//     \"toStop\":\"歸來\", \r\n//     \"price\":15\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":224,\r\n//     \"fromStop\":\"歸來\",\r\n//     \"toStop\":\"潮州\", \r\n//     \"price\":18\r\n// }\r\n\r\n// {\r\n//     \"trainNo\":224,\r\n//     \"fromStop\":\"竹田\",\r\n//     \"toStop\":\"潮州\", \r\n//     \"price\":15\r\n// }\r\n\r\n{\r\n    \"trainNo\":1102,\r\n    \"fromStop\":\"西勢\",\r\n    \"toStop\":\"潮州\", \r\n    \"price\":15\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/ticket",
+					"raw": "http://localhost:8080/api/v1/booking/nick123@example.com",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -313,29 +381,20 @@
 					"path": [
 						"api",
 						"v1",
-						"ticket"
+						"booking",
+						"nick123@example.com"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "取得該火車車次的停靠站",
+			"name": "查詢該乘車時段的該車次已被預訂的座位",
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/train/223/stops",
+					"raw": "http://localhost:8080/api/v1/seats?trainUuid=b302f86f-1c40-4e16-900f-d630e082400b&takeDate=2024-12-31",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -344,9 +403,44 @@
 					"path": [
 						"api",
 						"v1",
-						"train",
-						"223",
-						"stops"
+						"seats"
+					],
+					"query": [
+						{
+							"key": "trainUuid",
+							"value": "b302f86f-1c40-4e16-900f-d630e082400b"
+						},
+						{
+							"key": "takeDate",
+							"value": "2024-12-31"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "透過使用者帳號查詢儲值帳號資訊",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/account?username=nick123@example.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"account"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "nick123@example.com"
+						}
 					]
 				}
 			},
@@ -365,7 +459,7 @@
 					"formdata": [
 						{
 							"key": "trainNo",
-							"value": "",
+							"value": "224",
 							"type": "text"
 						},
 						{
@@ -380,7 +474,7 @@
 						},
 						{
 							"key": "takeDate",
-							"value": "",
+							"value": "2024-12-31",
 							"type": "text"
 						},
 						{
@@ -412,7 +506,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W10sImVtYWlsIjoibmljazEyM0BleGFtcGxlLmNvbSIsImlzcyI6IlNZU1RFTSIsInN1YiI6Im5pY2sxMjNAZXhhbXBsZS5jb20iLCJpYXQiOjE3MjY4NjExOTQsImV4cCI6MTcyNjg2NDc5NH0.tzW-2rOCQg9RLHCtd_9yTD_u5ru9kG3oMD-RK4X4tfY",
+				"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W10sImVtYWlsIjoibmljazEyM0BleGFtcGxlLmNvbSIsImlzcyI6IlNZU1RFTSIsInN1YiI6Im5pY2sxMjNAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzI0OTc2NTcsImV4cCI6MTczMjUwMTI1N30.SLodC7kot76j-zsaCmd8-dERCW_qXu074sRHkobLu7k",
 				"type": "string"
 			}
 		]
