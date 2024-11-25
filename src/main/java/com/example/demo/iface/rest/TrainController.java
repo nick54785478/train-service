@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,10 +25,12 @@ import com.example.demo.util.BaseDataTransformer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 
-@Validated
+@Valid
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/train")
@@ -62,11 +63,11 @@ public class TrainController {
 	 * @param trainNo
 	 * @return 該火車車次的停靠站資訊
 	 */
-	@Validated
+	@Valid
 	@GetMapping("/{trainNo}/stops")
 	@Operation(summary = "API - 取得該火車車次的資訊", description = "取得該火車車次的資訊。")
 	public ResponseEntity<TrainQueriedResource> query(
-			@Parameter(description = "火車車次") @Validated @PathVariable @Min(value = 1, message = "車次必須為正整數") Integer trainNo) {
+			@Parameter(description = "火車車次") @Valid @PathVariable @Min(value = 1, message = "車次必須為正整數") Integer trainNo) {
 		return new ResponseEntity<>(BaseDataTransformer.transformData(trainQueryService.queryTrainData(trainNo),
 				TrainQueriedResource.class), HttpStatus.OK);
 	}
@@ -81,13 +82,14 @@ public class TrainController {
 	 * @param time     出發時間
 	 * @return 該火車車次的停靠站資訊
 	 */
+	@Valid
 	@GetMapping("")
 	@Operation(summary = "API - 查詢符合條件的火車資訊", description = "查詢符合條件的火車資訊。")
 	public ResponseEntity<List<TrainDetailQueriedResource>> getTrainListBetweenStopSection(
 			@Parameter(description = "火車車次") @RequestParam(required = false) Integer trainNo,
 			@Parameter(description = "起站") @RequestParam String fromStop,
 			@Parameter(description = "迄站") @RequestParam String toStop,
-			@Parameter(description = "搭乘日期 (yyyy-mm-dd)") @RequestParam String takeDate,
+			@Parameter(description = "搭乘日期 (yyyy-mm-dd)") @Valid  @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}") @RequestParam String takeDate,
 			@Parameter(description = "搭乘時間 (hh:mm)") @RequestParam String time) {
 		QueryTrainCommand command = new QueryTrainCommand(trainNo, fromStop, toStop, takeDate, time);
 		return new ResponseEntity<>(BaseDataTransformer.transformData(

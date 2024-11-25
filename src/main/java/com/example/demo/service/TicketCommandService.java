@@ -98,7 +98,7 @@ public class TicketCommandService extends BaseApplicationService {
 		}
 
 		// 查詢 儲值帳號 資訊
-		MoneyAccount account = moneyAccountRepository.findByEmail(ContextHolder.getUserEmail());
+		MoneyAccount account = moneyAccountRepository.findByUsername(ContextHolder.getUsername());
 		TicketBookedData resource = ticketBookingService.book(command, account);
 
 		if (StringUtils.equals("Y", command.getPayByAccount())) {

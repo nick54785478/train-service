@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.base.config.context.ContextHolder;
 import com.example.demo.base.event.BaseEvent;
+import com.example.demo.base.exception.ValidationException;
 import com.example.demo.base.service.BaseDomainService;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
@@ -59,6 +60,11 @@ public class MoneyAccountService extends BaseDomainService {
 	 */
 	public MoneyAccountQueriedData queryAccount(String username) {
 		MoneyAccount account = moneyAccountRepository.findByUsername(username);
+		
+		if (account == null) {
+			throw new ValidationException("VALIDATION_EXCEPTION", "查無此使用者資料");
+		}
+		
 		return this.transformEntityToData(account, MoneyAccountQueriedData.class);
 	}
 }
