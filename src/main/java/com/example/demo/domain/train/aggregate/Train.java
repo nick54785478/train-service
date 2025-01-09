@@ -72,9 +72,9 @@ public class Train extends BaseEntity {
 	}
 
 	/**
-	 * Command Handler
+	 * Command Handler 用途: 新增車次
 	 * 
-	 * 用途: 新增車次
+	 * @param command
 	 */
 	public void create(CreateTrainCommand command) {
 		this.u = UUID.randomUUID().toString();

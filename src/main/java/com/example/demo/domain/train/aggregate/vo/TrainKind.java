@@ -33,6 +33,9 @@ public enum TrainKind {
 		return labelToTypeMap.get(label);
 	}
 	
+	public static Map<String, TrainKind> getMap() {
+		return labelToTypeMap;
+	}
 	
 	public static Boolean checkTrainKind(String label) {
 		TrainKind kind = TrainKind.fromLabel(label);
