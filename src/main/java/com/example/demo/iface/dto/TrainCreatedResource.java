@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrainCreatedResource {
-
-	private String uuid;
-
+	
+	private String code;
+	
+	private String message;
+	
 }

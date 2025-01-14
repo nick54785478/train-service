@@ -52,9 +52,8 @@ public class TrainController {
 			@Parameter(description = "火車車次資訊") @RequestBody CreateTrainResource resource) {
 		// DTO 轉換
 		CreateTrainCommand command = BaseDataTransformer.transformData(resource, CreateTrainCommand.class);
-		return new ResponseEntity<TrainCreatedResource>(
-				BaseDataTransformer.transformData(trainCommandService.createTrain(command), TrainCreatedResource.class),
-				HttpStatus.OK);
+		trainCommandService.createTrain(command);
+		return new ResponseEntity<TrainCreatedResource>(new TrainCreatedResource("201", "新增車次成功"), HttpStatus.OK);
 	}
 
 	/**

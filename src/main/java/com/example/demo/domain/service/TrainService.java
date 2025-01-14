@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.example.demo.base.exception.ValidationException;
 import com.example.demo.base.service.BaseDomainService;
 import com.example.demo.domain.share.StopQueriedData;
-import com.example.demo.domain.share.TrainCreatedData;
 import com.example.demo.domain.share.TrainDetailQueriedData;
 import com.example.demo.domain.share.TrainQueriedData;
 import com.example.demo.domain.ticket.aggregate.Ticket;
@@ -46,12 +45,11 @@ public class TrainService extends BaseDomainService {
 	 * @param command
 	 * @return uuid
 	 */
-	public TrainCreatedData create(CreateTrainCommand command) {
+	public void create(CreateTrainCommand command) {
 		this.checkBeforeCreate(command);
 		Train train = new Train();
 		train.create(command);
-		Train savedEntity = trainRepository.save(train);
-		return new TrainCreatedData(savedEntity.getUuid());
+		trainRepository.save(train);
 	}
 
 	/**
