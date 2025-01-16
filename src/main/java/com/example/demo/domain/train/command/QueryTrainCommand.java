@@ -14,6 +14,8 @@ import lombok.Setter;
 public class QueryTrainCommand {
 
 	private Integer trainNo; // 未必會使用單一車次
+	
+	private String trainKind;
 
 	private String fromStop;
 

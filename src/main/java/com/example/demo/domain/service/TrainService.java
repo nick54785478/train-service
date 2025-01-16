@@ -3,11 +3,10 @@ package com.example.demo.domain.service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.base.exception.ValidationException;
@@ -15,7 +14,6 @@ import com.example.demo.base.service.BaseDomainService;
 import com.example.demo.domain.share.StopQueriedData;
 import com.example.demo.domain.share.TrainDetailQueriedData;
 import com.example.demo.domain.share.TrainQueriedData;
-import com.example.demo.domain.ticket.aggregate.Ticket;
 import com.example.demo.domain.train.aggregate.Train;
 import com.example.demo.domain.train.aggregate.entity.TrainStop;
 import com.example.demo.domain.train.aggregate.vo.TrainKind;
@@ -70,38 +68,26 @@ public class TrainService extends BaseDomainService {
 	@Transactional // 確保在整個方法執行期間 Session 是打開的，保持懶加載(否則會報錯)
 	public List<TrainDetailQueriedData> filterTrainData(QueryTrainCommand command) {
 		List<TrainDetailQueriedData> resList = new ArrayList<>();
-		List<Train> trainList = trainRepository.findByCondition(command.getTrainNo(), command.getTime(),				command.getFromStop(), command.getToStop());
-
-		// 透過起迄站取得 Ticket 資料
-		List<Ticket> ticketList = ticketRepository.findByFromStopAndToStop(command.getFromStop(), command.getToStop());
-		Map<String, Ticket> ticketMap = ticketList.stream()
-				.collect(Collectors.toMap(Ticket::getTrainUuid, Function.identity()));
+		List<Train> trainList = trainRepository.findByCondition(command.getTrainNo(),
+				StringUtils.isNotBlank(command.getTrainKind()) ? TrainKind.fromLabel(command.getTrainKind()).toString()
+						: null,
+				command.getTime(), command.getFromStop(), command.getToStop());
 
 		trainList.stream().forEach(e -> {
 			TrainDetailQueriedData trainData = new TrainDetailQueriedData();
 			trainData.setUuid(e.getUuid());
 			trainData.setTrainNo(e.getNumber());
-			trainData.setFromStop(command.getFromStop());
-			trainData.setToStop(command.getToStop());
-			trainData.setKind(e.getKind().getLabel());
 
-			if (!Objects.isNull(ticketMap.get(e.getUuid()))) {
-				var ticket = ticketMap.get(e.getUuid());
-				trainData.setPrice(ticket.getPrice());
-				trainData.setTicketUuid(ticket.getTicketNo());
-			}
-
-			// 將停靠站清單轉為 Map <站名, Entity>
-			Map<String, TrainStop> stopMap = e.getStops().stream()
-					.collect(Collectors.toMap(TrainStop::getName, Function.identity()));
-			// 起站時間
-			if (!Objects.isNull(stopMap.get(trainData.getFromStop()))) {
-				trainData.setFromStopTime(stopMap.get(trainData.getFromStop()).getTime());
-			}
-			// 迄站時間
-			if (!Objects.isNull(stopMap.get(trainData.getToStop()))) {
-				trainData.setToStopTime(stopMap.get(trainData.getToStop()).getTime());
-			}
+			// 取得起點站與終點站
+			TrainStop[] station = getFirstAndTerminatedStation(e.getStops());
+			this.setStopData(station, trainData);
+//			TrainStop firstStop = station[0]; // 起點站
+//			TrainStop terminatedStop = station[1]; // 終點站
+//			trainData.setFromStop(firstStop.getName());
+//			trainData.setToStop(terminatedStop.getName());
+//			trainData.setKind(e.getKind().getLabel());
+//			trainData.setFromStopTime(station[0].getTime()); // 起站時間
+//			trainData.setToStopTime(station[1].getTime());// 迄站時間
 
 			List<StopQueriedData> stopResource = this.transformEntityToData(e.getStops(), StopQueriedData.class);
 
@@ -112,6 +98,23 @@ public class TrainService extends BaseDomainService {
 		});
 
 		return resList;
+	}
+
+	/**
+	 * 設置 Stop 資料
+	 * 
+	 * @param stationData 起始站與終點站資料
+	 * @param trainData   火車查詢資料
+	 */
+	private void setStopData(TrainStop[] stationData, TrainDetailQueriedData trainData) {
+		TrainStop firstStop = stationData[0]; // 起點站
+		TrainStop terminatedStop = stationData[1]; // 終點站
+		trainData.setFromStop(firstStop.getName());
+		trainData.setToStop(terminatedStop.getName());
+		trainData.setKind(trainData.getKind());
+		trainData.setFromStopTime(stationData[0].getTime()); // 起站時間
+		trainData.setToStopTime(stationData[1].getTime());// 迄站時間
+
 	}
 
 	/**
@@ -171,4 +174,24 @@ public class TrainService extends BaseDomainService {
 		return true;
 	}
 
+	/**
+	 * 找出起始站與終點站
+	 * 
+	 * @param trainStops 車站列表
+	 * @return TrainStop[]
+	 */
+	private TrainStop[] getFirstAndTerminatedStation(List<TrainStop> trainStops) {
+		TrainStop[] result = trainStops.stream().collect(() -> new TrainStop[] { null, null }, (res, stop) -> {
+			if (res[0] == null || stop.getSeq() < res[0].getSeq())
+				res[0] = stop; // 最小
+			if (res[1] == null || stop.getSeq() > res[1].getSeq())
+				res[1] = stop; // 最大
+		}, (res1, res2) -> {
+			if (res1[0] == null || (res2[0] != null && res2[0].getSeq() < res1[0].getSeq()))
+				res1[0] = res2[0];
+			if (res1[1] == null || (res2[1] != null && res2[1].getSeq() > res1[1].getSeq()))
+				res1[1] = res2[1];
+		});
+		return result;
+	}
 }

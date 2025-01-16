@@ -37,7 +37,7 @@ public class OptionController {
 				BaseDataTransformer.transformData(optionQueryService.getTrainKinds(), OptionQueriedResource.class),
 				HttpStatus.OK);
 	}
-	
+
 	/**
 	 * 查詢相關的設定 (下拉式選單)
 	 * 
@@ -48,5 +48,17 @@ public class OptionController {
 	public ResponseEntity<List<OptionQueriedResource>> query(@RequestParam String type) {
 		return new ResponseEntity<>(BaseDataTransformer.transformData(optionQueryService.getSettingTypes(type),
 				OptionQueriedResource.class), HttpStatus.OK);
+	}
+
+	/**
+	 * 查詢車次的下拉式選單資料
+	 * 
+	 * @return ResponseEntity<List<OptionQueriedResource>>
+	 */
+	@GetMapping("/trainNoList")
+	public ResponseEntity<List<OptionQueriedResource>> getTrainNoList() {
+		return new ResponseEntity<>(
+				BaseDataTransformer.transformData(optionQueryService.getTrainNoList(), OptionQueriedResource.class),
+				HttpStatus.OK);
 	}
 }
