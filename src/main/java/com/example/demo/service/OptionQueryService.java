@@ -33,5 +33,12 @@ public class OptionQueryService {
 	public List<OptionQueried> getTrainKinds() {
 		return optionService.getTrainKinds();
 	}
+	
+	/**
+	 * 取得火車車次資料 (下拉式選單)
+	 */
+	public List<OptionQueried> getTrainNoList() {
+		return optionService.getTrainNoList();
+	}
 
 }
