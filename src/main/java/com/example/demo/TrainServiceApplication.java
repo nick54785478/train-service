@@ -10,10 +10,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableJpaAuditing
 @SpringBootApplication
-public class TrainDemoApplication {
+public class TrainServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TrainDemoApplication.class, args);
+		SpringApplication.run(TrainServiceApplication.class, args);
 	}
 
 }
