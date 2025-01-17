@@ -32,5 +32,5 @@ public class TrainDetailQueriedData {
 
 	private BigDecimal price; // 票價
 
-	private List<StopQueriedData> stops = new ArrayList<>(); // 停靠站
+	private List<StopDetailQueriedData> stops = new ArrayList<>(); // 停靠站
 }

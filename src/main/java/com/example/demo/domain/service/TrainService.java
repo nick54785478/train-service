@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.base.exception.ValidationException;
 import com.example.demo.base.service.BaseDomainService;
+import com.example.demo.domain.share.StopDetailQueriedData;
 import com.example.demo.domain.share.StopQueriedData;
 import com.example.demo.domain.share.TrainDetailQueriedData;
 import com.example.demo.domain.share.TrainQueriedData;
@@ -77,22 +78,18 @@ public class TrainService extends BaseDomainService {
 			TrainDetailQueriedData trainData = new TrainDetailQueriedData();
 			trainData.setUuid(e.getUuid());
 			trainData.setTrainNo(e.getNumber());
+			trainData.setKind(e.getKind().getLabel());
+
 
 			// 取得起點站與終點站
 			TrainStop[] station = getFirstAndTerminatedStation(e.getStops());
 			this.setStopData(station, trainData);
-//			TrainStop firstStop = station[0]; // 起點站
-//			TrainStop terminatedStop = station[1]; // 終點站
-//			trainData.setFromStop(firstStop.getName());
-//			trainData.setToStop(terminatedStop.getName());
-//			trainData.setKind(e.getKind().getLabel());
-//			trainData.setFromStopTime(station[0].getTime()); // 起站時間
-//			trainData.setToStopTime(station[1].getTime());// 迄站時間
 
-			List<StopQueriedData> stopResource = this.transformEntityToData(e.getStops(), StopQueriedData.class);
+
+			List<StopDetailQueriedData> stopResource = this.transformEntityToData(e.getStops(), StopDetailQueriedData.class);
 
 			// 依 SEQ 升序排序
-			stopResource.sort(Comparator.comparingInt(StopQueriedData::getSeq));
+			stopResource.sort(Comparator.comparingInt(StopDetailQueriedData::getSeq));
 			trainData.setStops(stopResource);
 			resList.add(trainData);
 		});
@@ -111,7 +108,6 @@ public class TrainService extends BaseDomainService {
 		TrainStop terminatedStop = stationData[1]; // 終點站
 		trainData.setFromStop(firstStop.getName());
 		trainData.setToStop(terminatedStop.getName());
-		trainData.setKind(trainData.getKind());
 		trainData.setFromStopTime(stationData[0].getTime()); // 起站時間
 		trainData.setToStopTime(stationData[1].getTime());// 迄站時間
 
