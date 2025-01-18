@@ -11,16 +11,14 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.base.exception.ValidationException;
 import com.example.demo.base.service.BaseDomainService;
-import com.example.demo.domain.share.StopDetailQueriedData;
-import com.example.demo.domain.share.StopQueriedData;
-import com.example.demo.domain.share.TrainDetailQueriedData;
+import com.example.demo.domain.share.StopSummaryQueriedData;
 import com.example.demo.domain.share.TrainQueriedData;
+import com.example.demo.domain.share.TrainSummaryQueriedData;
 import com.example.demo.domain.train.aggregate.Train;
 import com.example.demo.domain.train.aggregate.entity.TrainStop;
 import com.example.demo.domain.train.aggregate.vo.TrainKind;
 import com.example.demo.domain.train.command.CreateTrainCommand;
 import com.example.demo.domain.train.command.QueryTrainCommand;
-import com.example.demo.infra.repository.TicketRepository;
 import com.example.demo.infra.repository.TrainRepository;
 
 import jakarta.transaction.Transactional;
@@ -36,7 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 public class TrainService extends BaseDomainService {
 
 	private TrainRepository trainRepository;
-	private TicketRepository ticketRepository;
 
 	/**
 	 * 新增火車資料
@@ -66,30 +63,35 @@ public class TrainService extends BaseDomainService {
 		return this.transformEntityToData(train, TrainQueriedData.class);
 	}
 
+	/**
+	 * 透過條件過濾並查詢火車資訊
+	 * 
+	 * @param command
+	 * @return 火車資訊
+	 */
 	@Transactional // 確保在整個方法執行期間 Session 是打開的，保持懶加載(否則會報錯)
-	public List<TrainDetailQueriedData> filterTrainData(QueryTrainCommand command) {
-		List<TrainDetailQueriedData> resList = new ArrayList<>();
+	public List<TrainSummaryQueriedData> filterTrainData(QueryTrainCommand command) {
+		List<TrainSummaryQueriedData> resList = new ArrayList<>();
 		List<Train> trainList = trainRepository.findByCondition(command.getTrainNo(),
 				StringUtils.isNotBlank(command.getTrainKind()) ? TrainKind.fromLabel(command.getTrainKind()).toString()
 						: null,
 				command.getTime(), command.getFromStop(), command.getToStop());
 
 		trainList.stream().forEach(e -> {
-			TrainDetailQueriedData trainData = new TrainDetailQueriedData();
+			TrainSummaryQueriedData trainData = new TrainSummaryQueriedData();
 			trainData.setUuid(e.getUuid());
 			trainData.setTrainNo(e.getNumber());
 			trainData.setKind(e.getKind().getLabel());
-
 
 			// 取得起點站與終點站
 			TrainStop[] station = getFirstAndTerminatedStation(e.getStops());
 			this.setStopData(station, trainData);
 
-
-			List<StopDetailQueriedData> stopResource = this.transformEntityToData(e.getStops(), StopDetailQueriedData.class);
+			List<StopSummaryQueriedData> stopResource = this.transformEntityToData(e.getStops(),
+					StopSummaryQueriedData.class);
 
 			// 依 SEQ 升序排序
-			stopResource.sort(Comparator.comparingInt(StopDetailQueriedData::getSeq));
+			stopResource.sort(Comparator.comparingInt(StopSummaryQueriedData::getSeq));
 			trainData.setStops(stopResource);
 			resList.add(trainData);
 		});
@@ -103,7 +105,7 @@ public class TrainService extends BaseDomainService {
 	 * @param stationData 起始站與終點站資料
 	 * @param trainData   火車查詢資料
 	 */
-	private void setStopData(TrainStop[] stationData, TrainDetailQueriedData trainData) {
+	private void setStopData(TrainStop[] stationData, TrainSummaryQueriedData trainData) {
 		TrainStop firstStop = stationData[0]; // 起點站
 		TrainStop terminatedStop = stationData[1]; // 終點站
 		trainData.setFromStop(firstStop.getName());

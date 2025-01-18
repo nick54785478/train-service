@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.base.service.BaseApplicationService;
 import com.example.demo.domain.service.TrainService;
-import com.example.demo.domain.share.TrainDetailQueriedData;
 import com.example.demo.domain.share.TrainQueriedData;
+import com.example.demo.domain.share.TrainSummaryQueriedData;
 import com.example.demo.domain.train.command.QueryTrainCommand;
 
 import lombok.AllArgsConstructor;
@@ -31,10 +31,10 @@ public class TrainQueryService extends BaseApplicationService {
 	/**
 	 * 透過條件查詢該火車資訊
 	 * 
-	 * @param trainNo
+	 * @param command
 	 * @return 火車資訊
 	 */
-	public List<TrainDetailQueriedData> queryTrainDataByCondition(QueryTrainCommand command) {
+	public List<TrainSummaryQueriedData> queryTrainDataByCondition(QueryTrainCommand command) {
 		return trainService.filterTrainData(command);
 	}
 }

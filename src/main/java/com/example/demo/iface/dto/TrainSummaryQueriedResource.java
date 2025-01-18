@@ -1,4 +1,4 @@
-package com.example.demo.domain.share;
+package com.example.demo.iface.dto;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainDetailQueriedData {
+public class TrainSummaryQueriedResource {
 
 	private String uuid; // 火車 UUID
 
@@ -29,5 +29,5 @@ public class TrainDetailQueriedData {
 
 	private String kind; // 火車種類
 
-	private List<StopDetailQueriedData> stops = new ArrayList<>(); // 停靠站
+	private List<StopSummaryQueriedResource> stops = new ArrayList<>(); // 停靠站
 }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainDetailQueriedData {
+public class TrainSummaryQueriedData {
 
 	private String uuid; // 火車 UUID
 
@@ -29,5 +29,5 @@ public class TrainDetailQueriedData {
 
 	private String kind; // 火車種類
 
-	private List<StopDetailQueriedData> stops = new ArrayList<>(); // 停靠站
+	private List<StopSummaryQueriedData> stops = new ArrayList<>(); // 停靠站
 }
