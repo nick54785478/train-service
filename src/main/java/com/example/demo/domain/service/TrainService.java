@@ -3,7 +3,9 @@ package com.example.demo.domain.service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,13 +14,16 @@ import org.springframework.stereotype.Service;
 import com.example.demo.base.exception.ValidationException;
 import com.example.demo.base.service.BaseDomainService;
 import com.example.demo.domain.share.StopSummaryQueriedData;
+import com.example.demo.domain.share.TrainDetailQueriedData;
 import com.example.demo.domain.share.TrainQueriedData;
 import com.example.demo.domain.share.TrainSummaryQueriedData;
+import com.example.demo.domain.ticket.aggregate.Ticket;
 import com.example.demo.domain.train.aggregate.Train;
 import com.example.demo.domain.train.aggregate.entity.TrainStop;
 import com.example.demo.domain.train.aggregate.vo.TrainKind;
 import com.example.demo.domain.train.command.CreateTrainCommand;
 import com.example.demo.domain.train.command.QueryTrainCommand;
+import com.example.demo.infra.repository.TicketRepository;
 import com.example.demo.infra.repository.TrainRepository;
 
 import jakarta.transaction.Transactional;
@@ -34,6 +39,8 @@ import lombok.extern.slf4j.Slf4j;
 public class TrainService extends BaseDomainService {
 
 	private TrainRepository trainRepository;
+
+	private TicketRepository ticketRepository;
 
 	/**
 	 * 新增火車資料
@@ -64,19 +71,81 @@ public class TrainService extends BaseDomainService {
 	}
 
 	/**
+	 * 透過條件過濾並查詢火車資訊(供訂票查詢用)
+	 * 
+	 * @param command
+	 * @return List<TrainDetailQueriedData>
+	 */
+	@Transactional
+	public List<TrainDetailQueriedData> queryTrainInfo(QueryTrainCommand command) {
+		List<TrainDetailQueriedData> resList = new ArrayList<>();
+		List<Train> trainList = trainRepository.findByCondition(command.getTrainNo(),
+				StringUtils.isNotBlank(command.getTrainKind()) ? TrainKind.fromLabel(command.getTrainKind()).toString()
+						: null,
+				command.getTime(), command.getFromStop(), command.getToStop());
+
+		// 建立 Train uuid 清單
+		List<String> trainNoList = trainList.stream().map(Train::getUuid).collect(Collectors.toList());
+
+		// 查詢車票資料，並整理為 Map<車次uuid-起站-迄站, Ticket>
+		List<Ticket> ticketList = ticketRepository.findByTrainUuidIn(trainNoList);
+		Map<String, Ticket> ticketMap = ticketList.stream()
+				.collect(Collectors.toMap(
+						ticket -> ticket.getTrainUuid() + "-" + ticket.getFromStop() + "-" + ticket.getToStop(),
+						Function.identity()));
+
+		// 透過 flatMap 與 Collectors.toMap 取得 Map<trainUuid+stopName, TrainStop>
+		Map<String, TrainStop> stopMap = trainList.stream().flatMap(
+				train -> train.getStops().stream().map(stop -> Map.entry(train.getUuid() + "-" + stop.getName(), stop)))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+		// 遍歷火車資料進行資料更新
+		trainList.stream().forEach(e -> {
+			TrainDetailQueriedData trainData = new TrainDetailQueriedData();
+			trainData.setUuid(e.getUuid());
+			trainData.setTrainNo(e.getNumber());
+			trainData.setKind(e.getKind().getLabel());
+			trainData.setTakeDate(command.getTakeDate());
+
+			// 從 stopMap 中取出對應的起訖站資料
+			// 取得起站資料
+			String fromStopkey = e.getUuid() + "-" + command.getFromStop();
+			if (!Objects.isNull(stopMap.get(fromStopkey))) {
+				var fromStop = stopMap.get(fromStopkey);
+				trainData.setFromStop(fromStop.getName());
+				trainData.setFromStopTime(fromStop.getTime());
+			}
+			// 取得迄站資料
+			String toStopkey = e.getUuid() + "-" + command.getToStop();
+			if (!Objects.isNull(stopMap.get(toStopkey))) {
+				var toStop = stopMap.get(toStopkey);
+				trainData.setToStop(toStop.getName());
+				trainData.setToStopTime(toStop.getTime());
+			}
+			// 從 ticketMap 中取出對應的 Ticket 資料
+			String ticketkey = e.getUuid() + "-" + command.getFromStop() + "-" + command.getToStop();
+			if (!Objects.isNull(ticketMap.get(ticketkey))) {
+				var ticket = ticketMap.get(ticketkey);
+				trainData.setPrice(ticket.getPrice());
+			}
+			resList.add(trainData);
+		});
+		return resList;
+	}
+
+	/**
 	 * 透過條件過濾並查詢火車資訊
 	 * 
 	 * @param command
 	 * @return 火車資訊
 	 */
 	@Transactional // 確保在整個方法執行期間 Session 是打開的，保持懶加載(否則會報錯)
-	public List<TrainSummaryQueriedData> filterTrainData(QueryTrainCommand command) {
+	public List<TrainSummaryQueriedData> queryTrainSummary(QueryTrainCommand command) {
 		List<TrainSummaryQueriedData> resList = new ArrayList<>();
 		List<Train> trainList = trainRepository.findByCondition(command.getTrainNo(),
 				StringUtils.isNotBlank(command.getTrainKind()) ? TrainKind.fromLabel(command.getTrainKind()).toString()
 						: null,
 				command.getTime(), command.getFromStop(), command.getToStop());
-
 		trainList.stream().forEach(e -> {
 			TrainSummaryQueriedData trainData = new TrainSummaryQueriedData();
 			trainData.setUuid(e.getUuid());
@@ -95,7 +164,6 @@ public class TrainService extends BaseDomainService {
 			trainData.setStops(stopResource);
 			resList.add(trainData);
 		});
-
 		return resList;
 	}
 

@@ -18,6 +18,7 @@ import com.example.demo.iface.dto.CreateTrainResource;
 import com.example.demo.iface.dto.TrainCreatedResource;
 import com.example.demo.iface.dto.TrainDetailQueriedResource;
 import com.example.demo.iface.dto.TrainQueriedResource;
+import com.example.demo.iface.dto.TrainSummaryQueriedResource;
 import com.example.demo.service.TrainCommandService;
 import com.example.demo.service.TrainQueryService;
 import com.example.demo.util.BaseDataTransformer;
@@ -72,6 +73,31 @@ public class TrainController {
 	}
 
 	/**
+	 * 查詢符合條件的火車資訊(訂票查詢)
+	 * 
+	 * @param trainNo   車次
+	 * @param trainKind 車種
+	 * @param fromStop  起站
+	 * @param toStop    迄站
+	 * @param takeDate  出發日期
+	 * @param time      出發時間
+	 * @return 該火車車次的停靠站資訊
+	 */
+	@GetMapping("")
+	@Operation(summary = "API - 查詢符合條件的火車資訊(訂票查詢)", description = "查詢符合條件的火車資訊(訂票查詢)。")
+	public ResponseEntity<List<TrainDetailQueriedResource>> getTrainInfo(
+			@Parameter(description = "車次") @RequestParam(required = false) Integer trainNo,
+			@Parameter(description = "車種") @RequestParam(required = false) String trainKind,
+			@Parameter(description = "起站") @RequestParam String fromStop,
+			@Parameter(description = "迄站") @RequestParam String toStop,
+			@Parameter(description = "搭乘日期 (yyyy-mm-dd)") @Valid @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}") String takeDate,
+			@Parameter(description = "搭乘時間 (hh:mm)") @RequestParam String time) {
+		QueryTrainCommand command = new QueryTrainCommand(trainNo, trainKind, fromStop, toStop, takeDate, time);
+		return new ResponseEntity<>(BaseDataTransformer.transformData(trainQueryService.queryTrainInfo(command),
+				TrainDetailQueriedResource.class), HttpStatus.OK);
+	}
+
+	/**
 	 * 查詢符合條件的火車資訊
 	 * 
 	 * @param trainNo   車次
@@ -83,9 +109,9 @@ public class TrainController {
 	 * @return 該火車車次的停靠站資訊
 	 */
 	@Valid
-	@GetMapping("")
+	@GetMapping("/summary")
 	@Operation(summary = "API - 查詢符合條件的火車資訊", description = "查詢符合條件的火車資訊。")
-	public ResponseEntity<List<TrainDetailQueriedResource>> getTrainListBetweenStopSection(
+	public ResponseEntity<List<TrainSummaryQueriedResource>> queryTrainSummary(
 			@Parameter(description = "車次") @RequestParam(required = false) Integer trainNo,
 			@Parameter(description = "車種") @RequestParam(required = false) String trainKind,
 			@Parameter(description = "起站") @RequestParam String fromStop,
@@ -93,8 +119,8 @@ public class TrainController {
 			@Parameter(description = "搭乘日期 (yyyy-mm-dd)") @Valid @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}") String takeDate,
 			@Parameter(description = "搭乘時間 (hh:mm)") @RequestParam String time) {
 		QueryTrainCommand command = new QueryTrainCommand(trainNo, trainKind, fromStop, toStop, takeDate, time);
-		return new ResponseEntity<>(BaseDataTransformer.transformData(
-				trainQueryService.queryTrainDataByCondition(command), TrainDetailQueriedResource.class), HttpStatus.OK);
+		return new ResponseEntity<>(BaseDataTransformer.transformData(trainQueryService.queryTrainSummary(command),
+				TrainSummaryQueriedResource.class), HttpStatus.OK);
 	}
 
 }
