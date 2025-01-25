@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.base.command.BaseIdempotentCommand;
 import com.example.demo.base.enums.YesNo;
 import com.example.demo.base.event.BaseEvent;
 import com.example.demo.base.service.BaseDomainService;
@@ -111,9 +112,9 @@ public class SeatService extends BaseDomainService {
 			// 隨機取得座位號
 			String seatNo = SequenceGenerator.generateSeatNumber();
 			// 使用冪等機制
-			BaseEvent baseEvent = BaseEvent.builder().eventLogUuid(UUID.randomUUID().toString()).targetId(seatNo)
-					.build();
-			if (eventIdempotentLogService.handleIdempotency(baseEvent)) {
+			BaseIdempotentCommand command = BaseIdempotentCommand.builder().eventLogUuid(UUID.randomUUID().toString())
+					.targetId(seatNo).build();
+			if (eventIdempotentLogService.handleIdempotency(command)) {
 				// 直接從第一列列車去取
 				trainSeatGottenData.setCarNo(1L);
 				trainSeatGottenData.setSeatNo(seatNo);
@@ -140,9 +141,9 @@ public class SeatService extends BaseDomainService {
 
 			unbooked.stream().findAny().ifPresent(seatNo -> {
 				// 使用冪等機制
-				BaseEvent baseEvent = BaseEvent.builder().eventLogUuid(UUID.randomUUID().toString()).targetId(seatNo)
-						.build();
-				if (eventIdempotentLogService.handleIdempotency(baseEvent)) {
+				BaseIdempotentCommand command = BaseIdempotentCommand.builder()
+						.eventLogUuid(UUID.randomUUID().toString()).targetId(seatNo).build();
+				if (eventIdempotentLogService.handleIdempotency(command)) {
 					trainSeatGottenData.setCarNo(key); // 根據目前被遍歷的車廂編號設置
 					trainSeatGottenData.setSeatNo(seatNo); // 設置隨機一筆 SeatNo
 					// 設置完移除該 SeatNo

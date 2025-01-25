@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.base.command.BaseIdempotentCommand;
 import com.example.demo.base.entity.EventIdempotentLog;
 import com.example.demo.base.event.BaseEvent;
 import com.example.demo.base.repository.EventIdempotentLogRepository;
@@ -35,6 +36,24 @@ public class EventIdempotentLogService {
 		// 若查無資料
 		if (logList.isEmpty()) {
 			repository.insert(event.getClass().getName(), event.getEventLogUuid(), event.getTargetId());
+			result = true;
+		}
+		return result;
+	}
+	
+	/**
+	 * 執行 非 Event 的冪等機制
+	 * 
+	 * @param command
+	 * @return boolean
+	 */
+	public boolean handleIdempotency(BaseIdempotentCommand command) {
+		boolean result = false;
+		List<EventIdempotentLog> logList = repository.findByEventTypeAndUniqueKey(command.getClass().getName(),
+				command.getEventLogUuid());
+		// 若查無資料
+		if (logList.isEmpty()) {
+			repository.insert(command.getClass().getName(), command.getEventLogUuid(), command.getTargetId());
 			result = true;
 		}
 		return result;
