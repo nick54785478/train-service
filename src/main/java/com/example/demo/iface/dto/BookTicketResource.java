@@ -27,6 +27,9 @@ public class BookTicketResource {
 
 	@Schema(description = "座號")
 	private String seatNo; // 座號
+	
+	@Schema(description = "車廂編號")
+	private Long carNo;
 
 	@Schema(description = "乘車日期 (yyyy/mm/dd)")
 	private String takeDate; // 乘車日期

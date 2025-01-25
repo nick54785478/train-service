@@ -16,6 +16,8 @@ import lombok.experimental.SuperBuilder;
 public class TicketBookingEvent extends BaseEvent {
 	
 	private String action; // 動作
+	
+	private Long carNo; // 車廂編號
 
 	private String seatNo; // 座號
 

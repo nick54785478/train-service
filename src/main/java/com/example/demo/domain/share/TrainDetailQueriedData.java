@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 public class TrainDetailQueriedData {
 
 	private String uuid; // 火車 UUID
+	
+	private String ticketUuid; // 車票的 uuid
 
 	private Integer trainNo; // 火車號次
 
@@ -30,5 +32,4 @@ public class TrainDetailQueriedData {
 
 	private BigDecimal price; // 售票價格
 
-//	private List<StopDetailQueriedData> stops = new ArrayList<>(); // 停靠站
 }

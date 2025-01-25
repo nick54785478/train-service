@@ -15,6 +15,8 @@ public class CheckInTicketCommand {
 	
 	private String seatNo; // 座號
 	
+	private Long carNo; // 車廂編號
+	
 	private LocalDate takeDate;	// 搭乘日期
 
 }

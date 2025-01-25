@@ -126,6 +126,7 @@ public class TrainService extends BaseDomainService {
 			String ticketkey = e.getUuid() + "-" + command.getFromStop() + "-" + command.getToStop();
 			if (!Objects.isNull(ticketMap.get(ticketkey))) {
 				var ticket = ticketMap.get(ticketkey);
+				trainData.setTicketUuid(ticket.getTicketNo());
 				trainData.setPrice(ticket.getPrice());
 			}
 			resList.add(trainData);

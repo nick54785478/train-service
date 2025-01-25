@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 public class TrainDetailQueriedResource {
 
 	private String uuid; // 火車 UUID
+	
+	private String ticketUuid; // 車票的 uuid
 
 	private Integer trainNo; // 火車號次
 

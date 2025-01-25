@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.share.SeatQueriedData;
+import com.example.demo.domain.share.UnbookedSeatGottenData;
 import com.example.demo.iface.dto.SeatQueriedResource;
+import com.example.demo.iface.dto.UnbookedSeatGottenResource;
 import com.example.demo.service.SeatQueryService;
 import com.example.demo.util.BaseDataTransformer;
 import com.example.demo.util.DateTransformUtil;
@@ -43,6 +45,24 @@ public class SeatController {
 		List<SeatQueriedData> seats = seatQueryService.queryBookedSeats(trainUuid,
 				DateTransformUtil.transformStringToLocalDate(takeDate));
 		return new ResponseEntity<>(BaseDataTransformer.transformData(seats, SeatQueriedResource.class), HttpStatus.OK);
+	}
+
+	/**
+	 * 取得座位資料
+	 * 
+	 * @param trainUuid
+	 * @param takeDate
+	 * @return 車位資料
+	 */
+	@GetMapping("/unbooked")
+	@Operation(summary = "API - 取得未被預訂的座位資料", description = "取得未被預訂的座位資料。")
+	public ResponseEntity<UnbookedSeatGottenResource> getUnbookedTrainSeat(
+			@Parameter(description = "火車代號 uuid") @RequestParam String trainUuid,
+			@Parameter(description = "乘車日期 (yyyy-mm-dd)") @RequestParam String takeDate) {
+		UnbookedSeatGottenData unbookedSeat = seatQueryService.getUnbookedSeat(trainUuid,
+				DateTransformUtil.transformStringToLocalDate(takeDate));
+		return new ResponseEntity<>(BaseDataTransformer.transformData(unbookedSeat, UnbookedSeatGottenResource.class),
+				HttpStatus.OK);
 	}
 
 }

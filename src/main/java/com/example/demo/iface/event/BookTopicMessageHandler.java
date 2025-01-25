@@ -78,8 +78,9 @@ public class BookTopicMessageHandler extends BaseEventHandler {
 
 				// Refund
 			} else if (StringUtils.equals(event.getAction(), TicketAction.REFUNDED.getName())) {
-				TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndTakeDateAndSeatNo(event.getTargetId(),
-						DateTransformUtil.transformStringToLocalDate(event.getTakeDate()), event.getSeatNo());
+				TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndTakeDateAndSeatNoAndCarNo(
+						event.getTargetId(), DateTransformUtil.transformStringToLocalDate(event.getTakeDate()),
+						event.getSeatNo(), event.getCarNo());
 				trainSeat.refund();
 				trainSeatRepository.save(trainSeat);
 
@@ -98,8 +99,8 @@ public class BookTopicMessageHandler extends BaseEventHandler {
 					BigDecimal balance = moneyAccount.getBalance().add(ticket.getPrice());
 
 					// 建立 Event
-					AccountTxEvent txEvent = AccountTxEvent.builder().money(balance).eventLogUuid(UUID.randomUUID().toString())
-							.targetId(booking.getAccountUuid()).build();
+					AccountTxEvent txEvent = AccountTxEvent.builder().money(balance)
+							.eventLogUuid(UUID.randomUUID().toString()).targetId(booking.getAccountUuid()).build();
 
 					// 建立 EventLog
 					this.generateEventLog(txQueueName, txEvent);
@@ -124,7 +125,7 @@ public class BookTopicMessageHandler extends BaseEventHandler {
 	private void book(TicketBooking booking, TicketBookingEvent event) {
 		TrainSeat trainSeat = new TrainSeat();
 		trainSeat.create(booking.getTicketUuid(), booking.getTrainUuid(), booking.getUuid(),
-				DateTransformUtil.transformStringToLocalDate(event.getTakeDate()), event.getSeatNo());
+				DateTransformUtil.transformStringToLocalDate(event.getTakeDate()), event.getSeatNo(), event.getCarNo());
 		trainSeatRepository.save(trainSeat);
 	}
 
@@ -135,8 +136,8 @@ public class BookTopicMessageHandler extends BaseEventHandler {
 	 * @param event   Event 資料
 	 */
 	private void checkIn(TicketBookingEvent event) {
-		TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndTakeDateAndSeatNo(event.getTargetId(),
-				DateTransformUtil.transformStringToLocalDate(event.getTakeDate()), event.getSeatNo());
+		TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndTakeDateAndSeatNoAndCarNo(event.getTargetId(),
+				DateTransformUtil.transformStringToLocalDate(event.getTakeDate()), event.getSeatNo(), event.getCarNo());
 		trainSeat.checkIn();
 		trainSeatRepository.save(trainSeat);
 

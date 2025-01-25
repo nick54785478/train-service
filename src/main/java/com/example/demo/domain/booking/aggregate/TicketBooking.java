@@ -77,7 +77,7 @@ public class TicketBooking extends BaseEntity {
 		// 建立一個 Event
 		TicketBookingEvent event = TicketBookingEvent.builder().eventLogUuid(UUID.randomUUID().toString())
 				.targetId(this.uuid).takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
-				.action(TicketAction.BOOK.getName()).seatNo(command.getSeatNo()).build();
+				.action(TicketAction.BOOK.getName()).seatNo(command.getSeatNo()).carNo(command.getCarNo()).build();
 		// 設置進 Context 上下文
 		ContextHolder.setBaseEvent(event);
 	}
@@ -94,7 +94,7 @@ public class TicketBooking extends BaseEntity {
 		// 建立一個 Event
 		TicketBookingEvent event = TicketBookingEvent.builder().eventLogUuid(UUID.randomUUID().toString())
 				.targetId(this.uuid).takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
-				.action(TicketAction.CHECK_IN.getName()).seatNo(command.getSeatNo()).build();
+				.action(TicketAction.CHECK_IN.getName()).seatNo(command.getSeatNo()).carNo(command.getCarNo()).build();
 		// 設置進 Context 上下文
 		ContextHolder.setBaseEvent(event);
 	}
@@ -111,7 +111,7 @@ public class TicketBooking extends BaseEntity {
 		// 建立一個 Event
 		TicketBookingEvent event = TicketBookingEvent.builder().eventLogUuid(UUID.randomUUID().toString())
 				.targetId(this.uuid).takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
-				.action(TicketAction.REFUNDED.getName()).seatNo(command.getSeatNo()).build();
+				.action(TicketAction.REFUNDED.getName()).seatNo(command.getSeatNo()).carNo(command.getCarNo()).build();
 		// 設置進 Context 上下文
 		ContextHolder.setBaseEvent(event);
 

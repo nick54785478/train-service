@@ -39,4 +39,5 @@ public class EventIdempotentLogService {
 		}
 		return result;
 	}
+	
 }

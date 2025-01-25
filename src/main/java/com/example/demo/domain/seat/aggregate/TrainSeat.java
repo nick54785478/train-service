@@ -45,6 +45,9 @@ public class TrainSeat extends BaseEntity {
 	@Column(name = "SEAT_NO")
 	private String seatNo; // 座號
 
+	@Column(name = "CAR_NO")
+	private Long carNo; // 車廂編號
+
 	@Column(name = "BOOKED")
 	@Enumerated(EnumType.STRING)
 	private YesNo booked; // 是否已預定
@@ -61,12 +64,14 @@ public class TrainSeat extends BaseEntity {
 	 * @param bookUuid
 	 * @param takeDate
 	 * @param seatNo
+	 * @param carNo
 	 */
-	public void create(String ticketUuid, String trainUuid, String bookUuid, LocalDate takeDate, String seatNo) {
+	public void create(String ticketUuid, String trainUuid, String bookUuid, LocalDate takeDate, String seatNo, Long carNo) {
 		this.ticketUuid = ticketUuid;
 		this.trainUuid = trainUuid;
 		this.bookUuid = bookUuid;
 		this.takeDate = takeDate;
+		this.carNo = carNo;
 		this.seatNo = seatNo;
 		this.booked = YesNo.Y;
 		this.activeFlag = YesNo.Y;

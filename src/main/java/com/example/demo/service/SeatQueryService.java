@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.base.service.BaseApplicationService;
 import com.example.demo.domain.service.SeatService;
 import com.example.demo.domain.share.SeatQueriedData;
+import com.example.demo.domain.share.UnbookedSeatGottenData;
 
 import lombok.AllArgsConstructor;
 
@@ -26,5 +27,16 @@ public class SeatQueryService extends BaseApplicationService {
 	 */
 	public List<SeatQueriedData> queryBookedSeats(String trainUuid, LocalDate takeDate) {
 		return seatService.queryBookedSeats(trainUuid, takeDate);
+	}
+
+	/**
+	 * 取得座位代號及車廂編號
+	 * 
+	 * @param trainUuid
+	 * @param takeDate
+	 * @return TrainSeatGottenData
+	 */
+	public UnbookedSeatGottenData getUnbookedSeat(String trainUuid, LocalDate takeDate) {
+		return seatService.getUnbookedSeat(trainUuid, takeDate);
 	}
 }

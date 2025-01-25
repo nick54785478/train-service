@@ -19,6 +19,8 @@ public class BookTicketCommand {
 	private Integer trainNo; // 火車號次
 	
 	private BigDecimal price; // 價格
+	
+	private Long carNo;	// 車廂編號
 
 	private String seatNo; // 座號
 

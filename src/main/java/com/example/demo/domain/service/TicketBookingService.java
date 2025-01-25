@@ -60,6 +60,7 @@ public class TicketBookingService extends BaseDomainService {
 	 * Book 車票
 	 * 
 	 * @param command
+	 * @return 成功訊息
 	 */
 	public TicketBookedData book(BookTicketCommand command, MoneyAccount account) {
 		TicketBooking ticketBooking = new TicketBooking();
