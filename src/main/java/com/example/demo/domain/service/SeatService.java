@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.base.command.BaseIdempotentCommand;
 import com.example.demo.base.enums.YesNo;
-import com.example.demo.base.event.BaseEvent;
 import com.example.demo.base.service.BaseDomainService;
 import com.example.demo.base.service.EventIdempotentLogService;
 import com.example.demo.domain.seat.aggregate.TrainSeat;

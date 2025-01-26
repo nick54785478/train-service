@@ -42,8 +42,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	 * 公開的路徑列表，不需要進行 JWT 驗證的路徑。
 	 */
 	private static final String[] PUBLIC_PATHS = { "/health", "/favicon.ico", "**/api-docs/**", "**/swagger-ui**",
-			"/api/v1/ticket", "/swagger*", "/swagger-ui/*", "/api/v1/train**", "/api/v1/train/**", "/api/v1/seats", 
-			"/api/v1/options/**", "/api/v1/account/**", "/actuator/**", "/v3/api-docs/**", "/login", "/api/v1/settings/**" };
+			"/api/v1/ticket", "/swagger*", "/swagger-ui/*", "/api/v1/train**", "/api/v1/train/**", "/api/v1/seats/**",
+			"/api/v1/options/**", "/api/v1/account/**", "/actuator/**", "/v3/api-docs/**", "/login",
+			"/api/v1/settings/**" };
 
 	/**
 	 * 過濾器的核心方法，用於處理 Request 中的授權資訊。
