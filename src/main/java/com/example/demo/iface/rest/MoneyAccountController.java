@@ -48,7 +48,7 @@ public class MoneyAccountController {
 		CreateMoneyAccountCommand command = BaseDataTransformer.transformData(resource,
 				CreateMoneyAccountCommand.class);
 
-		return new ResponseEntity<MoneyAccountRegisteredResource>(BaseDataTransformer.transformData(
+		return new ResponseEntity<>(BaseDataTransformer.transformData(
 				moneyAccountCommandService.register(command), MoneyAccountRegisteredResource.class), HttpStatus.OK);
 	}
 

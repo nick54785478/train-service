@@ -56,7 +56,7 @@ public class MoneyAccount extends BaseEntity {
 		this.balance = this.balance.add(command.getMoney()); // 加上去
 
 		// 建立 Event
-		BaseEvent event = RegisterUserEvent.builder().targetId(this.uuid).eventLogUuid(UUID.randomUUID().toString())
+		BaseEvent event = RegisterUserEvent.builder().name(this.name).targetId(this.uuid).eventLogUuid(UUID.randomUUID().toString())
 				.username(this.username).email(this.email).build();
 		ContextHolder.setBaseEvent(event);
 	}
