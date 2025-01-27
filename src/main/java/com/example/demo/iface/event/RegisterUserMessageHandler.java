@@ -6,7 +6,6 @@ import java.util.Objects;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.base.service.BaseEventHandler;
@@ -17,14 +16,15 @@ import com.example.demo.iface.dto.UserInfoResource;
 import com.example.demo.iface.dto.UserRegisteredResource;
 import com.rabbitmq.client.Channel;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@AllArgsConstructor
 @RabbitListener(queues = "${rabbitmq.register-topic-queue.name}")
 public class RegisterUserMessageHandler extends BaseEventHandler {
 
-	@Autowired
 	private AuthFeignClient authFeignClient;
 
 	@RabbitHandler
@@ -54,8 +54,6 @@ public class RegisterUserMessageHandler extends BaseEventHandler {
 
 		// 更改狀態為: 已消費
 		this.consumeEvent(event.getEventLogUuid());
-		
-		
 
 	}
 

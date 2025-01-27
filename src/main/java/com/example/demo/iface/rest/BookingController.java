@@ -49,7 +49,7 @@ public class BookingController {
 			@Parameter(description = "使用者帳號")
 			@PathVariable String username) {
 		BookingQueriedData bookQueriedData = bookQueryService.queryBooking(username);
-		return new ResponseEntity<BookingQueriedResource>(
+		return new ResponseEntity<>(
 				BaseDataTransformer.transformData(bookQueriedData, BookingQueriedResource.class), HttpStatus.OK);
 	}
 	

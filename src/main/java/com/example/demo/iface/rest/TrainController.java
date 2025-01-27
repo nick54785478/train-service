@@ -38,8 +38,8 @@ import lombok.AllArgsConstructor;
 @Tag(name = "Train API", description = "進行與火車領域相關動作")
 public class TrainController {
 
-	TrainQueryService trainQueryService;
-	TrainCommandService trainCommandService;
+	private TrainQueryService trainQueryService;
+	private TrainCommandService trainCommandService;
 
 	/**
 	 * 新增火車車次

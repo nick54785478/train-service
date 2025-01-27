@@ -23,8 +23,8 @@ import lombok.extern.slf4j.Slf4j;
  * 用於攔截所有的 HTTP Request，從 Header 中提取授權資訊，將其轉換為 JWT（JSON Web Token）後， 存儲到
  * ContextHolder 內以供後續使用。
  */
-@Component
 @Slf4j
+	@Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
 	@Autowired
@@ -43,7 +43,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	 */
 	private static final String[] PUBLIC_PATHS = { "/health", "/favicon.ico", "**/api-docs/**", "**/swagger-ui**",
 			"/api/v1/ticket", "/swagger*", "/swagger-ui/*", "/api/v1/train**", "/api/v1/train/**", "/api/v1/seats/**",
-			"/api/v1/options/**", "/api/v1/account/**", "/actuator/**", "/v3/api-docs/**", "/login",
+			"/api/v1/options/**", "/api/v1/account/**", "/actuator/**", "/v3/api-docs/**", "/api/v1/login",
 			"/api/v1/settings/**" };
 
 	/**
@@ -92,6 +92,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			}
 
 		} else {
+			log.error("No JWT Token");
 			// 如果沒有獲取到授權資訊，返回 401 錯誤碼
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No JWT Token");
 		}

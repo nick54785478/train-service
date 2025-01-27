@@ -1,9 +1,14 @@
 package com.example.demo.domain.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -60,42 +65,72 @@ public class SeatService extends BaseDomainService {
 		UnbookedSeatGottenData trainSeatGottenData = new UnbookedSeatGottenData();
 		trainSeatGottenData.setTrainUuid(trainUuid);
 
-		List<ConfigurableSetting> setting = settingRepository.findByDataTypeAndActiveFlag("SEAT_NO_LIST", YesNo.Y);
-		List<String> seatNoList = setting.stream().findFirst().stream().map(ConfigurableSetting::getDescription)
+		Map<Long, List<String>> availableSeatsMap = new HashMap<>();
+
+		// 取得全座位清單設定
+		List<ConfigurableSetting> seatNoSetting = settingRepository.findByDataTypeAndActiveFlag("SEAT_NO_LIST",
+				YesNo.Y);
+		// 解析座位清單設定 (假設座位清單是逗號分隔的字串，如 "A1,A2,A3,...")
+		List<String> seatNoList = seatNoSetting.stream().flatMap(s -> Arrays.stream(s.getDescription().split(",")))
 				.collect(Collectors.toList());
 
+		// 取得全車廂編號清單設定
+		List<ConfigurableSetting> carNoSettings = settingRepository.findByDataTypeAndActiveFlag("CAR_NO_LIST", YesNo.Y);
+		// 車廂編號清單
+		List<Long> carNoList = carNoSettings.stream()
+				.flatMap(setting -> Arrays.stream(setting.getDescription().split(","))) // 將設定值拆分為單一編號
+				.map(String::trim) // 移除可能存在的空格
+				.map(Long::valueOf) // 將字串轉換為 Long
+				.collect(Collectors.toList());
+
+		// 查詢內容目前被預訂清單
 		List<TrainSeat> trainSeats = trainSeatRepository.findByTrainUuidAndTakeDateAndActiveFlag(trainUuid, takeDate,
 				YesNo.Y);
 
-		// 若沒有任何預定資料
+		// 如果 trainSeats 為空，直接生成所有座位未被預訂的 Map
 		if (trainSeats.isEmpty()) {
-			this.getSeatNoAndCarNoRecursively(trainSeatGottenData);
-			return trainSeatGottenData;
+			availableSeatsMap = carNoList.stream().collect(Collectors.toMap(carNo -> carNo, // 車廂編號為 key
+					carNo -> new ArrayList<>(seatNoList) // 所有座位都未被預訂
+			));
+		} else {
+			// 將已預訂座位轉為 Map<Long, Set<String>> (車廂編號 -> 已預訂座位)
+			Map<Long, Set<String>> bookedSeatsMap = trainSeats.stream()
+					.collect(Collectors.groupingBy(TrainSeat::getCarNo, // 依車廂編號分組
+							Collectors.mapping(TrainSeat::getSeatNo, Collectors.toSet()) // 收集每個車廂的已預訂座位
+					));
+
+			// 建立未被預訂的清單 Map<Integer, List<String>>
+			availableSeatsMap = carNoList.stream().collect(Collectors.toMap(carNo -> carNo, // 車廂編號為 key
+					carNo -> {
+						// 該車廂的已預訂座位
+						Set<String> bookedSeats = bookedSeatsMap.getOrDefault(carNo, Collections.emptySet());
+						// 過濾出未被預訂的座位
+						return seatNoList.stream().filter(seat -> !bookedSeats.contains(seat)) // 排除已被預訂的座位
+								.collect(Collectors.toList());
+					}));
 		}
 
-		// 將 TrainSeat 依車廂編號分組，並提取各車廂有被預定的 seatNo
-		Map<Long, List<String>> group = trainSeats.stream().collect(Collectors.groupingBy(TrainSeat::getCarNo,
-				// 提取 seatNo 並收集為 List
-				Collectors.mapping(TrainSeat::getSeatNo, Collectors.toList())));
-
-		for (Map.Entry<Long, List<String>> entry : group.entrySet()) {
+		for (Map.Entry<Long, List<String>> entry : availableSeatsMap.entrySet()) {
+			// 車廂編號
 			Long key = entry.getKey();
-			List<String> bookedSeatList = entry.getValue();
-			// 兩個數量相等，代表位置已訂滿
-			if (bookedSeatList.size() == seatNoList.size()) {
-				continue;
+			// 該車廂尚未被預訂座位清單
+			List<String> unbooked = entry.getValue();
+
+			// 透過 while 迴圈嘗試取 SeatNo 及 CarNo 直到取得
+			while (Objects.isNull(trainSeatGottenData.getCarNo())
+					&& StringUtils.isBlank(trainSeatGottenData.getSeatNo())) {
+				// 取得 SeatNo
+				this.getSeatNoAndCarNo(trainSeatGottenData, unbooked, key);
+				// 若 unbooked 清單為空，跳出 while 迴圈，代表以該車廂已無未預定的座位
+				if (unbooked.isEmpty()) {
+					break;
+				}
 			}
 
-			// 過濾出該車廂未被預訂的 SeatNo
-			List<String> unbooked = seatNoList.stream().filter(item -> !bookedSeatList.contains(item))
-					.collect(Collectors.toList());
-			// 遞迴取得 SeatNo
-			this.getSeatNoAndCarNoRecursively(trainSeatGottenData, unbooked, key);
-
-			// 所有位置都被取完了且尚未取得座位編號 SeatNo 及 車廂編號 CarNo，跳過重取
-			if (unbooked.isEmpty() && Objects.isNull(trainSeatGottenData.getCarNo())
-					&& StringUtils.isBlank(trainSeatGottenData.getSeatNo())) {
-				continue;
+			// CarNo 及 SeatNo 已取得，跳出迴圈
+			if (!Objects.isNull(trainSeatGottenData.getCarNo())
+					&& StringUtils.isNotBlank(trainSeatGottenData.getSeatNo())) {
+				break;
 			}
 		}
 		return trainSeatGottenData;
@@ -105,21 +140,19 @@ public class SeatService extends BaseDomainService {
 	 * 遞迴取得 SeatNo(座位編號) 及 CarNo(車廂編號)，用於沒有任何被預訂的情況，避免在分布式環境中衝突取號
 	 * 
 	 * @param trainNoGottenData 回傳結果
+	 * @param trainSeat         座位清單
 	 */
-	private void getSeatNoAndCarNoRecursively(UnbookedSeatGottenData trainSeatGottenData) {
-		if (Objects.isNull(trainSeatGottenData.getCarNo()) && StringUtils.isBlank(trainSeatGottenData.getSeatNo())) {
-			// 隨機取得座位號
-			String seatNo = SequenceGenerator.generateSeatNumber();
-			// 使用冪等機制
-			BaseIdempotentCommand command = BaseIdempotentCommand.builder().eventLogUuid(UUID.randomUUID().toString())
-					.targetId(seatNo).build();
-			if (eventIdempotentLogService.handleIdempotency(command)) {
-				// 直接從第一列列車去取
-				trainSeatGottenData.setCarNo(1L);
-				trainSeatGottenData.setSeatNo(seatNo);
-			}
-		} else {
-			this.getSeatNoAndCarNoRecursively(trainSeatGottenData);
+	private void getSeatNoAndCarNo(UnbookedSeatGottenData trainSeatGottenData) {
+
+		// 隨機取得座位號
+		String seatNo = SequenceGenerator.generateSeatNumber();
+		// 使用冪等機制
+		BaseIdempotentCommand command = BaseIdempotentCommand.builder().eventLogUuid(UUID.randomUUID().toString())
+				.targetId(seatNo).build();
+		if (eventIdempotentLogService.handleIdempotency(command)) {
+			// 直接從第一列列車去取
+			trainSeatGottenData.setCarNo(1L);
+			trainSeatGottenData.setSeatNo(seatNo);
 		}
 	}
 
@@ -130,10 +163,12 @@ public class SeatService extends BaseDomainService {
 	 * @param unbooked          未被預訂的位置清單
 	 * @param key               車廂編號
 	 */
-	private void getSeatNoAndCarNoRecursively(UnbookedSeatGottenData trainSeatGottenData, List<String> unbooked,
-			Long key) {
+	private void getSeatNoAndCarNo(UnbookedSeatGottenData trainSeatGottenData, List<String> unbooked, Long key) {
+
+		// 若 CarNo 與 SeatNo 未取得，進入執行
 		if (Objects.isNull(trainSeatGottenData.getCarNo()) && StringUtils.isBlank(trainSeatGottenData.getSeatNo())) {
 
+			// 如果 Unbooked 清單為空跳出，代表以該車廂已無未預定的座位
 			if (unbooked.isEmpty()) {
 				return;
 			}
@@ -149,9 +184,6 @@ public class SeatService extends BaseDomainService {
 					unbooked.remove(seatNo);
 				}
 			});
-		} else {
-			// 沒取到再繼續執行
-			this.getSeatNoAndCarNoRecursively(trainSeatGottenData, unbooked, key);
 		}
 
 	}

@@ -17,11 +17,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @AllArgsConstructor
 @Tag(name = "Authority Login API", description = "進行會員登入")
-@RequestMapping("/login")
+@RequestMapping("/api/v1/login")
 public class AuthController {
 
 	private AuthCommandService authCommandService;
