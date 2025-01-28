@@ -34,7 +34,6 @@ public class BookTicketResource {
 	@Schema(description = "乘車日期 (yyyy/mm/dd)")
 	private String takeDate; // 乘車日期
 	
-	@Schema(description = "付款方式是否透過 帳號扣款")
-	private String payByAccount; // 付款方式是否透過 帳號扣款
-	
+	@Schema(description = "付款方式")
+	private String payMethod; // 付款方式
 }

@@ -41,9 +41,8 @@ public class OptionService {
 	 */
 	public List<OptionQueried> getTrainKinds() {
 		Map<String, TrainKind> kindMap = TrainKind.getMap();
-		List<OptionQueried> result = kindMap.values().stream()
+		return kindMap.values().stream()
 				.map(v -> new OptionQueried(null, v.getCode(), v.getLabel())).collect(Collectors.toList());
-		return result;
 	}
 
 	/**

@@ -26,6 +26,6 @@ public class BookTicketCommand {
 
 	private LocalDate takeDate; // 乘車日期
 	
-	private String payByAccount; // 付款方式是否透過 帳號扣款
+	private String payMethod; // 付款方式
 	
 }

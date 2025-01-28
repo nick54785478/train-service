@@ -27,6 +27,8 @@ public class BookQueriedResource {
 	private LocalTime arriveTime; // 抵達時間
 
 	private LocalDate takeDate; // 乘車日期
+	
+	private String carNo; // 車廂編號
 
 	private String seatNo; // 座號
 

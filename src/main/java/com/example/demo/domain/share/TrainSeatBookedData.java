@@ -29,6 +29,8 @@ public class TrainSeatBookedData {
 	private LocalDate takeDate; // 乘車日期
 
 	private String seatNo; // 座號
+	
+	private Long carNo; // 車廂編號
 
 	private YesNo booked; // 是否已預定
 

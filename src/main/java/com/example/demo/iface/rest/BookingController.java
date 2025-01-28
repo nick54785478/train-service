@@ -45,7 +45,7 @@ public class BookingController {
 	 */
 	@GetMapping("/{username}")
 	@Operation(summary = "API - 查詢該使用者的訂票資訊", description = "查詢該使用者的訂票資訊。")
-	public ResponseEntity<BookingQueriedResource> queryBook(
+	public ResponseEntity<BookingQueriedResource> queryBooking(
 			@Parameter(description = "使用者帳號")
 			@PathVariable String username) {
 		BookingQueriedData bookQueriedData = bookQueryService.queryBooking(username);

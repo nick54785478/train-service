@@ -47,7 +47,6 @@ public class MoneyAccountService extends BaseDomainService {
 			log.debug("Event : {}", event);
 			moneyAccount.setBalance(command.getMoney());
 			moneyAccountRepository.save(moneyAccount);
-
 		});
 
 	}

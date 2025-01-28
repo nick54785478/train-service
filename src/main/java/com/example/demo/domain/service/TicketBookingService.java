@@ -130,20 +130,20 @@ public class TicketBookingService extends BaseDomainService {
 
 		// 座位資料
 		List<TrainSeat> trainSeatList = trainSeatRepository.findByBookUuidIn(bookingUuidList);
-		// 座位 Map <book Uuid, Entity>
+		// 座位 Map <bookUuid, Entity>
 		Map<String, List<TrainSeat>> seatMap = trainSeatList.stream()
 				.collect(Collectors.groupingBy(TrainSeat::getBookUuid));
 
-		// 透過火車座位查出對應火車的 Uuid 清單
+		// 透過火車座位查出對應火車的 uuid 清單
 		List<String> trainUuidList = trainSeatList.stream().map(TrainSeat::getTrainUuid).collect(Collectors.toList());
-		// 透過 火車 Uuid 清單查出火車資訊
+		// 透過 火車 uuid 清單查出火車資訊
 		List<Train> trainList = trainRepository.findByUuidIn(trainUuidList);
 		// 火車 Map<火車 Uuid, Train>
 		Map<String, Train> trainMap = trainList.stream().collect(Collectors.toMap(Train::getUuid, Function.identity()));
 
-		// 透過火車座位查出對應車票的 Uuid 清單
+		// 透過火車座位查出對應車票的 uuid 清單
 		List<String> ticketUuidList = trainSeatList.stream().map(TrainSeat::getTicketUuid).collect(Collectors.toList());
-		// 車票 Map<車票 Uuid, Train>
+		// 車票 Map<車票 uuid, Train>
 		Map<String, Ticket> ticketMap = ticketReposiotry.findByTicketNoIn(ticketUuidList).stream()
 				.collect(Collectors.toMap(Ticket::getTicketNo, Function.identity()));
 
@@ -208,6 +208,7 @@ public class TicketBookingService extends BaseDomainService {
 				bookedData.setTakeDate(trainSeat.getTakeDate());
 				bookedData.setActiveFlag(trainSeat.getActiveFlag());
 				bookedData.setBooked(trainSeat.getBooked());
+				bookedData.setCarNo(trainSeat.getCarNo());
 			}
 		}
 	}

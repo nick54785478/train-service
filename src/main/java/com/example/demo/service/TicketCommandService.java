@@ -30,6 +30,7 @@ import com.example.demo.domain.share.TicketBookedData;
 import com.example.demo.domain.share.TicketCheckedInData;
 import com.example.demo.domain.share.TicketCreatedData;
 import com.example.demo.domain.share.TicketRefundedData;
+import com.example.demo.domain.share.enums.PayMethod;
 import com.example.demo.domain.ticket.command.CreateTicketCommand;
 import com.example.demo.infra.repository.MoneyAccountRepository;
 import com.example.demo.infra.repository.TrainSeatRepository;
@@ -101,10 +102,10 @@ public class TicketCommandService extends BaseApplicationService {
 		MoneyAccount account = moneyAccountRepository.findByUsername(ContextHolder.getUsername());
 		TicketBookedData resource = ticketBookingService.book(command, account);
 
-		if (StringUtils.equals("Y", command.getPayByAccount())) {
-
+		// 付款方式: 錢包
+		if (StringUtils.equals(PayMethod.fromLabel(command.getPayMethod()).getCode(),
+				PayMethod.PAY_BY_ACCOUNT.getCode())) {
 			BigDecimal balance = account.getBalance().subtract(command.getPrice());
-
 			// 發布扣款事件
 			AccountTxEvent event = AccountTxEvent.builder().targetId(account.getUuid())
 					.eventLogUuid(UUID.randomUUID().toString()).money(balance).build();
@@ -117,6 +118,8 @@ public class TicketCommandService extends BaseApplicationService {
 			eventLog.publish(eventLog.getBody());
 			eventLogRepository.save(eventLog);
 
+		} else {
+			// TODO 剩餘作法
 		}
 
 		// 發布事件
