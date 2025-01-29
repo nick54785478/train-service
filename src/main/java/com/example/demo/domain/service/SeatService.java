@@ -71,14 +71,14 @@ public class SeatService extends BaseDomainService {
 		List<ConfigurableSetting> seatNoSetting = settingRepository.findByDataTypeAndActiveFlag("SEAT_NO_LIST",
 				YesNo.Y);
 		// 解析座位清單設定 (假設座位清單是逗號分隔的字串，如 "A1,A2,A3,...")
-		List<String> seatNoList = seatNoSetting.stream().flatMap(s -> Arrays.stream(s.getDescription().split(",")))
+		List<String> seatNoList = seatNoSetting.stream().flatMap(s -> Arrays.stream(s.getValue().split(",")))
 				.collect(Collectors.toList());
 
 		// 取得全車廂編號清單設定
 		List<ConfigurableSetting> carNoSettings = settingRepository.findByDataTypeAndActiveFlag("CAR_NO_LIST", YesNo.Y);
 		// 車廂編號清單
 		List<Long> carNoList = carNoSettings.stream()
-				.flatMap(setting -> Arrays.stream(setting.getDescription().split(","))) // 將設定值拆分為單一編號
+				.flatMap(setting -> Arrays.stream(setting.getValue().split(","))) // 將設定值拆分為單一編號
 				.map(String::trim) // 移除可能存在的空格
 				.map(Long::valueOf) // 將字串轉換為 Long
 				.collect(Collectors.toList());

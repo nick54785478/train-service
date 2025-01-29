@@ -73,6 +73,7 @@ public class Ticket extends BaseEntity {
 	 */
 	public void create(CreateTicketCommand command, Train train) {
 		this.price = command.getPrice();
+		this.type = TicketType.fromLabel(command.getTicketType());
 		this.trainUuid = train.getUuid();
 		this.fromStop = command.getFromStop();
 		this.toStop = command.getToStop();

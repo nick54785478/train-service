@@ -21,6 +21,8 @@ public class CreateTicketCommand {
 
 	@NotBlank
 	private String toStop;
+	
+	private String ticketType;
 
 	private BigDecimal price;  // 票價
 }

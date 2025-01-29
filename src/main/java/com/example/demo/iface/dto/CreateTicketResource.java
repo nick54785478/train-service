@@ -21,6 +21,9 @@ public class CreateTicketResource {
 
 	@Schema(description = "迄站")
 	private String toStop;
+	
+	@Schema(description = "車票種類")
+	private String ticketType;
 
 	@Schema(description = "價格")
 	private BigDecimal price;
