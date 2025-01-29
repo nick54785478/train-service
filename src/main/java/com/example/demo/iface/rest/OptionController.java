@@ -37,6 +37,19 @@ public class OptionController {
 				BaseDataTransformer.transformData(optionQueryService.getTrainKinds(), OptionQueriedResource.class),
 				HttpStatus.OK);
 	}
+	
+	/**
+	 * 取得車票種類的下拉式選單資料
+	 * 
+	 * @return List<OptionResource>
+	 */
+	@GetMapping("/ticketTypes")
+	@Operation(summary = "API - 取得車票種類的下拉式選單資料", description = "取得車票種類的下拉式選單資料。")
+	public ResponseEntity<List<OptionQueriedResource>> getTicketTypes() {
+		return new ResponseEntity<>(
+				BaseDataTransformer.transformData(optionQueryService.getTicketTypes(), OptionQueriedResource.class),
+				HttpStatus.OK);
+	}
 
 	/**
 	 * 查詢相關的設定 (下拉式選單)
