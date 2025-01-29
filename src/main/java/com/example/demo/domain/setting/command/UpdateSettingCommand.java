@@ -17,6 +17,8 @@ public class UpdateSettingCommand {
 
 	private String name; // 名稱
 
+	private String value; // 值
+
 	private String description; // 敘述
 
 	private String activeFlag;

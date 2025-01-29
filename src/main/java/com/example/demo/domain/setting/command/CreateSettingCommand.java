@@ -17,6 +17,8 @@ public class CreateSettingCommand {
 
 	private String name; // 名稱
 
+	private String value; // 值
+	
 	private String description; // 敘述
 
 	private Integer priorityNo; // 順序號(從 1 開始)

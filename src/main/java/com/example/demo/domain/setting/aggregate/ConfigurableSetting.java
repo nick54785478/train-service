@@ -42,6 +42,9 @@ public class ConfigurableSetting {
 	@Column(name = "NAME")
 	private String name; // 名稱
 	
+	@Column(name = "VALUE")
+	private String value; // 名稱
+	
 	@Column(name = "PRIORITY_NO")
 	private Integer priorityNo; // 排序
 
@@ -61,6 +64,7 @@ public class ConfigurableSetting {
 		this.dataType = command.getDataType();
 		this.type = command.getType();
 		this.name = command.getName();
+		this.value = command.getValue();
 		this.description = command.getDescription();
 		this.priorityNo = command.getPriorityNo();
 		this.activeFlag = YesNo.Y;
@@ -75,6 +79,7 @@ public class ConfigurableSetting {
 		this.dataType = command.getDataType();
 		this.type = command.getType();
 		this.name = command.getName();
+		this.value = command.getValue();
 		this.description = command.getDescription();
 		this.activeFlag = YesNo.valueOf(command.getActiveFlag());
 	}
