@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.base.enums.YesNo;
 import com.example.demo.domain.share.OptionQueried;
+import com.example.demo.domain.ticket.aggregate.vo.TicketType;
 import com.example.demo.domain.train.aggregate.Train;
 import com.example.demo.domain.train.aggregate.vo.TrainKind;
 import com.example.demo.infra.repository.SettingRepository;
@@ -41,8 +42,19 @@ public class OptionService {
 	 */
 	public List<OptionQueried> getTrainKinds() {
 		Map<String, TrainKind> kindMap = TrainKind.getMap();
-		return kindMap.values().stream()
-				.map(v -> new OptionQueried(null, v.getCode(), v.getLabel())).collect(Collectors.toList());
+		return kindMap.values().stream().map(v -> new OptionQueried(null, v.getCode(), v.getLabel()))
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * 取得車票種類
+	 * 
+	 * @return List<OptionQueried>
+	 */
+	public List<OptionQueried> getTicketTypes() {
+		Map<String, TicketType> kindMap = TicketType.getMap();
+		return kindMap.values().stream().map(v -> new OptionQueried(null, v.getLabel(), v.getLabel()))
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -50,8 +62,8 @@ public class OptionService {
 	 */
 	public List<OptionQueried> getTrainNoList() {
 		return trainRepository.findAll().stream().map(Train::getNumber).distinct().map(e -> {
-			return new OptionQueried(null, String.valueOf(e) ,String.valueOf(e));
+			return new OptionQueried(null, String.valueOf(e), String.valueOf(e));
 		}).distinct().collect(Collectors.toList());
-		
+
 	}
 }
