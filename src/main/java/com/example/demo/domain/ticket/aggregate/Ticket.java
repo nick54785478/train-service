@@ -5,11 +5,14 @@ import java.util.Objects;
 import java.util.UUID;
 
 import com.example.demo.base.entity.BaseEntity;
+import com.example.demo.domain.ticket.aggregate.vo.TicketType;
 import com.example.demo.domain.ticket.command.CreateTicketCommand;
 import com.example.demo.domain.train.aggregate.Train;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,6 +40,10 @@ public class Ticket extends BaseEntity {
 
 	@Column(name = "TRAIN_UUID")
 	private String trainUuid;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "TYPE")
+	private TicketType type;
 
 	@Column(name = "FROM_STOP")
 	private String fromStop; // 起站
