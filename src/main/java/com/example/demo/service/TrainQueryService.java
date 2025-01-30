@@ -10,6 +10,7 @@ import com.example.demo.domain.share.TrainDetailQueriedData;
 import com.example.demo.domain.share.TrainQueriedData;
 import com.example.demo.domain.share.TrainSummaryQueriedData;
 import com.example.demo.domain.train.command.QueryTrainCommand;
+import com.example.demo.domain.train.command.QueryTrainSummaryCommand;
 
 import lombok.AllArgsConstructor;
 
@@ -35,7 +36,7 @@ public class TrainQueryService extends BaseApplicationService {
 	 * @param command
 	 * @return 火車資訊
 	 */
-	public List<TrainSummaryQueriedData> queryTrainSummary(QueryTrainCommand command) {
+	public List<TrainSummaryQueriedData> queryTrainSummary(QueryTrainSummaryCommand command) {
 		return trainService.queryTrainSummary(command);
 	}
 	

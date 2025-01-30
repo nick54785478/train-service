@@ -56,17 +56,16 @@ public class TrainStopService {
 				StopDetailQueriedData stopDetailQueriedData = new StopDetailQueriedData();
 				stopDetailQueriedData.setFromStop(fromStop);
 				stopDetailQueriedData.setToStop(ticket.getToStop());
-				
 
+				// 取得起站資訊
 				if (!Objects.isNull(stopMap.get(fromStop))) {
-					// 取得起站資訊
 					TrainStop fromStopInfo = stopMap.get(ticket.getToStop());
 					stopDetailQueriedData.setFromStop(fromStop);
 					stopDetailQueriedData.setArriveStartStopTime(fromStopInfo.getTime().toString());
 				}
 				
+				// 取得迄站資訊
 				if (!Objects.isNull(stopMap.get(ticket.getToStop()))) {
-					// 取得迄站資訊
 					TrainStop toStopInfo = stopMap.get(ticket.getToStop());
 					stopDetailQueriedData.setSeq(toStopInfo.getSeq());
 					stopDetailQueriedData.setArriveStartStopTime(toStopInfo.getTime().toString()); // 抵達起站時間

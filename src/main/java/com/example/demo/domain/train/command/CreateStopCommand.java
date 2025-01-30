@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 public class CreateStopCommand {
 
 	private Integer seq;  // 停站順序
+	
 	private String stopName;	// 站名
+	
 	private String stopTime;	// 停靠時間
 }

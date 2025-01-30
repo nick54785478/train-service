@@ -41,10 +41,6 @@ public class Ticket extends BaseEntity {
 	@Column(name = "TRAIN_UUID")
 	private String trainUuid;
 	
-	@Enumerated(EnumType.STRING)
-	@Column(name = "TYPE")
-	private TicketType type;
-
 	@Column(name = "FROM_STOP")
 	private String fromStop; // 起站
 
@@ -73,7 +69,6 @@ public class Ticket extends BaseEntity {
 	 */
 	public void create(CreateTicketCommand command, Train train) {
 		this.price = command.getPrice();
-		this.type = TicketType.fromLabel(command.getTicketType());
 		this.trainUuid = train.getUuid();
 		this.fromStop = command.getFromStop();
 		this.toStop = command.getToStop();

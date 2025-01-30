@@ -1,5 +1,6 @@
 package com.example.demo.domain.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -11,8 +12,10 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.base.enums.YesNo;
 import com.example.demo.base.exception.ValidationException;
 import com.example.demo.base.service.BaseDomainService;
+import com.example.demo.domain.setting.aggregate.ConfigurableSetting;
 import com.example.demo.domain.share.StopSummaryQueriedData;
 import com.example.demo.domain.share.TrainDetailQueriedData;
 import com.example.demo.domain.share.TrainQueriedData;
@@ -23,6 +26,8 @@ import com.example.demo.domain.train.aggregate.entity.TrainStop;
 import com.example.demo.domain.train.aggregate.vo.TrainKind;
 import com.example.demo.domain.train.command.CreateTrainCommand;
 import com.example.demo.domain.train.command.QueryTrainCommand;
+import com.example.demo.domain.train.command.QueryTrainSummaryCommand;
+import com.example.demo.infra.repository.SettingRepository;
 import com.example.demo.infra.repository.TicketRepository;
 import com.example.demo.infra.repository.TrainRepository;
 
@@ -41,6 +46,8 @@ public class TrainService extends BaseDomainService {
 	private TrainRepository trainRepository;
 
 	private TicketRepository ticketRepository;
+
+	private SettingRepository settingRepository;
 
 	/**
 	 * 新增火車資料
@@ -83,6 +90,11 @@ public class TrainService extends BaseDomainService {
 				StringUtils.isNotBlank(command.getTrainKind()) ? TrainKind.fromLabel(command.getTrainKind()).toString()
 						: null,
 				command.getTime(), command.getFromStop(), command.getToStop());
+
+		// 各車票種類的價格折扣
+		Map<String, BigDecimal> rateMap = settingRepository
+				.findByDataTypeAndActiveFlag("TICKET_PRICE_RATE", YesNo.Y).stream()
+				.collect(Collectors.toMap(ConfigurableSetting::getName, setting -> new BigDecimal(setting.getValue())));
 
 		// 建立 Train uuid 清單
 		List<String> trainNoList = trainList.stream().map(Train::getUuid).collect(Collectors.toList());
@@ -127,7 +139,12 @@ public class TrainService extends BaseDomainService {
 			if (!Objects.isNull(ticketMap.get(ticketkey))) {
 				var ticket = ticketMap.get(ticketkey);
 				trainData.setTicketUuid(ticket.getTicketNo());
-				trainData.setPrice(ticket.getPrice());
+				
+				// 根據選擇的票別去打折
+				if (!Objects.isNull(rateMap.get(command.getTicketType()))) {
+					var rate = rateMap.get(command.getTicketType());
+					trainData.setPrice(ticket.getPrice().multiply(rate));
+				}
 			}
 			resList.add(trainData);
 		});
@@ -141,7 +158,7 @@ public class TrainService extends BaseDomainService {
 	 * @return 火車資訊
 	 */
 	@Transactional // 確保在整個方法執行期間 Session 是打開的，保持懶加載(否則會報錯)
-	public List<TrainSummaryQueriedData> queryTrainSummary(QueryTrainCommand command) {
+	public List<TrainSummaryQueriedData> queryTrainSummary(QueryTrainSummaryCommand command) {
 		List<TrainSummaryQueriedData> resList = new ArrayList<>();
 		List<Train> trainList = trainRepository.findByCondition(command.getTrainNo(),
 				StringUtils.isNotBlank(command.getTrainKind()) ? TrainKind.fromLabel(command.getTrainKind()).toString()

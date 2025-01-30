@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QueryTrainCommand {
+public class QueryTrainSummaryCommand {
 
 	private Integer trainNo; // 未必會使用單一車次
 	
@@ -24,7 +24,5 @@ public class QueryTrainCommand {
 	private String takeDate;	// 目前日期都固定
 
 	private String time;
-
-	private String ticketType; 
 
 }
