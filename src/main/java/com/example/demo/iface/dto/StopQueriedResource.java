@@ -9,9 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StopQueriedResource {
 	
+	private String uuid;
+	
 	private Integer seq;
 
 	private String stopName;
 	
 	private String stopTime;
+	
+	private String deleteFlag;
 }

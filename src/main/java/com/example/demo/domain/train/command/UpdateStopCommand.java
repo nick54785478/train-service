@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateStopCommand {
+public class UpdateStopCommand {
+	
+	private String uuid;
 
 	private Integer seq;  // 停站順序
 	
@@ -15,4 +17,5 @@ public class CreateStopCommand {
 	
 	private String stopTime;	// 停靠時間
 	
+	private String deleteFlag = "N";
 }

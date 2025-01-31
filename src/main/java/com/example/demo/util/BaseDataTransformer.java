@@ -14,6 +14,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.base.enums.YesNo;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -119,6 +121,24 @@ public class BaseDataTransformer {
 					return null;
 				}
 			}
+		});
+
+		// 設置 YesNo -> String
+		modelMapper.addConverter(new Converter<YesNo, String>() {
+
+			@Override
+			public String convert(MappingContext<YesNo, String> context) {
+				return context.getSource() == null ? null : context.getSource().getValue();
+			}
+		});
+
+		// 設置 String -> YesNo
+		modelMapper.addConverter(new Converter<String, YesNo>() {
+			@Override
+			public YesNo convert(MappingContext<String, YesNo> context) {
+				return context.getSource() == null ? null : YesNo.valueOf(context.getSource());
+			}
+
 		});
 
 	}

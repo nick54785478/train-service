@@ -16,6 +16,7 @@ import com.example.demo.base.enums.YesNo;
 import com.example.demo.base.exception.ValidationException;
 import com.example.demo.base.service.BaseDomainService;
 import com.example.demo.domain.setting.aggregate.ConfigurableSetting;
+import com.example.demo.domain.share.StopQueriedData;
 import com.example.demo.domain.share.StopSummaryQueriedData;
 import com.example.demo.domain.share.TrainDetailQueriedData;
 import com.example.demo.domain.share.TrainQueriedData;
@@ -27,6 +28,7 @@ import com.example.demo.domain.train.aggregate.vo.TrainKind;
 import com.example.demo.domain.train.command.CreateTrainCommand;
 import com.example.demo.domain.train.command.QueryTrainCommand;
 import com.example.demo.domain.train.command.QueryTrainSummaryCommand;
+import com.example.demo.domain.train.command.UpdateTrainCommand;
 import com.example.demo.infra.repository.SettingRepository;
 import com.example.demo.infra.repository.TicketRepository;
 import com.example.demo.infra.repository.TrainRepository;
@@ -44,21 +46,32 @@ import lombok.extern.slf4j.Slf4j;
 public class TrainService extends BaseDomainService {
 
 	private TrainRepository trainRepository;
-
 	private TicketRepository ticketRepository;
-
 	private SettingRepository settingRepository;
 
 	/**
 	 * 新增火車資料
 	 * 
 	 * @param command
-	 * @return uuid
 	 */
 	public void create(CreateTrainCommand command) {
 		this.checkBeforeCreate(command);
 		Train train = new Train();
 		train.create(command);
+		trainRepository.save(train);
+	}
+	
+	/**
+	 * 更新火車資料
+	 * 
+	 * @param command
+	 */
+	public void update(UpdateTrainCommand command) {
+		Train train = trainRepository.findByNumber(command.getTrainNo());
+		System.out.println("train.getStops():"+train.getStops());
+		train.update(command, train.getUuid());
+		System.out.println(train.getStops());
+		System.out.println(train.getStops().size());
 		trainRepository.save(train);
 	}
 
@@ -74,7 +87,10 @@ public class TrainService extends BaseDomainService {
 		if (Objects.isNull(train)) {
 			throw new ValidationException("VALIDATE_FAILED", "查無此車次 " + trainNo);
 		}
-		return this.transformEntityToData(train, TrainQueriedData.class);
+		TrainQueriedData queriedData = this.transformEntityToData(train, TrainQueriedData.class);
+		queriedData.getStops().sort(Comparator.comparingInt(StopQueriedData::getSeq));
+		return queriedData;
+
 	}
 
 	/**
@@ -92,8 +108,8 @@ public class TrainService extends BaseDomainService {
 				command.getTime(), command.getFromStop(), command.getToStop());
 
 		// 各車票種類的價格折扣
-		Map<String, BigDecimal> rateMap = settingRepository
-				.findByDataTypeAndActiveFlag("TICKET_PRICE_RATE", YesNo.Y).stream()
+		Map<String, BigDecimal> rateMap = settingRepository.findByDataTypeAndActiveFlag("TICKET_PRICE_RATE", YesNo.Y)
+				.stream()
 				.collect(Collectors.toMap(ConfigurableSetting::getName, setting -> new BigDecimal(setting.getValue())));
 
 		// 建立 Train uuid 清單
@@ -139,7 +155,7 @@ public class TrainService extends BaseDomainService {
 			if (!Objects.isNull(ticketMap.get(ticketkey))) {
 				var ticket = ticketMap.get(ticketkey);
 				trainData.setTicketUuid(ticket.getTicketNo());
-				
+
 				// 根據選擇的票別去打折
 				if (!Objects.isNull(rateMap.get(command.getTicketType()))) {
 					var rate = rateMap.get(command.getTicketType());
@@ -214,7 +230,6 @@ public class TrainService extends BaseDomainService {
 
 		List<TrainQueriedData> dataList = trainList.stream().filter(e -> {
 			List<String> stopList = e.getStops().stream().sorted(Comparator.comparingInt(TrainStop::getSeq)) // 根據 SEQ
-																												// 排序
 					.map(TrainStop::getName).collect(Collectors.toList());
 			// 起站 index
 			int fromIndex = stopList.indexOf(fromStop);
@@ -265,17 +280,21 @@ public class TrainService extends BaseDomainService {
 	 * @return TrainStop[]
 	 */
 	private TrainStop[] getFirstAndTerminatedStation(List<TrainStop> trainStops) {
-		TrainStop[] result = trainStops.stream().collect(() -> new TrainStop[] { null, null }, (res, stop) -> {
-			if (res[0] == null || stop.getSeq() < res[0].getSeq())
+		return trainStops.stream().collect(() -> new TrainStop[] { null, null }, (res, stop) -> {
+			if (res[0] == null || stop.getSeq() < res[0].getSeq()) {
 				res[0] = stop; // 最小
-			if (res[1] == null || stop.getSeq() > res[1].getSeq())
+				
+			}
+			if (res[1] == null || stop.getSeq() > res[1].getSeq()) {
 				res[1] = stop; // 最大
+			}
 		}, (res1, res2) -> {
-			if (res1[0] == null || (res2[0] != null && res2[0].getSeq() < res1[0].getSeq()))
+			if (res1[0] == null || (res2[0] != null && res2[0].getSeq() < res1[0].getSeq())) {
 				res1[0] = res2[0];
-			if (res1[1] == null || (res2[1] != null && res2[1].getSeq() > res1[1].getSeq()))
+			}
+			if (res1[1] == null || (res2[1] != null && res2[1].getSeq() > res1[1].getSeq())) {
 				res1[1] = res2[1];
+			}
 		});
-		return result;
 	}
 }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,11 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.domain.train.command.CreateTrainCommand;
 import com.example.demo.domain.train.command.QueryTrainCommand;
 import com.example.demo.domain.train.command.QueryTrainSummaryCommand;
+import com.example.demo.domain.train.command.UpdateTrainCommand;
 import com.example.demo.iface.dto.CreateTrainResource;
 import com.example.demo.iface.dto.TrainCreatedResource;
 import com.example.demo.iface.dto.TrainDetailQueriedResource;
 import com.example.demo.iface.dto.TrainQueriedResource;
 import com.example.demo.iface.dto.TrainSummaryQueriedResource;
+import com.example.demo.iface.dto.TrainUpdatedResource;
+import com.example.demo.iface.dto.UpdateTrainResource;
 import com.example.demo.service.TrainCommandService;
 import com.example.demo.service.TrainQueryService;
 import com.example.demo.util.BaseDataTransformer;
@@ -56,6 +60,22 @@ public class TrainController {
 		CreateTrainCommand command = BaseDataTransformer.transformData(resource, CreateTrainCommand.class);
 		trainCommandService.createTrain(command);
 		return new ResponseEntity<>(new TrainCreatedResource("201", "新增車次成功"), HttpStatus.OK);
+	}
+	
+	/**
+	 * 更新火車車次
+	 * 
+	 * @param resource
+	 * @return 成功訊息
+	 */
+	@PutMapping("")
+	@Operation(summary = "API - 更新火車車次", description = "更新火車車次。")
+	public ResponseEntity<TrainUpdatedResource> update(
+			@Parameter(description = "火車車次資訊") @RequestBody UpdateTrainResource resource) {
+		// DTO 轉換
+		UpdateTrainCommand command = BaseDataTransformer.transformData(resource, UpdateTrainCommand.class);
+		trainCommandService.updateTrain(command);
+		return new ResponseEntity<>(new TrainUpdatedResource("200", "更新車次成功"), HttpStatus.OK);
 	}
 
 	/**

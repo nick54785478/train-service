@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.base.service.BaseApplicationService;
 import com.example.demo.domain.service.TrainService;
 import com.example.demo.domain.train.command.CreateTrainCommand;
+import com.example.demo.domain.train.command.UpdateTrainCommand;
 
 import lombok.AllArgsConstructor;
 
@@ -26,6 +27,16 @@ public class TrainCommandService extends BaseApplicationService {
 	 */
 	public void createTrain(CreateTrainCommand command) {
 		trainService.create(command);
+	}
+	
+	/**
+	 * 更新火車資訊
+	 * 
+	 * @param command
+	 * @return UUID
+	 */
+	public void updateTrain(UpdateTrainCommand command) {
+		trainService.update(command);
 	}
 
 }

@@ -4,6 +4,8 @@ import java.time.LocalTime;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.modelmapper.internal.bytebuddy.asm.Advice.This;
+
 import com.example.demo.base.entity.BaseEntity;
 import com.example.demo.base.enums.YesNo;
 
@@ -11,6 +13,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -32,6 +36,7 @@ public class TrainStop extends BaseEntity {
 
 	@Id
 	@Column(name = "UUID")
+    @GeneratedValue(strategy = GenerationType.UUID) // Hibernate 6+ 自動產生 UUID
 	private String uuid;
 
 	@Transient
@@ -53,16 +58,6 @@ public class TrainStop extends BaseEntity {
 	@Column(name = "DELETE_FLAG")
 	private YesNo deleteFlag; // 是否失效
 
-	/**
-	 * 在持久化之前執行的方法。
-	 */
-	@PrePersist
-	public void prePersist() {
-		// 新增時沒有 UUID，設置 UUID
-		if (Objects.isNull(this.uuid)) {
-			this.uuid = this.u;
-		}
-	}
 
 	/**
 	 * 設置火車代碼
@@ -88,6 +83,28 @@ public class TrainStop extends BaseEntity {
 		this.name = name;
 		this.time = LocalTime.parse(time);
 		this.deleteFlag = YesNo.N;
+	}
+	
+	/**
+	 * 更新停靠站資料
+	 * 
+	 * @param seq
+	 * @param name
+	 * @param time
+	 * @param deleteFlag
+	 */
+	public void update(Integer seq, String name, String time, YesNo deleteFlag) {
+		this.seq = seq;
+		this.name = name;
+		this.time = LocalTime.parse(time);
+		this.deleteFlag = deleteFlag;
+	}
+	
+	/**
+	 * 刪除 Stop 資料
+	 * */
+	public void delete() {
+		this.deleteFlag = YesNo.Y;
 	}
 
 }

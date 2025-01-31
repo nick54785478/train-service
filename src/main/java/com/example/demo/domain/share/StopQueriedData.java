@@ -8,10 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StopQueriedData {
+	
+	private String uuid;
 
 	private Integer seq; // 停站順序
 	
 	private String name; // 站名
 
 	private String time; // 停站時間
+	
+	private String deleteFlag;
 }
