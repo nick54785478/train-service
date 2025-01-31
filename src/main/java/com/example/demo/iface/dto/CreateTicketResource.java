@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Schema(description = "車票資訊")
 public class CreateTicketResource {
 
-	@Schema(description = "火車代號 uuid")
+	@Schema(description = "火車車次")
 	private Integer trainNo;
 
 	@Schema(description = "起站")
