@@ -28,9 +28,9 @@ import com.example.demo.domain.service.TicketBookingService;
 import com.example.demo.domain.service.TicketService;
 import com.example.demo.domain.share.TicketBookedData;
 import com.example.demo.domain.share.TicketCheckedInData;
-import com.example.demo.domain.share.TicketCreatedData;
 import com.example.demo.domain.share.TicketRefundedData;
 import com.example.demo.domain.share.enums.PayMethod;
+import com.example.demo.domain.ticket.command.CreateOrUpdateTicketCommand;
 import com.example.demo.domain.ticket.command.CreateTicketCommand;
 import com.example.demo.infra.repository.MoneyAccountRepository;
 import com.example.demo.infra.repository.TrainSeatRepository;
@@ -66,21 +66,19 @@ public class TicketCommandService extends BaseApplicationService {
 	 * 新增車票資訊
 	 * 
 	 * @param command
-	 * @return TicketCreatedData
 	 */
-	public TicketCreatedData createTicket(CreateTicketCommand command) {
-		return ticketService.create(command);
+	public void createTicket(CreateTicketCommand command) {
+		ticketService.create(command);
 	}
 
 	/**
 	 * 批次新增車票資訊
 	 * 
-	 * @param trainNo 車次
-	 * @param command
-	 * @return TicketCreatedData
+	 * @param trainNo  車次
+	 * @param commands
 	 */
-	public TicketCreatedData createTickets(Integer trainNo, List<CreateTicketCommand> command) {
-		return ticketService.create(trainNo, command);
+	public void createOrUpdateTickets(Integer trainNo, List<CreateOrUpdateTicketCommand> commands) {
+		ticketService.createOrUpdate(trainNo, commands);
 	}
 
 	/**

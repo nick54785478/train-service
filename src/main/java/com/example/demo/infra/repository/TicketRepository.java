@@ -12,6 +12,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 	
 	Ticket findByTicketNo(String ticketNo);
 	
+	List<Ticket> findByTrainUuid(String trainUuid);
+	
 	List<Ticket> findByTrainUuidIn(List<String> trainNoList);
 	
 	List<Ticket> findByTrainUuidAndFromStop(String trainUuid, String fromStop);

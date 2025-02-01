@@ -5,14 +5,12 @@ import java.util.Objects;
 import java.util.UUID;
 
 import com.example.demo.base.entity.BaseEntity;
-import com.example.demo.domain.ticket.aggregate.vo.TicketType;
+import com.example.demo.domain.ticket.command.CreateOrUpdateTicketCommand;
 import com.example.demo.domain.ticket.command.CreateTicketCommand;
 import com.example.demo.domain.train.aggregate.Train;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,7 +38,7 @@ public class Ticket extends BaseEntity {
 
 	@Column(name = "TRAIN_UUID")
 	private String trainUuid;
-	
+
 	@Column(name = "FROM_STOP")
 	private String fromStop; // 起站
 
@@ -65,11 +63,37 @@ public class Ticket extends BaseEntity {
 	 * 建立 票券資料
 	 * 
 	 * @param command
+	 * @param trainUuid 火車uuid
+	 */
+	public void create(CreateTicketCommand command, String trainUuid) {
+		this.price = command.getPrice();
+		this.trainUuid = trainUuid;
+		this.fromStop = command.getFromStop();
+		this.toStop = command.getToStop();
+	}
+
+	/**
+	 * 建立 票券資料
+	 * 
+	 * @param command
+	 * @param trainUuid 火車uuid
+	 */
+	public void create(CreateOrUpdateTicketCommand command, String trainUuid) {
+		this.price = command.getPrice();
+		this.trainUuid = trainUuid;
+		this.fromStop = command.getFromStop();
+		this.toStop = command.getToStop();
+	}
+
+	/**
+	 * 更新 票券資料
+	 * 
+	 * @param command
 	 * @param train   火車實體
 	 */
-	public void create(CreateTicketCommand command, Train train) {
+	public void update(CreateOrUpdateTicketCommand command, String trainUuid) {
 		this.price = command.getPrice();
-		this.trainUuid = train.getUuid();
+		this.trainUuid = trainUuid;
 		this.fromStop = command.getFromStop();
 		this.toStop = command.getToStop();
 	}

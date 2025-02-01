@@ -1,5 +1,7 @@
 package com.example.demo.iface.dto;
 
+import java.math.BigDecimal;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,9 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TicketCreatedResource {
+public class TicketQueriedResource {
 
-	private String code;
+	private String ticketNo; 
 	
-	private String message;
+	private String fromStop;
+	
+	private String toStop;
+
+	private BigDecimal price;
 }

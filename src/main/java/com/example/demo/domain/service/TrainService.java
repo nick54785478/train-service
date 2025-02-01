@@ -68,10 +68,7 @@ public class TrainService extends BaseDomainService {
 	 */
 	public void update(UpdateTrainCommand command) {
 		Train train = trainRepository.findByNumber(command.getTrainNo());
-		System.out.println("train.getStops():"+train.getStops());
 		train.update(command, train.getUuid());
-		System.out.println(train.getStops());
-		System.out.println(train.getStops().size());
 		trainRepository.save(train);
 	}
 

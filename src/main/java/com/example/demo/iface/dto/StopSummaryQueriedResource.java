@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StopSummaryQueriedResource {
-
+	
 	private Integer seq; // 停站順序
 
 	private String stopName; // 站名
