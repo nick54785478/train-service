@@ -31,6 +31,7 @@
 		<java.version>17</java.version>
 		<jjwt.version>0.12.6</jjwt.version>
 		<springdoc-openapi.version>2.3.0</springdoc-openapi.version>
+		<poi.version>5.4.0</poi.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -70,6 +71,16 @@
 			<version>3.2.1</version>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 			<version>4.1.3</version>
@@ -102,6 +113,11 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>${springdoc-openapi.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.minio</groupId>
+		    <artifactId>minio</artifactId>
+		    <version>8.5.17</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>

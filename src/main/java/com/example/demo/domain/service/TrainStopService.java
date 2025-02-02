@@ -1,6 +1,5 @@
 package com.example.demo.domain.service;
 
-import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -9,12 +8,10 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.base.exception.ValidationException;
 import com.example.demo.domain.share.StopDetailQueriedData;
-import com.example.demo.domain.share.StopSummaryQueriedData;
 import com.example.demo.domain.ticket.aggregate.Ticket;
 import com.example.demo.domain.train.aggregate.Train;
 import com.example.demo.domain.train.aggregate.entity.TrainStop;
@@ -52,7 +49,7 @@ public class TrainStopService {
 
 			// 查詢起站通往各迄站車票資訊
 			List<Ticket> tickets = ticketRepository.findByTrainUuidAndFromStop(train.getUuid(), fromStop);
-			List<StopDetailQueriedData> result = tickets.stream().map(ticket -> {
+			return tickets.stream().map(ticket -> {
 				StopDetailQueriedData stopDetailQueriedData = new StopDetailQueriedData();
 				stopDetailQueriedData.setFromStop(fromStop);
 				stopDetailQueriedData.setToStop(ticket.getToStop());
@@ -63,7 +60,6 @@ public class TrainStopService {
 					stopDetailQueriedData.setFromStop(fromStop);
 					stopDetailQueriedData.setArriveStartStopTime(fromStopInfo.getTime().toString());
 				}
-				
 				// 取得迄站資訊
 				if (!Objects.isNull(stopMap.get(ticket.getToStop()))) {
 					TrainStop toStopInfo = stopMap.get(ticket.getToStop());
@@ -74,8 +70,7 @@ public class TrainStopService {
 				}
 				return stopDetailQueriedData;
 			}).sorted(Comparator.comparingInt(StopDetailQueriedData::getSeq)).collect(Collectors.toList());
-			return result;
 		}
-
 	}
+
 }

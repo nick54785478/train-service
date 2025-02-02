@@ -1,8 +1,10 @@
 package com.example.demo.iface.rest;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,8 +13,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.base.exception.ValidationException;
 import com.example.demo.domain.train.command.CreateTrainCommand;
 import com.example.demo.domain.train.command.QueryTrainCommand;
 import com.example.demo.domain.train.command.QueryTrainSummaryCommand;
@@ -23,6 +28,7 @@ import com.example.demo.iface.dto.TrainDetailQueriedResource;
 import com.example.demo.iface.dto.TrainQueriedResource;
 import com.example.demo.iface.dto.TrainSummaryQueriedResource;
 import com.example.demo.iface.dto.TrainUpdatedResource;
+import com.example.demo.iface.dto.TrainUploadedResource;
 import com.example.demo.iface.dto.UpdateTrainResource;
 import com.example.demo.service.TrainCommandService;
 import com.example.demo.service.TrainQueryService;
@@ -35,7 +41,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Valid
 @RestController
 @AllArgsConstructor
@@ -61,7 +69,7 @@ public class TrainController {
 		trainCommandService.createTrain(command);
 		return new ResponseEntity<>(new TrainCreatedResource("201", "新增車次成功"), HttpStatus.OK);
 	}
-	
+
 	/**
 	 * 更新火車車次
 	 * 
@@ -96,13 +104,13 @@ public class TrainController {
 	/**
 	 * 查詢符合條件的火車資訊(訂票查詢)
 	 * 
-	 * @param trainNo   車次
-	 * @param trainKind 車種
-	 * @param fromStop  起站
-	 * @param toStop    迄站
+	 * @param trainNo    車次
+	 * @param trainKind  車種
+	 * @param fromStop   起站
+	 * @param toStop     迄站
 	 * @param ticketType 車票種類
-	 * @param takeDate  出發日期
-	 * @param time      出發時間
+	 * @param takeDate   出發日期
+	 * @param time       出發時間
 	 * @return 該火車車次的停靠站資訊
 	 */
 	@GetMapping("")
@@ -114,8 +122,7 @@ public class TrainController {
 			@Parameter(description = "迄站") @RequestParam String toStop,
 			@Parameter(description = "車票種類") @RequestParam String ticketType,
 			@Parameter(description = "搭乘日期 (yyyy-mm-dd)") @Valid @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}") String takeDate,
-			@Parameter(description = "搭乘時間 (hh:mm)") @RequestParam String time
-			) {
+			@Parameter(description = "搭乘時間 (hh:mm)") @RequestParam String time) {
 		QueryTrainCommand command = new QueryTrainCommand(trainNo, trainKind, fromStop, toStop, takeDate, time,
 				ticketType);
 		return new ResponseEntity<>(BaseDataTransformer.transformData(trainQueryService.queryTrainInfo(command),
@@ -143,9 +150,36 @@ public class TrainController {
 			@Parameter(description = "迄站") @RequestParam String toStop,
 			@Parameter(description = "搭乘日期 (yyyy-mm-dd)") @Valid @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}") String takeDate,
 			@Parameter(description = "搭乘時間 (hh:mm)") @RequestParam String time) {
-		QueryTrainSummaryCommand command = new QueryTrainSummaryCommand(trainNo, trainKind, fromStop, toStop, takeDate, time);
+		QueryTrainSummaryCommand command = new QueryTrainSummaryCommand(trainNo, trainKind, fromStop, toStop, takeDate,
+				time);
 		return new ResponseEntity<>(BaseDataTransformer.transformData(trainQueryService.queryTrainSummary(command),
 				TrainSummaryQueriedResource.class), HttpStatus.OK);
 	}
 
+	/**
+	 * 上傳車次資料
+	 * 
+	 * @param mapping
+	 * @param sheetMapping
+	 * @param file
+	 * 
+	 * @return ResponseEntity<TrainUploadedResource>
+	 */
+	@Operation(summary = "API - 上傳車次資料", description = "上傳車次資料。")
+	@PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<TrainUploadedResource> upload(
+			@Parameter(description = "Column Mapping", required = true) @RequestParam(name = "mapping", required = true) String mapping,
+			@Parameter(description = "Sheet Name Mapping", required = true) @RequestParam(name = "sheetMapping", required = true) String sheetMapping,
+			@Parameter(description = "要上傳的文件", required = true) @RequestPart(name = "file", required = true) MultipartFile file) {
+
+		try {
+			trainCommandService.upload(mapping, sheetMapping, file);
+		} catch (IOException e) {
+			log.error("發生錯誤，上傳失敗", e);
+			throw new ValidationException("VALIDATION_FAILED", "發生錯誤，上傳失敗"); // 拋出例外
+		}
+
+		return new ResponseEntity<>(new TrainUploadedResource("200", "上傳成功"), HttpStatus.OK);
+
+	}
 }

@@ -15,6 +15,8 @@ import jakarta.persistence.criteria.Predicate;
 
 @Repository
 public interface SettingRepository extends JpaRepository<ConfigurableSetting, Long> {
+	
+	List<ConfigurableSetting> findByTypeAndActiveFlag(String type, YesNo activeFlag);
 
 	List<ConfigurableSetting> findByDataTypeAndActiveFlag(String dataType, YesNo activeFlag);
 

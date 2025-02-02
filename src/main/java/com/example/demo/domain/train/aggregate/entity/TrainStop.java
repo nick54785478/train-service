@@ -1,6 +1,7 @@
 package com.example.demo.domain.train.aggregate.entity;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -36,7 +37,7 @@ public class TrainStop extends BaseEntity {
 
 	@Id
 	@Column(name = "UUID")
-    @GeneratedValue(strategy = GenerationType.UUID) // Hibernate 6+ 自動產生 UUID
+	@GeneratedValue(strategy = GenerationType.UUID) // Hibernate 6+ 自動產生 UUID
 	private String uuid;
 
 	@Transient
@@ -57,7 +58,6 @@ public class TrainStop extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "DELETE_FLAG")
 	private YesNo deleteFlag; // 是否失效
-
 
 	/**
 	 * 設置火車代碼
@@ -84,7 +84,7 @@ public class TrainStop extends BaseEntity {
 		this.time = LocalTime.parse(time);
 		this.deleteFlag = YesNo.N;
 	}
-	
+
 	/**
 	 * 更新停靠站資料
 	 * 
@@ -99,12 +99,14 @@ public class TrainStop extends BaseEntity {
 		this.time = LocalTime.parse(time);
 		this.deleteFlag = deleteFlag;
 	}
-	
+
 	/**
 	 * 刪除 Stop 資料
-	 * */
+	 */
 	public void delete() {
 		this.deleteFlag = YesNo.Y;
 	}
+
+	
 
 }

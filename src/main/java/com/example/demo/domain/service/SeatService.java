@@ -28,7 +28,6 @@ import com.example.demo.domain.share.SeatQueriedData;
 import com.example.demo.domain.share.UnbookedSeatGottenData;
 import com.example.demo.infra.repository.SettingRepository;
 import com.example.demo.infra.repository.TrainSeatRepository;
-import com.example.demo.util.SequenceGenerator;
 
 import lombok.AllArgsConstructor;
 
@@ -77,8 +76,7 @@ public class SeatService extends BaseDomainService {
 		// 取得全車廂編號清單設定
 		List<ConfigurableSetting> carNoSettings = settingRepository.findByDataTypeAndActiveFlag("CAR_NO_LIST", YesNo.Y);
 		// 車廂編號清單
-		List<Long> carNoList = carNoSettings.stream()
-				.flatMap(setting -> Arrays.stream(setting.getValue().split(","))) // 將設定值拆分為單一編號
+		List<Long> carNoList = carNoSettings.stream().flatMap(setting -> Arrays.stream(setting.getValue().split(","))) // 將設定值拆分為單一編號
 				.map(String::trim) // 移除可能存在的空格
 				.map(Long::valueOf) // 將字串轉換為 Long
 				.collect(Collectors.toList());
@@ -134,26 +132,6 @@ public class SeatService extends BaseDomainService {
 			}
 		}
 		return trainSeatGottenData;
-	}
-
-	/**
-	 * 遞迴取得 SeatNo(座位編號) 及 CarNo(車廂編號)，用於沒有任何被預訂的情況，避免在分布式環境中衝突取號
-	 * 
-	 * @param trainNoGottenData 回傳結果
-	 * @param trainSeat         座位清單
-	 */
-	private void getSeatNoAndCarNo(UnbookedSeatGottenData trainSeatGottenData) {
-
-		// 隨機取得座位號
-		String seatNo = SequenceGenerator.generateSeatNumber();
-		// 使用冪等機制
-		BaseIdempotentCommand command = BaseIdempotentCommand.builder().eventLogUuid(UUID.randomUUID().toString())
-				.targetId(seatNo).build();
-		if (eventIdempotentLogService.handleIdempotency(command)) {
-			// 直接從第一列列車去取
-			trainSeatGottenData.setCarNo(1L);
-			trainSeatGottenData.setSeatNo(seatNo);
-		}
 	}
 
 	/**

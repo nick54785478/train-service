@@ -21,8 +21,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
@@ -73,7 +71,6 @@ public class Train extends BaseEntity {
 			// 將 Train UUID 設置進 Stop
 			for (TrainStop stop : stops) {
 				stop.setTrainUuid(this.uuid);
-				System.out.println("prePersist:" + stop);
 			}
 		}
 	}
@@ -93,7 +90,6 @@ public class Train extends BaseEntity {
 			trainStop.create("", stop.getSeq(), stop.getStopName(), stop.getStopTime());
 			stops.add(trainStop);
 		}
-
 	}
 
 	/**
@@ -102,40 +98,11 @@ public class Train extends BaseEntity {
 	 * @param command
 	 */
 	public void update(UpdateTrainCommand command, String trainUuid) {
-//		// 將 Stop 資料進行重設置(註.不能使用清空後重新新增，因為 update 比 create 更快)
-//		Map<String, TrainStop> existMap = this.stops.stream()
-//				.collect(Collectors.toMap(TrainStop::getUuid, Function.identity()));
-//
-//		// 新資料沒有但舊資料有 => 刪除
-//		List<TrainStop> result = this.stops.stream()
-//				.filter(existStop -> command.getStops().stream()
-//						.noneMatch(newStop -> existStop.getUuid().equals(newStop.getUuid())))
-//				.peek(TrainStop::delete) // peek 在收集到清單之前執行
-//				.collect(Collectors.toList());
-//
-//		// 遍歷使用者的角色資料蒐集
-//		command.getStops().stream().forEach(e -> {
-//			// uuid 對不到 --> 新資料中有但舊資料沒有的資料 => 新增
-//			if (Objects.isNull(existMap.get(e.getUuid()))) {
-//				TrainStop trainStop = new TrainStop();
-//				trainStop.create(this.uuid, e.getSeq(), e.getStopName(), e.getStopTime());
-//				result.add(trainStop);
-//			} else {
-//				// 有對到 --> 新蓋舊
-//				TrainStop old = existMap.get(e.getUuid());
-//				old.update(e.getSeq(), e.getStopName(), e.getStopTime(), YesNo.valueOf(e.getDeleteFlag()));
-//				result.add(old);
-//			}
-//		});
-
 		this.stops.clear();
-
 		List<String> uuids = this.stops.stream().map(TrainStop::getUuid).collect(Collectors.toList());
 		// 移除 functions 中不存在於 Role Functions 的項目
 		this.stops.removeIf(existingStop -> command.getStops().stream()
 				.noneMatch(newStop -> StringUtils.equals(newStop.getUuid(), existingStop.getUuid())));
-		System.out.println("sss:" + this.stops.size());
-		// 增加新的 Role Function
 		command.getStops().stream().forEach(newStop -> {
 			if (!uuids.contains(newStop.getUuid())) {
 				TrainStop trainStop = new TrainStop();
@@ -143,8 +110,13 @@ public class Train extends BaseEntity {
 				this.stops.add(trainStop);
 			}
 		});
-//		this.stops = new ArrayList<>();
-		System.out.println("result size:" + stops.size());
+	}
+
+	/**
+	 * 更新 Stops
+	 * */
+	public void updateStops(List<TrainStop> stops) {
+		this.stops = stops;
 	}
 
 }

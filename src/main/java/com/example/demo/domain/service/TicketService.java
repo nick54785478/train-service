@@ -1,8 +1,10 @@
 package com.example.demo.domain.service;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -19,10 +21,12 @@ import com.example.demo.infra.repository.TicketRepository;
 import com.example.demo.infra.repository.TrainRepository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Domain Service
  */
+@Slf4j
 @Service
 @AllArgsConstructor
 public class TicketService extends BaseDomainService {
@@ -40,12 +44,35 @@ public class TicketService extends BaseDomainService {
 
 		// 領域檢核 檢查車次是否存在(車次存在才可以新增)
 		if (Objects.isNull(train)) {
+			log.error("該車次不存在");
 			throw new ValidationException("VALIDATE_FAILED", "該車次不存在");
 		}
 		Ticket ticket = new Ticket();
 		ticket.create(command, train.getUuid());
 		ticketRepository.save(ticket); // 將ticket資料存入資料庫
+	}
 
+	/**
+	 * 批次新增車票資料
+	 * 
+	 * @param command
+	 */
+	public void create(List<CreateTicketCommand> commands) {
+		Optional<CreateTicketCommand> any = commands.stream().findAny();
+		if (any.isPresent()) {
+			// 車次
+			Integer trainNo = any.get().getTrainNo();
+			Train train = trainRepository.findByNumber(trainNo);
+			List<Ticket> tickets = commands.stream().map(command -> {
+				Ticket ticket = new Ticket();
+				ticket.create(command, train.getUuid());
+				return ticket;
+			}).collect(Collectors.toList());
+			ticketRepository.saveAll(tickets); // 將 ticket 資料存入資料庫
+		} else {
+			log.error( "該車次不存在");
+			throw new ValidationException("VALIDATION_FAILED", "該車次不存在");
+		}
 	}
 
 	/**

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.base.config.context.ContextHolder;
 import com.example.demo.base.event.BaseEvent;
+import com.example.demo.infra.blob.MinioService;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +21,18 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class TestController {
 
+	private MinioService minoService;
+
 	@PostMapping("/checkContextHolder")
 	public String checkToken() {
 		BaseEvent event = BaseEvent.builder().eventLogUuid(UUID.randomUUID().toString()).build();
 		ContextHolder.setBaseEvent(event);
-		
+
 		log.info("Event: {}", ContextHolder.getEvent());
 		log.info("Username:{} ", ContextHolder.getUsername());
 		log.info("JwToken: {} ", ContextHolder.getJwtoken());
 		return "End";
 	}
+	
+
 }

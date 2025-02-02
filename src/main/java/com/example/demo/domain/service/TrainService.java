@@ -266,7 +266,6 @@ public class TrainService extends BaseDomainService {
 			log.error("火車停靠站重複，新增失敗，車次列表:{}", command.getStops());
 			throw new ValidationException("VALIDATE_FAILED", "火車停靠站重複，新增失敗");
 		}
-
 		return true;
 	}
 
@@ -294,4 +293,5 @@ public class TrainService extends BaseDomainService {
 			}
 		});
 	}
+	
 }

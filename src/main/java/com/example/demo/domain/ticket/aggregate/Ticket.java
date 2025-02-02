@@ -7,7 +7,6 @@ import java.util.UUID;
 import com.example.demo.base.entity.BaseEntity;
 import com.example.demo.domain.ticket.command.CreateOrUpdateTicketCommand;
 import com.example.demo.domain.ticket.command.CreateTicketCommand;
-import com.example.demo.domain.train.aggregate.Train;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -96,6 +95,15 @@ public class Ticket extends BaseEntity {
 		this.trainUuid = trainUuid;
 		this.fromStop = command.getFromStop();
 		this.toStop = command.getToStop();
+	}
+
+	/**
+	 * 更新火車 uuid
+	 * 
+	 * @param trainUuid
+	 */
+	public void updateTrainUuid(String trainUuid) {
+		this.trainUuid = trainUuid;
 	}
 
 }

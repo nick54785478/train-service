@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 public class RabbitmqService {
 
 	@Autowired
-	RabbitTemplate rabbitTemplate;
+	private RabbitTemplate rabbitTemplate;
 
 	/**
 	 * 發布事件到 Rabbit MQ
