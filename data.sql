@@ -93,3 +93,39 @@ INSERT INTO `TRAIN_STOP` (`UUID`, `TRAIN_UUID`, `SEQ`, `NAME`, `TIME`, `DELETE_F
 ('cb8f950c-8a6b-438e-948c-44d85cd57d63', 'b302f86f-1c40-4e16-900f-d630e082400b', 2, '西勢', '11:01:00', 'N', '2024-09-13 03:24:03', 'SYSTEM', '2024-09-13 03:24:03', 'SYSTEM'),
 ('cf26a4fc-b1cd-4103-9f21-fce027558a0c', '6fb1e5c5-c640-4a18-9335-b93f2a92c5fe', 3, '屏東', '15:16:00', 'N', '2024-09-13 03:24:03', 'SYSTEM', '2024-09-13 03:24:03', 'SYSTEM'),
 ('e3b8c6be-f535-4c40-bfec-07d803b6c3ed', '6fb1e5c5-c640-4a18-9335-b93f2a92c5fe', 1, '潮州', '15:00:00', 'N', '2024-09-13 03:24:03', 'SYSTEM', '2024-09-13 03:24:03', 'SYSTEM');
+
+INSERT INTO `SETTING` (`ID`, `DATA_TYPE`, `TYPE`, `NAME`, `VALUE`, `DESCRIPTION`, `PRIORITY_NO`, `ACTIVE_FLAG`) VALUES
+(1, 'YES_NO', 'Y', 'Y', 'YES', 'YES', 1, 'Y');
+INSERT INTO `SETTING` (`ID`, `DATA_TYPE`, `TYPE`, `NAME`, `VALUE`, `DESCRIPTION`, `PRIORITY_NO`, `ACTIVE_FLAG`) VALUES
+(2, 'YES_NO', 'N', 'N', 'NO', 'NO', 1, 'Y');
+INSERT INTO `SETTING` (`ID`, `DATA_TYPE`, `TYPE`, `NAME`, `VALUE`, `DESCRIPTION`, `PRIORITY_NO`, `ACTIVE_FLAG`) VALUES
+(3, 'SEAT_NO_LIST', '座位清單', '座位清單', '1A,1B,1C,1D,1E,2A,2B,2C,2D,2E,3A,3B,3C,3D,3E,4A,4B,4C,4D,4E,5A,5B,5C,5D,5E,6A,6B,6C,6D,6E,7A,7B,7C,7D,7E,8A,8B,8C,8D,8E,9A,9B,9C,9D,9E,10A,10B,10C,10D,10E,11A,11B,11C,11D,11E,12A,12B,12C,12D,12E,13A,13B,13C,13D,13E', '1A,1B,1C,1D,1E,2A,2B,2C,2D,2E,3A,3B,3C,3D,3E,4A,4B,4C,4D,4E,5A,5B,5C,5D,5E,6A,6B,6C,6D,6E,7A,7B,7C,7D,7E,8A,8B,8C,8D,8E,9A,9B,9C,9D,9E,10A,10B,10C,10D,10E,11A,11B,11C,11D,11E,12A,12B,12C,12D,12E,13A,13B,13C,13D,13E', 1, 'Y');
+INSERT INTO `SETTING` (`ID`, `DATA_TYPE`, `TYPE`, `NAME`, `VALUE`, `DESCRIPTION`, `PRIORITY_NO`, `ACTIVE_FLAG`) VALUES
+(4, 'STOP_KIND', '屏東', '屏東', '屏東', '屏東車站', 1, 'Y'),
+(5, 'STOP_KIND', '麟洛', '麟洛', '麟洛', '麟洛車站', 2, 'Y'),
+(6, 'STOP_KIND', '歸來', '歸來', '歸來', '歸來車站', 3, 'Y'),
+(7, 'STOP_KIND', '西勢', '西勢', '西勢', '西勢車站', 4, 'Y'),
+(8, 'STOP_KIND', '竹田', '竹田', '竹田', '竹田車站', 5, 'Y'),
+(9, 'STOP_KIND', '潮州', '潮州', '潮州', '潮州車站', 6, 'Y'),
+(10, 'TRAIN_KIND', 'JI_XIANG', '吉祥號', '吉祥號', '吉祥號', 1, 'Y'),
+(11, 'TRAIN_KIND', 'RU_YI', '如意號', '如意號', '如意號', 2, 'Y'),
+(12, 'CAR_NO_LIST', '車廂編號清單', '車廂編號清單', '1,2,3,4,5,6,7,8,9,10,11,12', '1,2,3,4,5,6,7,8,9,10,11,12', 1, 'Y'),
+(13, 'PAY_METHOD', '帳戶錢包', '帳戶錢包', '帳戶錢包', '帳戶錢包扣款', 1, 'Y'),
+(14, 'PAY_METHOD', '簽帳卡', '簽帳卡', '簽帳卡', '簽帳金融卡付款', 2, 'Y'),
+(15, 'PAY_METHOD', '信用卡', '信用卡', '信用卡', '信用卡付款', 2, 'Y'),
+(16, 'TICKET_PRICE_RATE', 'ADULT', '全票', '1', '全票折扣', 1, 'Y'),
+(17, 'TICKET_PRICE_RATE', 'EARLY_BIRD', '早鳥票', '0.85', '早鳥票折扣，離峰時段適用', 2, 'Y'),
+(18, 'TICKET_PRICE_RATE', 'MILITARY_POLICE', '軍警票', '0.9', '軍警票折扣，適用於軍、警、消', 3, 'Y'),
+(19, 'TICKET_PRICE_RATE', 'SENIOR_PERSONS', '敬老票', '0.5', '敬老折扣，適用60歲以上老人', 4, 'Y'),
+(20, 'TICKET_PRICE_RATE', 'STUDENT', '學生票', '0.95', '學生折扣，適用於學生', 5, 'Y'),
+(21, 'DATA_MAPPING', 'TRAIN_MAPPING', '起站', 'fromStop', '上傳報表起站欄位 MAPPING ', 1, 'Y'),
+(22, 'DATA_MAPPING', 'TRAIN_MAPPING', '迄站', 'toStop', '上傳報表迄站欄位 MAPPING ', 2, 'Y'),
+(23, 'DATA_MAPPING', 'TRAIN_MAPPING', '票價', 'price', '上傳報表票價欄位 MAPPING ', 3, 'Y'),
+(24, 'DATA_MAPPING', 'TRAIN_MAPPING', '停站順序', 'seq', '上傳報表停站順序欄位 MAPPING ', 4, 'Y'),
+(25, 'DATA_MAPPING', 'TRAIN_MAPPING', '站名', 'stopName', '上傳報表車站名稱欄位 MAPPING ', 5, 'Y'),
+(26, 'DATA_MAPPING', 'TRAIN_MAPPING', '停站時間', 'stopTime', '上傳報表停站時間欄位 MAPPING ', 6, 'Y'),
+(27, 'DATA_MAPPING', 'TRAIN_MAPPING', '車次', 'trainNo', '上傳報表車次欄位 MAPPING ', 7, 'Y'),
+(28, 'DATA_MAPPING', 'TRAIN_MAPPING', '車種', 'trainKind', '上傳報表車種欄位 MAPPING ', 8, 'Y'),
+(29, 'SHEET_NAME', 'TRAIN_SHEET_NAME', 'Train', 'Train', 'SHEET NAME - Train', 1, 'Y'),
+(30, 'SHEET_NAME', 'TRAIN_SHEET_NAME', 'Stops', 'Stops', 'SHEET NAME - Stops', 2, 'Y'),
+(31, 'SHEET_NAME', 'TRAIN_SHEET_NAME', 'Tickets', 'Tickets', 'SHEET NAME - Tickets', 3, 'Y');
