@@ -1,4 +1,4 @@
-package com.example.demo.domain.ticket.aggregate.vo;
+package com.example.demo.domain.share.enums;
 
 import java.util.HashMap;
 import java.util.Map;

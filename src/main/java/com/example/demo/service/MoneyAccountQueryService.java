@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.base.service.BaseApplicationService;
 import com.example.demo.domain.service.MoneyAccountService;
 import com.example.demo.domain.share.MoneyAccountQueriedData;
 
@@ -9,7 +10,7 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class MoneyAccountQueryService {
+public class MoneyAccountQueryService extends BaseApplicationService {
 
 	private MoneyAccountService moneyAccountService;
 

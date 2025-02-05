@@ -1,0 +1,52 @@
+package com.example.demo.domain.service;
+
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.demo.base.enums.YesNo;
+import com.example.demo.base.service.BaseDomainService;
+import com.example.demo.domain.template.aggregate.Template;
+import com.example.demo.domain.template.aggregate.vo.FileType;
+import com.example.demo.domain.template.aggregate.vo.TemplateType;
+import com.example.demo.domain.template.command.UploadTemplateCommand;
+import com.example.demo.infra.blob.MinioService;
+import com.example.demo.infra.repository.TemplateRepository;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+@AllArgsConstructor
+public class TemplateService extends BaseDomainService {
+
+	private MinioService minioService;
+	private TemplateRepository templateRepository;
+
+	/**
+	 * 上傳範本
+	 * 
+	 * @param command
+	 * @param file
+	 * @throws Exception
+	 */
+	public void upload(UploadTemplateCommand command, MultipartFile file) throws Exception {
+		// 取出最新版本
+		Template template = templateRepository.findByTemplateTypeAndFileTypeAndDeleteFlag(
+				TemplateType.valueOf(command.getType()), FileType.valueOf(command.getFileType()), YesNo.N);
+		if (Objects.isNull(template)) {
+			// 新增 Template 資料
+			Template entity = new Template();
+			entity.create(command);
+			templateRepository.save(template);
+		} else {
+			// TODO 可改為版本控制，但會變得很複雜
+		}
+
+		// 上傳 範本資料
+		minioService.uploadFile(file, command.getFileName(), command.getFilePath());
+	}
+}

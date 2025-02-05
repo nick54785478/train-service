@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.base.enums.YesNo;
 import com.example.demo.domain.share.OptionQueried;
-import com.example.demo.domain.ticket.aggregate.vo.TicketType;
+import com.example.demo.domain.share.enums.TicketType;
 import com.example.demo.domain.train.aggregate.Train;
 import com.example.demo.domain.train.aggregate.vo.TrainKind;
 import com.example.demo.infra.repository.SettingRepository;

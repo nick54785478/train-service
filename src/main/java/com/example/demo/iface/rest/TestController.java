@@ -2,13 +2,17 @@ package com.example.demo.iface.rest;
 
 import java.util.UUID;
 
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.base.config.context.ContextHolder;
 import com.example.demo.base.event.BaseEvent;
+import com.example.demo.iface.dto.UploadTemplateResource;
 import com.example.demo.infra.blob.MinioService;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class TestController {
 
-	private MinioService minoService;
+	private MinioService minioService;
 
 	@PostMapping("/checkContextHolder")
 	public String checkToken() {
@@ -33,6 +37,13 @@ public class TestController {
 		log.info("JwToken: {} ", ContextHolder.getJwtoken());
 		return "End";
 	}
-	
+
+	@PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public String upload(@RequestPart(name = "resource", required = true) UploadTemplateResource resource,
+			@RequestPart(name = "file", required = true) MultipartFile file) throws Exception {
+		System.out.println("resource:" + resource);
+		minioService.uploadFile(file, resource.getFileName(), resource.getFilePath());
+		return "End";
+	}
 
 }

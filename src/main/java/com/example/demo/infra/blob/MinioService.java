@@ -22,7 +22,10 @@ public class MinioService {
 
 	@Value("${minio.bucketName}")
 	private String bucketName;
-
+	
+	
+	@Value("${minio.endpoint}")
+	private String minioEndpoint;
 
 	public MinioService(@Value("${minio.endpoint}") String endpoint, @Value("${minio.accessKey}") String accessKey,
 			@Value("${minio.secretKey}") String secretKey) {
@@ -53,6 +56,32 @@ public class MinioService {
 		client.putObject(PutObjectArgs.builder().bucket(bucketName).object(objectName)
 				.stream(file.getInputStream(), file.getSize(), -1).contentType(file.getContentType()).build());
 		return objectName;
+	}
+
+	/**
+	 * 上傳檔案至 MinIO
+	 *
+	 * @param file     上傳的檔案
+	 * @param fileName 指定檔案名稱
+	 * @param filePath 指定存放路徑（資料夾路徑）
+	 * @return 檔案 URL
+	 */
+	public String uploadFile(MultipartFile file, String fileName, String filePath) throws Exception {
+		this.createBucket(); // 確保 bucket 存在
+
+		// 確保 filePath 以 '/' 結尾，避免路徑錯誤
+		if (!filePath.endsWith("/")) {
+			filePath += "/";
+		}
+
+		// 組合完整 objectName，例如 "uploads/images/myfile.jpg"
+		String objectName = filePath + fileName;
+
+		client.putObject(PutObjectArgs.builder().bucket(bucketName).object(objectName)
+				.stream(file.getInputStream(), file.getSize(), -1).contentType(file.getContentType()).build());
+
+		// 組合檔案的存取 URL
+		return String.format("http://%s/%s/%s", minioEndpoint, bucketName, objectName);
 	}
 
 	/**

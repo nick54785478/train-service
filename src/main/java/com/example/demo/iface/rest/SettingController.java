@@ -21,6 +21,7 @@ import com.example.demo.iface.dto.SettingCreatedResource;
 import com.example.demo.iface.dto.SettingDeletedResource;
 import com.example.demo.iface.dto.SettingQueriedResource;
 import com.example.demo.iface.dto.SettingUpdatedResource;
+import com.example.demo.iface.dto.TemplateUploadedResource;
 import com.example.demo.iface.dto.UpdateSettingResource;
 import com.example.demo.service.SettingCommandService;
 import com.example.demo.service.SettingQueryService;
@@ -99,4 +100,6 @@ public class SettingController {
 		settingCommandService.delete(id);
 		return new ResponseEntity<>(new SettingDeletedResource("200", "成功刪除一筆資料"), HttpStatus.OK);
 	}
+	
+
 }
