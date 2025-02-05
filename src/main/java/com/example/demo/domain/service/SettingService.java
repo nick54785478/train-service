@@ -44,7 +44,7 @@ public class SettingService {
 			setting.update(command);
 			settingRepository.save(setting);
 		}, () -> {
-			throw new ValidationException("VALIDATION_FAILED", "查無此資料，更新失敗");
+			throw new ValidationException("VALIDATE_FAILED", "查無此資料，更新失敗");
 		});
 	}
 
@@ -74,7 +74,7 @@ public class SettingService {
 			settingRepository.save(setting);
 		}, () -> {
 			log.error("查無此資料，ID:" + id + "，刪除失敗");
-			throw new ValidationException("VALIDATION_FAILED", "查無此資料，刪除失敗");
+			throw new ValidationException("VALIDATE_FAILED", "查無此資料，刪除失敗");
 		});
 	}
 
@@ -85,11 +85,11 @@ public class SettingService {
 	 */
 	public void checkSetting(CreateSettingCommand command) {
 		if (StringUtils.equals(command.getDataType(), "CONFIGURE") && command.getPriorityNo() != 0L) {
-			throw new ValidationException("VALIDATION_FAILED", "資料配置有誤，Configure 的排序號需為 0");
+			throw new ValidationException("VALIDATE_FAILED", "資料配置有誤，Configure 的排序號需為 0");
 		}
 
 		if (StringUtils.equals(command.getDataType(), "DATA") && command.getPriorityNo() == 0L) {
-			throw new ValidationException("VALIDATION_FAILED", "資料配置有誤，Data 的排序號需大於 0");
+			throw new ValidationException("VALIDATE_FAILED", "資料配置有誤，Data 的排序號需大於 0");
 		}
 
 	}

@@ -85,6 +85,7 @@ public class TrainCommandService extends BaseApplicationService {
 
 		// 處理資料為 Command
 		Map<String, Object> processUploadData = this.processUploadData(excelData, mappings);
+		log.info("processUploadData: {}", processUploadData);
 		// 儲存處理後的資料
 		this.saveProcessedData(processUploadData);
 	}
@@ -141,7 +142,7 @@ public class TrainCommandService extends BaseApplicationService {
 		Map<String, String> mapping = dataMapping.stream()
 				.collect(Collectors.toMap(ConfigurableSetting::getName, ConfigurableSetting::getValue));
 
-		log.info("excelData:" + excelData);
+		log.info("excelData:{}", excelData);
 		// 遍歷 Map<SheetName, List<Map<Header, Value>>>
 		excelData.forEach((k, v) -> {
 
@@ -208,7 +209,6 @@ public class TrainCommandService extends BaseApplicationService {
 					tickets.add(ticket);
 				});
 				resMap.put(k, tickets);
-
 			}
 		});
 		return resMap;

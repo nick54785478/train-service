@@ -71,7 +71,7 @@ public class TicketService extends BaseDomainService {
 			ticketRepository.saveAll(tickets); // 將 ticket 資料存入資料庫
 		} else {
 			log.error( "該車次不存在");
-			throw new ValidationException("VALIDATION_FAILED", "該車次不存在");
+			throw new ValidationException("VALIDATE_FAILED", "該車次不存在");
 		}
 	}
 

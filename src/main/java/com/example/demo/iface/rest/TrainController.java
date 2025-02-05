@@ -176,7 +176,7 @@ public class TrainController {
 			trainCommandService.upload(mapping, sheetMapping, file);
 		} catch (IOException e) {
 			log.error("發生錯誤，上傳失敗", e);
-			throw new ValidationException("VALIDATION_FAILED", "發生錯誤，上傳失敗"); // 拋出例外
+			throw new ValidationException("VALIDATE_FAILED", "發生錯誤，上傳失敗"); // 拋出例外
 		}
 
 		return new ResponseEntity<>(new TrainUploadedResource("200", "上傳成功"), HttpStatus.OK);
