@@ -19,6 +19,4 @@ public class UploadTemplateResource {
 
 	private String fileName; // 檔案名稱
 
-	private String deleteFlag; // 是否刪除
-
 }
