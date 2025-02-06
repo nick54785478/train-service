@@ -129,3 +129,6 @@ INSERT INTO `SETTING` (`ID`, `DATA_TYPE`, `TYPE`, `NAME`, `VALUE`, `DESCRIPTION`
 (29, 'SHEET_NAME', 'TRAIN_SHEET_NAME', 'Train', 'Train', 'SHEET NAME - Train', 1, 'Y'),
 (30, 'SHEET_NAME', 'TRAIN_SHEET_NAME', 'Stops', 'Stops', 'SHEET NAME - Stops', 2, 'Y'),
 (31, 'SHEET_NAME', 'TRAIN_SHEET_NAME', 'Tickets', 'Tickets', 'SHEET NAME - Tickets', 3, 'Y');
+(32, 'TEMPLATE', 'TRAIN_TIMETABLE', '火車時刻表範本', '火車時刻表範本', '火車時刻表範本。', 1, 'Y');
+(33, 'TEMPLATE', 'TRAIN_UPLOAD', '車次資料上傳範本', '車次資料上傳範本', '車次資料上傳範本。', 2, 'Y');
+

@@ -52,7 +52,7 @@ public class OptionController {
 	}
 
 	/**
-	 * 查詢相關的設定 (下拉式選單)
+	 * 查詢相關 DataType 的設定 (下拉式選單)
 	 * 
 	 * @param type 設定種類
 	 * @return ResponseEntity<List<OptionQueriedResource>>

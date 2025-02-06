@@ -68,7 +68,7 @@ public class Template extends BaseEntity {
 		this.name = command.getName();
 		this.type = TemplateType.fromLabel(command.getType());
 		this.fileType = FileType.fromLabel(command.getFileType());
-		this.filePath = command.getFileType();
+		this.filePath = command.getFilePath();
 		this.fileName = command.getFileName();
 		this.deleteFlag = YesNo.N;
 	}

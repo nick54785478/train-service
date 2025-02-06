@@ -11,6 +11,7 @@ import com.example.demo.domain.template.aggregate.vo.TemplateType;
 @Repository
 public interface TemplateRepository extends JpaRepository<Template, Long> {
 
-	Template findByTemplateTypeAndFileTypeAndDeleteFlag(TemplateType templateType, FileType fileType, YesNo deleteFlag);
+	Template findByTypeAndFileTypeAndDeleteFlag(TemplateType templateType, FileType fileType, YesNo deleteFlag);
 
+	Template findByTypeAndDeleteFlag(TemplateType type, YesNo deleteFlag);
 }
