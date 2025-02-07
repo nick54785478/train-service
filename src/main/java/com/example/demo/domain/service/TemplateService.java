@@ -58,4 +58,5 @@ public class TemplateService extends BaseDomainService {
 		Template queried = templateRepository.findByTypeAndDeleteFlag(TemplateType.valueOf(type), YesNo.N);
 		return Objects.isNull(queried) ? null : transformEntityToData(queried, TemplateQueriedData.class);
 	}
+	
 }

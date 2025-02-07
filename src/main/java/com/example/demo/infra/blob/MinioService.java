@@ -1,6 +1,9 @@
 package com.example.demo.infra.blob;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,6 +15,12 @@ import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
+import io.minio.errors.ErrorResponseException;
+import io.minio.errors.InsufficientDataException;
+import io.minio.errors.InternalException;
+import io.minio.errors.InvalidResponseException;
+import io.minio.errors.ServerException;
+import io.minio.errors.XmlParserException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -88,8 +97,18 @@ public class MinioService {
 	 * 下載檔案
 	 * 
 	 * @param objectName Object 名稱
+	 * @throws IOException 
+	 * @throws IllegalArgumentException 
+	 * @throws XmlParserException 
+	 * @throws ServerException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws InvalidResponseException 
+	 * @throws InternalException 
+	 * @throws InsufficientDataException 
+	 * @throws ErrorResponseException 
+	 * @throws InvalidKeyException 
 	 */
-	public InputStream getFile(String objectName) throws Exception {
+	public InputStream getFile(String objectName) throws InvalidKeyException, ErrorResponseException, InsufficientDataException, InternalException, InvalidResponseException, NoSuchAlgorithmException, ServerException, XmlParserException, IllegalArgumentException, IOException {
 		return client.getObject(GetObjectArgs.builder().bucket(bucketName).object(objectName).build());
 	}
 
