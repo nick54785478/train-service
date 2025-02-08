@@ -34,7 +34,7 @@ public class TemplateService extends BaseDomainService {
 	public void upload(UploadTemplateCommand command, MultipartFile file) throws Exception {
 		// 取出最新版本
 		Template template = templateRepository.findByTypeAndFileTypeAndDeleteFlag(
-				TemplateType.fromLabel(command.getType()), FileType.fromLabel(command.getFileType()), YesNo.N);
+				TemplateType.valueOf(command.getType()), FileType.fromLabel(command.getFileType()), YesNo.N);
 		if (Objects.isNull(template)) {
 			// 新增 Template 資料
 			Template entity = new Template();
@@ -58,5 +58,5 @@ public class TemplateService extends BaseDomainService {
 		Template queried = templateRepository.findByTypeAndDeleteFlag(TemplateType.valueOf(type), YesNo.N);
 		return Objects.isNull(queried) ? null : transformEntityToData(queried, TemplateQueriedData.class);
 	}
-	
+
 }

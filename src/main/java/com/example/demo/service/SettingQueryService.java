@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.service.SettingService;
-import com.example.demo.domain.share.SettingQueried;
+import com.example.demo.domain.share.SettingQueriedData;
 
 import lombok.AllArgsConstructor;
 
@@ -24,7 +24,7 @@ public class SettingQueryService {
 	 * @param activeFlag
 	 * @return
 	 */
-	public List<SettingQueried> query(String dataType, String type, String name, String activeFlag) {
+	public List<SettingQueriedData> query(String dataType, String type, String name, String activeFlag) {
 		return service.query(dataType, type, name, activeFlag);
 	}
 

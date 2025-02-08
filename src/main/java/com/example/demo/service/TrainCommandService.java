@@ -1,6 +1,9 @@
 package com.example.demo.service;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -12,6 +15,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -19,19 +23,34 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.base.enums.YesNo;
+import com.example.demo.base.exception.ValidationException;
 import com.example.demo.base.service.BaseApplicationService;
 import com.example.demo.domain.service.TicketService;
+import com.example.demo.domain.service.TimetableService;
 import com.example.demo.domain.service.TrainService;
 import com.example.demo.domain.setting.aggregate.ConfigurableSetting;
+import com.example.demo.domain.share.TemplateQueriedData;
+import com.example.demo.domain.share.TimetableGeneratedData;
+import com.example.demo.domain.share.TrainSummaryQueriedData;
 import com.example.demo.domain.share.enums.TrainSheetMapping;
 import com.example.demo.domain.ticket.command.CreateTicketCommand;
 import com.example.demo.domain.train.command.CreateStopCommand;
 import com.example.demo.domain.train.command.CreateTrainCommand;
+import com.example.demo.domain.train.command.GenerateTimetableCommand;
+import com.example.demo.domain.train.command.QueryTrainSummaryCommand;
 import com.example.demo.domain.train.command.UpdateTrainCommand;
+import com.example.demo.infra.blob.MinioService;
 import com.example.demo.infra.repository.SettingRepository;
 import com.example.demo.util.ExcelUtil;
+import com.example.demo.util.JasperUtil;
 import com.example.demo.util.ParameterMappingUtil;
 
+import io.minio.errors.ErrorResponseException;
+import io.minio.errors.InsufficientDataException;
+import io.minio.errors.InternalException;
+import io.minio.errors.InvalidResponseException;
+import io.minio.errors.ServerException;
+import io.minio.errors.XmlParserException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,7 +61,9 @@ import lombok.extern.slf4j.Slf4j;
 public class TrainCommandService extends BaseApplicationService {
 
 	private TrainService trainService;
+	private MinioService minioService;
 	private TicketService ticketService;
+	private TimetableService timetableService;
 	private SettingRepository settingRepository;
 
 	/**
@@ -226,5 +247,41 @@ public class TrainCommandService extends BaseApplicationService {
 		// 轉換 LocalTime 為 "HH:mm:ss" 格式的字串
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 		return parsedTime.format(formatter);
+	}
+
+	/**
+	 * 下載火車時刻表
+	 * 
+	 * @param command
+	 * @return ByteArrayResource
+	 */
+	public ByteArrayResource downloadTimetable(QueryTrainSummaryCommand command) {
+		try {
+			List<TrainSummaryQueriedData> summaryData = trainService.queryTrainSummary(command);
+			
+			// 轉換 command 用以建立 Timetable
+			List<GenerateTimetableCommand> commands = transformData(summaryData, GenerateTimetableCommand.class);
+			TimetableGeneratedData generateData = timetableService.generateTimetableByFromStopAndToStop(commands);
+
+			// 透過 Template 配置取得資料流
+			TemplateQueriedData templateData = generateData.getTemplateQueriedData();
+			InputStream inputStream = minioService
+					.getFile(templateData.getFilePath() + "/" + generateData.getTemplateQueriedData().getFileName());
+
+			ByteArrayResource resource = JasperUtil.generateReportToPDF(inputStream, generateData.getDetails(),
+					generateData.getParameters());
+			
+			if (Objects.isNull(resource)) {
+				log.error("建立失敗，下載失敗");
+				throw new ValidationException("VALIDATE_FAILED", "建立失敗，下載失敗");
+			}
+			return resource;
+
+		} catch (InvalidKeyException | ErrorResponseException | InsufficientDataException | InternalException
+				| InvalidResponseException | NoSuchAlgorithmException | ServerException | XmlParserException
+				| IllegalArgumentException | IOException e) {
+			log.error("取得檔案發生錯誤");
+			throw new ValidationException("VALIDATE_FAILED", "取得資料流時發生錯誤，下載失敗");
+		}
 	}
 }

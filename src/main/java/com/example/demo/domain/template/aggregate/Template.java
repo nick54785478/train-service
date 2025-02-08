@@ -66,7 +66,7 @@ public class Template extends BaseEntity {
 	 */
 	public void create(UploadTemplateCommand command) {
 		this.name = command.getName();
-		this.type = TemplateType.fromLabel(command.getType());
+		this.type = TemplateType.valueOf(command.getType());
 		this.fileType = FileType.fromLabel(command.getFileType());
 		this.filePath = command.getFilePath();
 		this.fileName = command.getFileName();

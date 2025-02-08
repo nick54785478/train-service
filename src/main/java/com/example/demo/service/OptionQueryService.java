@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.base.service.BaseApplicationService;
 import com.example.demo.domain.service.OptionService;
-import com.example.demo.domain.share.OptionQueried;
+import com.example.demo.domain.share.OptionQueriedData;
 
 import lombok.AllArgsConstructor;
 
@@ -22,7 +22,7 @@ public class OptionQueryService extends BaseApplicationService{
 	 * @param type 設定種類
 	 * @return List<OptionQueried>
 	 */
-	public List<OptionQueried> getSettingTypes(String type) {
+	public List<OptionQueriedData> getSettingTypes(String type) {
 		return optionService.getSettingTypes(type);
 	}
 
@@ -31,7 +31,7 @@ public class OptionQueryService extends BaseApplicationService{
 	 * 
 	 * @return List<OptionQueried>
 	 */
-	public List<OptionQueried> getTrainKinds() {
+	public List<OptionQueriedData> getTrainKinds() {
 		return optionService.getTrainKinds();
 	}
 	
@@ -40,14 +40,14 @@ public class OptionQueryService extends BaseApplicationService{
 	 * 
 	 * @return List<OptionQueried>
 	 */
-	public List<OptionQueried> getTicketTypes() {
+	public List<OptionQueriedData> getTicketTypes() {
 		return optionService.getTicketTypes();
 	}
 	
 	/**
 	 * 取得火車車次資料 (下拉式選單)
 	 */
-	public List<OptionQueried> getTrainNoList() {
+	public List<OptionQueriedData> getTrainNoList() {
 		return optionService.getTrainNoList();
 	}
 

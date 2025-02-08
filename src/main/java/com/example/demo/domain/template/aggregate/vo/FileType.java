@@ -18,6 +18,8 @@ public enum FileType {
 
 	TXT("txt", "txt"),
 
+	JASPER("jasper", "jasper"),
+	
 	DOC("doc", "doc");
 
 	@Getter

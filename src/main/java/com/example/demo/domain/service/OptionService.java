@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.base.enums.YesNo;
-import com.example.demo.domain.share.OptionQueried;
+import com.example.demo.domain.share.OptionQueriedData;
 import com.example.demo.domain.share.enums.TicketType;
 import com.example.demo.domain.train.aggregate.Train;
 import com.example.demo.domain.train.aggregate.vo.TrainKind;
@@ -29,9 +29,9 @@ public class OptionService {
 	 * @param type 設定種類
 	 * @return List<OptionQueried>
 	 */
-	public List<OptionQueried> getSettingTypes(String dataType) {
+	public List<OptionQueriedData> getSettingTypes(String dataType) {
 		return settingRepository.findByDataTypeAndActiveFlag(dataType, YesNo.Y).stream().map(setting -> {
-			return new OptionQueried(setting.getId(), setting.getType(), setting.getType());
+			return new OptionQueriedData(setting.getId(), setting.getType(), setting.getType());
 		}).collect(Collectors.toList());
 	}
 
@@ -40,9 +40,9 @@ public class OptionService {
 	 * 
 	 * @return List<OptionQueried>
 	 */
-	public List<OptionQueried> getTrainKinds() {
+	public List<OptionQueriedData> getTrainKinds() {
 		Map<String, TrainKind> kindMap = TrainKind.getMap();
-		return kindMap.values().stream().map(v -> new OptionQueried(null, v.getCode(), v.getLabel()))
+		return kindMap.values().stream().map(v -> new OptionQueriedData(null, v.getCode(), v.getLabel()))
 				.collect(Collectors.toList());
 	}
 
@@ -51,18 +51,18 @@ public class OptionService {
 	 * 
 	 * @return List<OptionQueried>
 	 */
-	public List<OptionQueried> getTicketTypes() {
+	public List<OptionQueriedData> getTicketTypes() {
 		Map<String, TicketType> kindMap = TicketType.getMap();
-		return kindMap.values().stream().map(v -> new OptionQueried(null, v.getLabel(), v.getLabel()))
+		return kindMap.values().stream().map(v -> new OptionQueriedData(null, v.getLabel(), v.getLabel()))
 				.collect(Collectors.toList());
 	}
 
 	/**
 	 * 取得火車車次資料 (下拉式選單)
 	 */
-	public List<OptionQueried> getTrainNoList() {
+	public List<OptionQueriedData> getTrainNoList() {
 		return trainRepository.findAll().stream().map(Train::getNumber).distinct().map(e -> {
-			return new OptionQueried(null, String.valueOf(e), String.valueOf(e));
+			return new OptionQueriedData(null, String.valueOf(e), String.valueOf(e));
 		}).distinct().collect(Collectors.toList());
 
 	}

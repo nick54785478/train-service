@@ -9,7 +9,7 @@ import com.example.demo.base.exception.ValidationException;
 import com.example.demo.domain.setting.aggregate.ConfigurableSetting;
 import com.example.demo.domain.setting.command.CreateSettingCommand;
 import com.example.demo.domain.setting.command.UpdateSettingCommand;
-import com.example.demo.domain.share.SettingQueried;
+import com.example.demo.domain.share.SettingQueriedData;
 import com.example.demo.infra.repository.SettingRepository;
 import com.example.demo.util.BaseDataTransformer;
 
@@ -57,10 +57,10 @@ public class SettingService {
 	 * @param activeFlag
 	 * @return
 	 */
-	public List<SettingQueried> query(String dataType, String type, String name, String activeFlag) {
+	public List<SettingQueriedData> query(String dataType, String type, String name, String activeFlag) {
 		List<ConfigurableSetting> settingList = settingRepository.findAllWithSpecification(dataType, type, name,
 				activeFlag);
-		return BaseDataTransformer.transformData(settingList, SettingQueried.class);
+		return BaseDataTransformer.transformData(settingList, SettingQueriedData.class);
 	}
 
 	/**

@@ -1,8 +1,13 @@
 package com.example.demo.iface.rest;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -171,15 +176,39 @@ public class TrainController {
 			@Parameter(description = "Column Mapping", required = true) @RequestParam(name = "mapping", required = true) String mapping,
 			@Parameter(description = "Sheet Name Mapping", required = true) @RequestParam(name = "sheetMapping", required = true) String sheetMapping,
 			@Parameter(description = "要上傳的文件", required = true) @RequestPart(name = "file", required = true) MultipartFile file) {
-
 		try {
 			trainCommandService.upload(mapping, sheetMapping, file);
 		} catch (IOException e) {
 			log.error("發生錯誤，上傳失敗", e);
 			throw new ValidationException("VALIDATE_FAILED", "發生錯誤，上傳失敗"); // 拋出例外
 		}
-
 		return new ResponseEntity<>(new TrainUploadedResource("200", "上傳成功"), HttpStatus.OK);
+	}
+
+	/**
+	 * 下載火車時刻表
+	 * 
+	 * @param resource
+	 * @return 成功訊息
+	 */
+	@Operation(summary = "API - 下載火車時刻表", description = "下載火車時刻表。")
+	@GetMapping(value = "/download/timetable", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<Resource> downloadTimetable(@Parameter(description = "起站") @RequestParam String fromStop,
+			@Parameter(description = "迄站") @RequestParam String toStop) {
+		// DTO 轉換
+		QueryTrainSummaryCommand command = new QueryTrainSummaryCommand();
+		command.setFromStop(fromStop);
+		command.setToStop(toStop);
+		ByteArrayResource resource = trainCommandService.downloadTimetable(command);
+
+		// 設置檔名進 Header
+//		 String encodedFileName = UriUtils.encode(fileName, StandardCharsets.UTF_8);
+		// 待確認是否加密
+		ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+				.filename("火車時刻表.pdf", StandardCharsets.UTF_8).build();
+		HttpHeaders respHeaders = new HttpHeaders();
+		respHeaders.setContentDisposition(contentDisposition);
+		return new ResponseEntity<>(resource, respHeaders, HttpStatus.OK);
 
 	}
 }
