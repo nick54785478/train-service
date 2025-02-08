@@ -267,10 +267,9 @@ public class TrainCommandService extends BaseApplicationService {
 			TemplateQueriedData templateData = generateData.getTemplateQueriedData();
 			InputStream inputStream = minioService
 					.getFile(templateData.getFilePath() + "/" + generateData.getTemplateQueriedData().getFileName());
-
 			ByteArrayResource resource = JasperUtil.generateReportToPDF(inputStream, generateData.getDetails(),
 					generateData.getParameters());
-			
+
 			if (Objects.isNull(resource)) {
 				log.error("建立失敗，下載失敗");
 				throw new ValidationException("VALIDATE_FAILED", "建立失敗，下載失敗");

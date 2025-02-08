@@ -60,7 +60,7 @@ public class TrainService extends BaseDomainService {
 		train.create(command);
 		trainRepository.save(train);
 	}
-	
+
 	/**
 	 * 更新火車資料
 	 * 
@@ -176,7 +176,8 @@ public class TrainService extends BaseDomainService {
 		List<Train> trainList = trainRepository.findByCondition(command.getTrainNo(),
 				StringUtils.isNotBlank(command.getTrainKind()) ? TrainKind.fromLabel(command.getTrainKind()).toString()
 						: null,
-				command.getTime(), command.getFromStop(), command.getToStop());
+				StringUtils.isNotBlank(command.getTime()) ? command.getTime() : "00:00:00", command.getFromStop(),
+				command.getToStop());
 		trainList.stream().forEach(e -> {
 			TrainSummaryQueriedData trainData = new TrainSummaryQueriedData();
 			trainData.setUuid(e.getUuid());
@@ -279,7 +280,7 @@ public class TrainService extends BaseDomainService {
 		return trainStops.stream().collect(() -> new TrainStop[] { null, null }, (res, stop) -> {
 			if (res[0] == null || stop.getSeq() < res[0].getSeq()) {
 				res[0] = stop; // 最小
-				
+
 			}
 			if (res[1] == null || stop.getSeq() > res[1].getSeq()) {
 				res[1] = stop; // 最大
@@ -293,5 +294,5 @@ public class TrainService extends BaseDomainService {
 			}
 		});
 	}
-	
+
 }

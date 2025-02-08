@@ -192,7 +192,7 @@ public class TrainController {
 	 * @return 成功訊息
 	 */
 	@Operation(summary = "API - 下載火車時刻表", description = "下載火車時刻表。")
-	@GetMapping(value = "/download/timetable", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@GetMapping(value = "/download/timetable", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	public ResponseEntity<Resource> downloadTimetable(@Parameter(description = "起站") @RequestParam String fromStop,
 			@Parameter(description = "迄站") @RequestParam String toStop) {
 		// DTO 轉換

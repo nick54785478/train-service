@@ -50,18 +50,23 @@ public class TimetableService extends BaseDomainService {
 
 		List<TimetableDetailGeneratedData> details = BaseDataTransformer.transformData(commands,
 				TimetableDetailGeneratedData.class);
+		
+		log.debug("details:{}",details);
 
 		// 取得 Parameters
 		List<ConfigurableSetting> settings = settingRepository.findByDataTypeAndTypeAndActiveFlag("JASPER_PARAMETER",
 				TemplateType.TRAIN_TIMETABLE.getCode(), YesNo.Y);
+		
 		List<SettingQueriedData> parameterList = this.transformEntityToData(settings, SettingQueriedData.class);
 		Map<String, Object> parameters = parameterList.stream()
 				.collect(Collectors.toMap(SettingQueriedData::getName, SettingQueriedData::getValue));
+		System.out.println(parameters);
 		// 設置 Detail 大小
-		parameters.put("DETAIL_SIZE", details.size());
+		parameters.put("detailSize", details.size());
 
 		TimetableGeneratedData timetableGeneratedData = new TimetableGeneratedData();
 		timetableGeneratedData.setTemplateQueriedData(templateData);
+		timetableGeneratedData.setDetails(details);
 		timetableGeneratedData.setParameters(parameters);
 		return timetableGeneratedData;
 	}
