@@ -22,4 +22,5 @@ public class AuthCommandService {
 		JwtTokenGettenResource resource = client.login(command);
 		return resource;
 	}
+
 }

@@ -80,6 +80,7 @@ public class ConfigurableSetting {
 		this.type = command.getType();
 		this.name = command.getName();
 		this.value = command.getValue();
+		this.priorityNo = command.getPriorityNo();
 		this.description = command.getDescription();
 		this.activeFlag = YesNo.valueOf(command.getActiveFlag());
 	}

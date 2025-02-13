@@ -70,7 +70,6 @@ public class TrainCommandService extends BaseApplicationService {
 	 * 新增火車資訊
 	 * 
 	 * @param command
-	 * @return UUID
 	 */
 	public void createTrain(CreateTrainCommand command) {
 		trainService.create(command);
@@ -80,7 +79,6 @@ public class TrainCommandService extends BaseApplicationService {
 	 * 更新火車資訊
 	 * 
 	 * @param command
-	 * @return UUID
 	 */
 	public void updateTrain(UpdateTrainCommand command) {
 		trainService.update(command);
@@ -252,13 +250,14 @@ public class TrainCommandService extends BaseApplicationService {
 	/**
 	 * 下載火車時刻表
 	 * 
+	 * 
 	 * @param command
 	 * @return ByteArrayResource
 	 */
 	public ByteArrayResource downloadTimetable(QueryTrainSummaryCommand command) {
 		try {
 			List<TrainSummaryQueriedData> summaryData = trainService.queryTrainSummary(command);
-			
+
 			// 轉換 command 用以建立 Timetable
 			List<GenerateTimetableCommand> commands = transformData(summaryData, GenerateTimetableCommand.class);
 			TimetableGeneratedData generateData = timetableService.generateTimetableByFromStopAndToStop(commands);
@@ -267,6 +266,8 @@ public class TrainCommandService extends BaseApplicationService {
 			TemplateQueriedData templateData = generateData.getTemplateQueriedData();
 			InputStream inputStream = minioService
 					.getFile(templateData.getFilePath() + "/" + generateData.getTemplateQueriedData().getFileName());
+
+			// TODO JasperReport 已無法開源使用，尚待新的 Solution
 			ByteArrayResource resource = JasperUtil.generateReportToPDF(inputStream, generateData.getDetails(),
 					generateData.getParameters());
 

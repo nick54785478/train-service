@@ -20,6 +20,8 @@ public class UpdateSettingCommand {
 	private String value; // 值
 
 	private String description; // 敘述
+	
+	private Integer priorityNo; // 順序號(從 1 開始)
 
 	private String activeFlag;
 
