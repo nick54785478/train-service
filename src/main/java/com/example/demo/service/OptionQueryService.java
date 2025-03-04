@@ -12,18 +12,18 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class OptionQueryService extends BaseApplicationService{
+public class OptionQueryService extends BaseApplicationService {
 
 	private OptionService optionService;
-	
+
 	/**
-	 * 查詢相關的設定
+	 * 透過 DataType 查詢相關的設定
 	 * 
-	 * @param type 設定種類
+	 * @param dataType 設定種類
 	 * @return List<OptionQueried>
 	 */
-	public List<OptionQueriedData> getSettingTypes(String type) {
-		return optionService.getSettingTypes(type);
+	public List<OptionQueriedData> getSettingsByDataType(String dataType) {
+		return optionService.getSettingsByDataType(dataType);
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class OptionQueryService extends BaseApplicationService{
 	public List<OptionQueriedData> getTrainKinds() {
 		return optionService.getTrainKinds();
 	}
-	
+
 	/**
 	 * 取得車票種類
 	 * 
@@ -43,12 +43,25 @@ public class OptionQueryService extends BaseApplicationService{
 	public List<OptionQueriedData> getTicketTypes() {
 		return optionService.getTicketTypes();
 	}
-	
+
 	/**
 	 * 取得火車車次資料 (下拉式選單)
+	 * 
+	 * @return List<OptionQueried>
 	 */
 	public List<OptionQueriedData> getTrainNoList() {
 		return optionService.getTrainNoList();
+	}
+
+	/**
+	 * 透過 Type 查詢相關的設定
+	 * 
+	 * @param dataType
+	 * @param type
+	 * @return List<OptionQueried>
+	 */
+	public List<OptionQueriedData> getSettingsByDataTypeAndType(String dataType, String type) {
+		return optionService.getSettingsByDataTypeAndType(dataType, type);
 	}
 
 }

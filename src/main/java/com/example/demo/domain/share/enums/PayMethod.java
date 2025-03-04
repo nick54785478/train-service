@@ -3,8 +3,6 @@ package com.example.demo.domain.share.enums;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.example.demo.domain.train.aggregate.vo.TrainKind;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

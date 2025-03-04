@@ -26,10 +26,10 @@ public class OptionService {
 	/**
 	 * 查詢相關的設定 (dropdown)
 	 * 
-	 * @param type 設定種類
+	 * @param dataType 設定種類
 	 * @return List<OptionQueried>
 	 */
-	public List<OptionQueriedData> getSettingTypes(String dataType) {
+	public List<OptionQueriedData> getSettingsByDataType(String dataType) {
 		return settingRepository.findByDataTypeAndActiveFlag(dataType, YesNo.Y).stream().map(setting -> {
 			return new OptionQueriedData(setting.getId(), setting.getType(), setting.getType());
 		}).collect(Collectors.toList());
@@ -65,5 +65,18 @@ public class OptionService {
 			return new OptionQueriedData(null, String.valueOf(e), String.valueOf(e));
 		}).distinct().collect(Collectors.toList());
 
+	}
+
+	/**
+	 * 取得特定設定資料
+	 * 
+	 * @param dataType
+	 * @param type
+	 * @return List<OptionQueriedData>
+	 */
+	public List<OptionQueriedData> getSettingsByDataTypeAndType(String dataType, String type) {
+		return settingRepository.findByDataTypeAndTypeAndActiveFlag(dataType, type, YesNo.Y).stream().map(setting -> {
+			return new OptionQueriedData(null, setting.getName(), setting.getValue());
+		}).collect(Collectors.toList());
 	}
 }

@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * ContextHolder 內以供後續使用。
  */
 @Slf4j
-	@Component
+@Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
 	@Autowired
@@ -80,7 +80,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 		// 從 Request Header 中獲取授權資訊
 		String authorization = request.getHeader(JwtConstants.JWT_HEADER.getValue());
-		log.debug("request header authorization: {}", authorization);
+		log.info("request header authorization: {}", authorization);
 
 		// 如果授權資訊不為空且以 Bearer 開頭
 		if (authorization != null && authorization.startsWith(JwtConstants.JWT_PREFIX.getValue())) {
