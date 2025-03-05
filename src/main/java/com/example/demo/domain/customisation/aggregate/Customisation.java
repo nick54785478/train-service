@@ -59,7 +59,7 @@ public class Customisation extends BaseEntity {
 	private YesNo activeFlag; // 是否生效
 
 	/**
-	 * 建立個人配置
+	 * 建立個人化配置
 	 * 
 	 * @param command
 	 */
@@ -74,7 +74,7 @@ public class Customisation extends BaseEntity {
 	}
 
 	/**
-	 * 更新個人配置
+	 * 更新個人化配置
 	 * 
 	 * @param command
 	 */
@@ -86,11 +86,28 @@ public class Customisation extends BaseEntity {
 	}
 
 	/**
-	 * 更新設定的值
+	 * 更新個人化設定的值
 	 * 
 	 * @param value
 	 */
 	public void update(String value) {
 		this.value = value;
 	}
+
+	/**
+	 * 新增個人化設定的值
+	 * 
+	 * @param username
+	 * @param type
+	 * @param name
+	 * @param value
+	 */
+	public void create(String username, String type, String name, String value) {
+		this.username = username;
+		this.type = CustomisationType.valueOf(type);
+		this.name = name;
+		this.value = value;
+		this.activeFlag = YesNo.Y;
+	}
+
 }

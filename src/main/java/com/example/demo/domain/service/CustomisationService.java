@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.base.config.context.ContextHolder;
 import com.example.demo.base.enums.YesNo;
 import com.example.demo.base.exception.ValidationException;
 import com.example.demo.base.service.BaseDomainService;
@@ -82,9 +83,9 @@ public class CustomisationService extends BaseDomainService {
 
 		// 若無個人化配置，回傳全部
 		if (Objects.isNull(customisation)) {
-			data = settingRepository.findByDataTypeAndTypeAndActiveFlag(dataType, type, YesNo.Y).stream()
+			data.addAll(settingRepository.findByDataTypeAndTypeAndActiveFlag(dataType, type, YesNo.Y).stream()
 					.map(setting -> new OptionQueriedData(setting.getId(), setting.getName(), setting.getValue()))
-					.collect(Collectors.toList());
+					.collect(Collectors.toList()));
 		} else {
 //			data = Stream.of(customisation.getValue().split(",")).map(e -> {
 //				if (transformMap.containsKey(StringUtils.trim(e))) {
@@ -94,11 +95,10 @@ public class CustomisationService extends BaseDomainService {
 //					return null;
 //				}
 //			}).collect(Collectors.toList());
-			data = Stream.of(customisation.getValue().split(","))
-				    .map(e -> transformMap.get(StringUtils.trim(e))) // 先找出設定值
-				    .filter(Objects::nonNull) // 過濾掉 null
-				    .map(setting -> new OptionQueriedData(setting.getId(), setting.getName(), setting.getValue())) // 建立物件
-				    .collect(Collectors.toList());
+			data.addAll(Stream.of(customisation.getValue().split(",")).map(e -> transformMap.get(StringUtils.trim(e))) // 先找出設定值
+					.filter(Objects::nonNull) // 過濾掉 null
+					.map(setting -> new OptionQueriedData(setting.getId(), setting.getName(), setting.getValue())) // 建立物件
+					.collect(Collectors.toList()));
 		}
 		CustomisationQueriedData customisationQueriedData = new CustomisationQueriedData();
 		customisationQueriedData.setUsername(username);
@@ -114,17 +114,24 @@ public class CustomisationService extends BaseDomainService {
 	public void updateCustomizedValue(UpdateCustomizedValueCommand command) {
 		List<ConfigurableSetting> settings = settingRepository.findByDataTypeAndTypeAndActiveFlag(command.getDataType(),
 				command.getType(), YesNo.Y);
-
-		Customisation customistation = customisationRepository.findByUsernameAndTypeAndActiveFlag(command.getUsername(),
+		Customisation customisation = customisationRepository.findByUsernameAndTypeAndActiveFlag(command.getUsername(),
 				CustomisationType.valueOf(command.getType()), YesNo.Y);
-
 		// 檢查是否為合法的設定
 		this.checkValidCustomizedValue(settings, command);
 
-		// 更新個人化設定的值
+		// 將 List<String> 轉為 "," 分隔的字串
 		String value = String.join(",", command.getValueList());
-		customistation.update(value);
-		customisationRepository.save(customistation);
+
+		// 若查無個人配置，代表尚未配置 => 將進行個人化配置
+		if (Objects.isNull(customisation)) {
+			customisation = new Customisation();
+			customisation.create(ContextHolder.getUsername(), command.getType(), command.getType(), value);
+		} else {
+			// 否則，進行更新個人化設定的值
+			customisation.update(value);
+		}
+		customisationRepository.save(customisation);
+
 	}
 
 	/***
