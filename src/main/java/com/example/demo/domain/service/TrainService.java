@@ -1,6 +1,7 @@
 package com.example.demo.domain.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -156,7 +157,7 @@ public class TrainService extends BaseDomainService {
 				// 根據選擇的票別去打折
 				if (!Objects.isNull(rateMap.get(command.getTicketType()))) {
 					var rate = rateMap.get(command.getTicketType());
-					trainData.setPrice(ticket.getPrice().multiply(rate));
+					trainData.setPrice(ticket.getPrice().multiply(rate).setScale(0, RoundingMode.HALF_UP));
 				}
 			}
 			resList.add(trainData);

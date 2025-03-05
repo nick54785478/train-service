@@ -13,7 +13,6 @@ import com.example.demo.base.config.context.ContextHolder;
 import com.example.demo.base.service.BaseEventHandler;
 import com.example.demo.domain.account.command.DepositMoneyCommand;
 import com.example.demo.domain.account.outbound.AccountTxEvent;
-import com.example.demo.infra.repository.MoneyAccountRepository;
 import com.example.demo.service.MoneyAccountCommandService;
 import com.rabbitmq.client.Channel;
 
@@ -25,9 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AccountTxTopicMessageHandler extends BaseEventHandler {
 
 	@Autowired
-	MoneyAccountCommandService moneyAccountCommandService;
-	@Autowired
-	MoneyAccountRepository moneyAccountRepository;
+	private MoneyAccountCommandService moneyAccountCommandService;
 
 	@RabbitHandler
 	public void handle(AccountTxEvent event, Channel channel, Message message) throws IOException {

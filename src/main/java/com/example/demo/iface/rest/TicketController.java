@@ -54,7 +54,7 @@ public class TicketController {
 	 * 針對某車次批次建立車票資料
 	 * 
 	 * @param resource
-	 * @return ResponseEntity
+	 * @return ResponseEntity<TicketCreatedResource>
 	 */
 	@PostMapping("/{trainNo}")
 	@Operation(summary = "API - 針對某車次批次建立車票資料", description = "針對某車次批次建立車票資料。")
@@ -69,6 +69,12 @@ public class TicketController {
 		return new ResponseEntity<>(new TicketCreatedResource("200", "新增/更新成功"), HttpStatus.OK);
 	}
 
+	/**
+	 * 查詢某車次批次的車票資料
+	 * 
+	 * @param trainNo 車次
+	 * @return ResponseEntity<List<TicketQueriedResource>>
+	 */
 	@GetMapping("/{trainNo}")
 	@Operation(summary = "API - 查詢某車次批次的車票資料", description = "查詢某車次批次的車票資料。")
 	public ResponseEntity<List<TicketQueriedResource>> queryTicketsByTrainNo(
