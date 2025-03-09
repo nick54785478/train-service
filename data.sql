@@ -97,7 +97,7 @@ INSERT INTO `TRAIN_STOP` (`UUID`, `TRAIN_UUID`, `SEQ`, `NAME`, `TIME`, `DELETE_F
 INSERT INTO `SETTING` (`ID`, `DATA_TYPE`, `TYPE`, `NAME`, `VALUE`, `DESCRIPTION`, `PRIORITY_NO`, `ACTIVE_FLAG`) VALUES
 (1, 'YES_NO', 'Y', 'Y', 'YES', 'YES', 1, 'Y');
 INSERT INTO `SETTING` (`ID`, `DATA_TYPE`, `TYPE`, `NAME`, `VALUE`, `DESCRIPTION`, `PRIORITY_NO`, `ACTIVE_FLAG`) VALUES
-(2, 'YES_NO', 'N', 'N', 'NO', 'NO', 1, 'Y');
+(2, 'YES_NO', 'N', 'N', 'NO', 'NO', 2, 'Y');
 INSERT INTO `SETTING` (`ID`, `DATA_TYPE`, `TYPE`, `NAME`, `VALUE`, `DESCRIPTION`, `PRIORITY_NO`, `ACTIVE_FLAG`) VALUES
 (3, 'SEAT_NO_LIST', '座位清單', '座位清單', '1A,1B,1C,1D,1E,2A,2B,2C,2D,2E,3A,3B,3C,3D,3E,4A,4B,4C,4D,4E,5A,5B,5C,5D,5E,6A,6B,6C,6D,6E,7A,7B,7C,7D,7E,8A,8B,8C,8D,8E,9A,9B,9C,9D,9E,10A,10B,10C,10D,10E,11A,11B,11C,11D,11E,12A,12B,12C,12D,12E,13A,13B,13C,13D,13E', '1A,1B,1C,1D,1E,2A,2B,2C,2D,2E,3A,3B,3C,3D,3E,4A,4B,4C,4D,4E,5A,5B,5C,5D,5E,6A,6B,6C,6D,6E,7A,7B,7C,7D,7E,8A,8B,8C,8D,8E,9A,9B,9C,9D,9E,10A,10B,10C,10D,10E,11A,11B,11C,11D,11E,12A,12B,12C,12D,12E,13A,13B,13C,13D,13E', 1, 'Y');
 INSERT INTO `SETTING` (`ID`, `DATA_TYPE`, `TYPE`, `NAME`, `VALUE`, `DESCRIPTION`, `PRIORITY_NO`, `ACTIVE_FLAG`) VALUES
@@ -107,8 +107,8 @@ INSERT INTO `SETTING` (`ID`, `DATA_TYPE`, `TYPE`, `NAME`, `VALUE`, `DESCRIPTION`
 (7, 'STOP_KIND', '西勢', '西勢', '西勢', '西勢車站', 4, 'Y'),
 (8, 'STOP_KIND', '竹田', '竹田', '竹田', '竹田車站', 5, 'Y'),
 (9, 'STOP_KIND', '潮州', '潮州', '潮州', '潮州車站', 6, 'Y'),
-(10, 'TRAIN_KIND', 'JI_XIANG', '吉祥號', '吉祥號', '吉祥號', 1, 'Y'),
-(11, 'TRAIN_KIND', 'RU_YI', '如意號', '如意號', '如意號', 2, 'Y'),
+(10, 'TRAIN_KIND', '吉祥號', '吉祥號', '吉祥號', '吉祥號', 1, 'Y'),
+(11, 'TRAIN_KIND', '如意號', '如意號', '如意號', '如意號', 2, 'Y'),
 (12, 'CAR_NO_LIST', '車廂編號清單', '車廂編號清單', '1,2,3,4,5,6,7,8,9,10,11,12', '1,2,3,4,5,6,7,8,9,10,11,12', 1, 'Y'),
 (13, 'PAY_METHOD', '帳戶錢包', '帳戶錢包', '帳戶錢包', '帳戶錢包扣款', 1, 'Y'),
 (14, 'PAY_METHOD', '簽帳卡', '簽帳卡', '簽帳卡', '簽帳金融卡付款', 2, 'Y'),
@@ -130,5 +130,16 @@ INSERT INTO `SETTING` (`ID`, `DATA_TYPE`, `TYPE`, `NAME`, `VALUE`, `DESCRIPTION`
 (30, 'SHEET_NAME', 'TRAIN_SHEET_NAME', 'Stops', 'Stops', 'SHEET NAME - Stops', 2, 'Y'),
 (31, 'SHEET_NAME', 'TRAIN_SHEET_NAME', 'Tickets', 'Tickets', 'SHEET NAME - Tickets', 3, 'Y'),
 (32, 'TEMPLATE', 'TRAIN_TIMETABLE', '火車時刻表範本', '火車時刻表範本', '火車時刻表範本。', 1, 'Y'),
-(33, 'TEMPLATE', 'TRAIN_UPLOAD', '車次資料上傳範本', '車次資料上傳範本', '車次資料上傳範本。', 2, 'Y');
-
+(33, 'TEMPLATE', 'TRAIN_UPLOAD', '車次資料上傳範本', '車次資料上傳範本', '車次資料上傳範本。', 2, 'Y'),
+(34, 'CUSTOMISATION', 'SETTING_TABLE_COLUMN', 'DATA_TYPE', 'dataType', '自定義資料頁面表格種類欄位顯示設置', 1, 'Y'),
+(35, 'CUSTOMISATION', 'SETTING_TABLE_COLUMN', 'TYPE', 'type', '自定義資料頁面表格類別欄位顯示設置', 2, 'Y'),
+(36, 'CUSTOMISATION', 'SETTING_TABLE_COLUMN', 'NAME', 'name', '自定義資料頁面表格名稱欄位顯示設置', 3, 'Y'),
+(37, 'CUSTOMISATION', 'SETTING_TABLE_COLUMN', 'VALUE', 'value', '自定義資料頁面表格值欄位顯示設置', 4, 'Y'),
+(38, 'CUSTOMISATION', 'SETTING_TABLE_COLUMN', 'DESCRIPTION', 'description', '自定義資料頁面表格說明別欄位顯示設置', 5, 'Y'),
+(39, 'CUSTOMISATION', 'SETTING_TABLE_COLUMN', 'PRIORIOTY_NO', 'priorityNo', '查詢車次資料頁面表格終點站排序欄位顯示設置', 6, 'Y'),
+(40, 'CUSTOMISATION', 'TRAIN_TABLE_COLUMN', 'TRAIN_NO', 'trainNo', '火車查詢資料頁面表格車次欄位顯示設置', 7, 'Y'),
+(41, 'CUSTOMISATION', 'TRAIN_TABLE_COLUMN', 'KIND', 'kind', '火車查詢資料頁面表格車種欄位顯示設置', 7, 'Y'),
+(42, 'CUSTOMISATION', 'TRAIN_TABLE_COLUMN', 'FROM_STOP', 'fromStop', '火車查詢資料頁面表格起始站欄位顯示設置', 7, 'Y'),
+(43, 'CUSTOMISATION', 'TRAIN_TABLE_COLUMN', 'TO_STOP', 'toStop', '火車查詢資料頁面表格終點站欄位顯示設置', 7, 'Y'),
+(44, 'CUSTOMISATION', 'TRAIN_TABLE_COLUMN', 'FROM_STOP_TIME', 'fromStopTime', '火車查詢資料頁面表格起始站發車時間欄位顯示設置', 7, 'Y'),
+(45, 'CUSTOMISATION', 'TRAIN_TABLE_COLUMN', 'TO_STOP_TIME', 'toStopTime', '火車查詢資料頁面表格終點站抵達時間欄位顯示設置', 7, 'Y');

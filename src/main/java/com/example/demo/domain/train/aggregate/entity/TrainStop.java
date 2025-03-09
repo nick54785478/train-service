@@ -1,11 +1,7 @@
 package com.example.demo.domain.train.aggregate.entity;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 import java.util.UUID;
-
-import org.modelmapper.internal.bytebuddy.asm.Advice.This;
 
 import com.example.demo.base.entity.BaseEntity;
 import com.example.demo.base.enums.YesNo;
@@ -17,7 +13,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
