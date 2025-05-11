@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.base.util.BaseDataTransformer;
 import com.example.demo.domain.share.SeatQueriedData;
 import com.example.demo.domain.share.UnbookedSeatGottenData;
 import com.example.demo.iface.dto.SeatQueriedResource;
 import com.example.demo.iface.dto.UnbookedSeatGottenResource;
 import com.example.demo.service.SeatQueryService;
-import com.example.demo.util.BaseDataTransformer;
 import com.example.demo.util.DateTransformUtil;
 
 import io.swagger.v3.oas.annotations.Operation;

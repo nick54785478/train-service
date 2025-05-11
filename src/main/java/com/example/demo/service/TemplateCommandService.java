@@ -57,7 +57,7 @@ public class TemplateCommandService extends BaseApplicationService {
 			ServerException, XmlParserException, IllegalArgumentException, IOException {
 		Map<String, InputStream> downloadFileMap = new HashMap<>();
 		TemplateQueriedData template = templateService.queryByType(type);
-		InputStream inputStream = minioService.getFile(template.getFilePath() + "/" + template.getFileName());
+		InputStream inputStream = minioService.downloadFile(template.getFilePath() + "/" + template.getFileName());
 		downloadFileMap.put(template.getFileName(), inputStream);
 		return downloadFileMap;
 	}

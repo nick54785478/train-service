@@ -108,7 +108,7 @@ public class MinioService {
 	 * @throws ErrorResponseException 
 	 * @throws InvalidKeyException 
 	 */
-	public InputStream getFile(String objectName) throws InvalidKeyException, ErrorResponseException, InsufficientDataException, InternalException, InvalidResponseException, NoSuchAlgorithmException, ServerException, XmlParserException, IllegalArgumentException, IOException {
+	public InputStream downloadFile(String objectName) throws InvalidKeyException, ErrorResponseException, InsufficientDataException, InternalException, InvalidResponseException, NoSuchAlgorithmException, ServerException, XmlParserException, IllegalArgumentException, IOException {
 		return client.getObject(GetObjectArgs.builder().bucket(bucketName).object(objectName).build());
 	}
 

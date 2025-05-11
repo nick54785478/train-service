@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.base.util.BaseDataTransformer;
 import com.example.demo.domain.ticket.command.CreateOrUpdateTicketCommand;
 import com.example.demo.domain.ticket.command.CreateTicketCommand;
 import com.example.demo.iface.dto.CreateOrUpdateTicketResource;
@@ -19,7 +20,6 @@ import com.example.demo.iface.dto.TicketCreatedResource;
 import com.example.demo.iface.dto.TicketQueriedResource;
 import com.example.demo.service.TicketCommandService;
 import com.example.demo.service.TicketQueryService;
-import com.example.demo.util.BaseDataTransformer;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

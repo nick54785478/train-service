@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.base.entity.EventLog;
 import com.example.demo.base.event.BaseEvent;
+import com.example.demo.base.port.EventPublishPort;
 import com.example.demo.base.repository.EventLogRepository;
-import com.example.demo.infra.event.RabbitmqService;
-import com.example.demo.util.BaseDataTransformer;
+import com.example.demo.base.util.BaseDataTransformer;
 import com.example.demo.util.JsonParseUtil;
 
 /**
@@ -19,7 +19,7 @@ import com.example.demo.util.JsonParseUtil;
 public abstract class BaseApplicationService {
 
 	@Autowired
-	protected RabbitmqService rabbitmqService;
+	protected EventPublishPort rabbitmqService;
 	@Autowired
 	protected EventLogRepository eventLogRepository;
 
@@ -61,11 +61,11 @@ public abstract class BaseApplicationService {
 	/**
 	 * 建立 EventLog
 	 * 
-	 * @param topicQueue Topic 通道
+	 * @param topicQueue   Topic 通道
 	 * @param eventLogUuid EventLog 的 UUID
-	 * @param targetId   目標物 UUID
-	 * @param event      事件
-	 * @param body       事件發生變動內容
+	 * @param targetId     目標物 UUID
+	 * @param event        事件
+	 * @param body         事件發生變動內容
 	 */
 	public EventLog generateEventLog(String topicQueue, String eventLogUuid, String targetId, BaseEvent event) {
 

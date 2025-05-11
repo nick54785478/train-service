@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.base.exception.ValidationException;
+import com.example.demo.base.util.BaseDataTransformer;
 import com.example.demo.domain.train.command.CreateTrainCommand;
 import com.example.demo.domain.train.command.QueryTrainCommand;
 import com.example.demo.domain.train.command.QueryTrainSummaryCommand;
@@ -37,7 +38,6 @@ import com.example.demo.iface.dto.TrainUploadedResource;
 import com.example.demo.iface.dto.UpdateTrainResource;
 import com.example.demo.service.TrainCommandService;
 import com.example.demo.service.TrainQueryService;
-import com.example.demo.util.BaseDataTransformer;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
