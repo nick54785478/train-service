@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.base.util.BaseDataTransformer;
 import com.example.demo.iface.dto.OptionQueriedResource;
 import com.example.demo.service.OptionQueryService;
-import com.example.demo.util.BaseDataTransformer;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

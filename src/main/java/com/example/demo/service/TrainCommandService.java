@@ -265,7 +265,7 @@ public class TrainCommandService extends BaseApplicationService {
 			// 透過 Template 配置取得資料流
 			TemplateQueriedData templateData = generateData.getTemplateQueriedData();
 			InputStream inputStream = minioService
-					.getFile(templateData.getFilePath() + "/" + generateData.getTemplateQueriedData().getFileName());
+					.downloadFile(templateData.getFilePath() + "/" + generateData.getTemplateQueriedData().getFileName());
 
 			// TODO JasperReport 已無法開源使用，尚待新的 Solution
 			ByteArrayResource resource = JasperUtil.generateReportToPDF(inputStream, generateData.getDetails(),

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.demo.base.exception.response.BaseExceptionResponse;
-import com.example.demo.util.BaseDataTransformer;
+import com.example.demo.base.util.BaseDataTransformer;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;

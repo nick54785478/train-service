@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.base.util.BaseDataTransformer;
 import com.example.demo.domain.booking.command.BookTicketCommand;
 import com.example.demo.domain.booking.command.CheckInTicketCommand;
 import com.example.demo.domain.booking.command.RefundTicketCommand;
@@ -21,7 +22,6 @@ import com.example.demo.iface.dto.TicketBookedResource;
 import com.example.demo.iface.dto.TicketCheckedInResource;
 import com.example.demo.service.BookQueryService;
 import com.example.demo.service.TicketCommandService;
-import com.example.demo.util.BaseDataTransformer;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

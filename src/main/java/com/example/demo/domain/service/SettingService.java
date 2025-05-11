@@ -6,12 +6,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.base.exception.ValidationException;
+import com.example.demo.base.util.BaseDataTransformer;
 import com.example.demo.domain.setting.aggregate.ConfigurableSetting;
 import com.example.demo.domain.setting.command.CreateSettingCommand;
 import com.example.demo.domain.setting.command.UpdateSettingCommand;
 import com.example.demo.domain.share.SettingQueriedData;
 import com.example.demo.infra.repository.SettingRepository;
-import com.example.demo.util.BaseDataTransformer;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

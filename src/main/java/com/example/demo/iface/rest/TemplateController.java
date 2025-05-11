@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.base.exception.ValidationException;
+import com.example.demo.base.util.BaseDataTransformer;
 import com.example.demo.domain.share.TemplateQueriedData;
 import com.example.demo.domain.template.command.UploadTemplateCommand;
 import com.example.demo.iface.dto.TemplateQueriedResource;
@@ -31,7 +32,6 @@ import com.example.demo.iface.dto.TemplateUploadedResource;
 import com.example.demo.iface.dto.UploadTemplateResource;
 import com.example.demo.service.TemplateCommandService;
 import com.example.demo.service.TemplateQueryService;
-import com.example.demo.util.BaseDataTransformer;
 
 import io.minio.errors.ErrorResponseException;
 import io.minio.errors.InsufficientDataException;
@@ -84,7 +84,6 @@ public class TemplateController {
 	@Operation(summary = "API - 下載範本", description = "下載範本。")
 	public ResponseEntity<Resource> download(@Parameter(description = "範本種類") @RequestParam String type) {
 		try {
-			System.out.println("Type:" + type);
 			Map<String, InputStream> downloadFileMap = templateCommandService.download(type);
 			String fileName = null;
 			InputStream inputStream = null;
@@ -92,7 +91,7 @@ public class TemplateController {
 			for (String key : downloadFileMap.keySet()) {
 				fileName = key;
 				if (downloadFileMap.isEmpty() || Objects.isNull(downloadFileMap.get(key))) {
-					log.error("未取得檔案 " + fileName + "，導致錯誤。");
+					log.error("未取得檔案:{}，導致錯誤。", fileName);
 					throw new ValidationException("VALIDATE_FAILED", "未取得檔案 " + fileName + "，導致錯誤。");
 				}
 				inputStream = downloadFileMap.get(key);
