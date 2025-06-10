@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 import com.example.demo.base.entity.EventLog;
 import com.example.demo.base.enums.EventLogSendQueueStatus;
 import com.example.demo.base.event.BaseEvent;
+import com.example.demo.base.port.EventPublishPort;
 import com.example.demo.base.repository.EventLogRepository;
-import com.example.demo.infra.event.RabbitmqService;
 import com.example.demo.util.JsonParseUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class EventRePublishSchedule {
 	@Autowired
 	private EventLogRepository eventLogRepository;
 	@Autowired
-	private RabbitmqService rabbitmqService;
+	private EventPublishPort rabbitmqService;
 
 	@Value("${rabbitmq.exchange.name}")
 	private String exchangeName;
