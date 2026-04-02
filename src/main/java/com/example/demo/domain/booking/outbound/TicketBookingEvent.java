@@ -1,6 +1,6 @@
 package com.example.demo.domain.booking.outbound;
 
-import com.example.demo.base.event.BaseEvent;
+import com.example.demo.base.shared.event.BaseEvent;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

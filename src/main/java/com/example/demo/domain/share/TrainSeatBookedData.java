@@ -3,7 +3,7 @@ package com.example.demo.domain.share;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import com.example.demo.base.enums.YesNo;
+import com.example.demo.base.shared.enums.YesNo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

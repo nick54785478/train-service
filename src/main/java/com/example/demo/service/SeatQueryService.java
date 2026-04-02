@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.base.service.BaseApplicationService;
+import com.example.demo.base.application.service.BaseApplicationService;
 import com.example.demo.domain.service.SeatService;
 import com.example.demo.domain.share.SeatQueriedData;
 import com.example.demo.domain.share.UnbookedSeatGottenData;

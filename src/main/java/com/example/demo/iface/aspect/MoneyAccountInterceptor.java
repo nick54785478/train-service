@@ -1,14 +1,13 @@
-package com.example.demo.aop;
+package com.example.demo.iface.aspect;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.base.config.context.ContextHolder;
-import com.example.demo.base.event.BaseEvent;
+import com.example.demo.base.shared.event.BaseEvent;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.service.MoneyAccountService;
 import com.example.demo.util.JsonParseUtil;
@@ -18,13 +17,16 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 針對 MoneyAccount 領域的攔截器，用於紀錄 Event Source
  */
+@Slf4j
 @Aspect
 @Component
-@Slf4j
 public class MoneyAccountInterceptor {
 
-	@Autowired
 	private MoneyAccountService moneyAccountService;
+
+	public MoneyAccountInterceptor(MoneyAccountService moneyAccountService) {
+		this.moneyAccountService = moneyAccountService;
+	}
 
 	/**
 	 * 定義切入點，針對 MoneyAccountRepository 的 save 方法進行切入。

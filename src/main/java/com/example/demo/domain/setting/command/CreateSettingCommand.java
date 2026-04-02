@@ -1,6 +1,6 @@
 package com.example.demo.domain.setting.command;
 
-import com.example.demo.base.enums.YesNo;
+import com.example.demo.base.shared.enums.YesNo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

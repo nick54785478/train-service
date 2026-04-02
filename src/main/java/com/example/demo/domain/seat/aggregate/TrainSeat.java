@@ -3,7 +3,7 @@ package com.example.demo.domain.seat.aggregate;
 import java.time.LocalDate;
 
 import com.example.demo.base.entity.BaseEntity;
-import com.example.demo.base.enums.YesNo;
+import com.example.demo.base.shared.enums.YesNo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

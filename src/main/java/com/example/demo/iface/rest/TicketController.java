@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.base.util.BaseDataTransformer;
 import com.example.demo.domain.ticket.command.CreateOrUpdateTicketCommand;
 import com.example.demo.domain.ticket.command.CreateTicketCommand;
-import com.example.demo.iface.dto.CreateOrUpdateTicketResource;
-import com.example.demo.iface.dto.CreateTicketResource;
-import com.example.demo.iface.dto.TicketCreatedResource;
-import com.example.demo.iface.dto.TicketQueriedResource;
+import com.example.demo.iface.dto.req.CreateOrUpdateTicketResource;
+import com.example.demo.iface.dto.req.CreateTicketResource;
+import com.example.demo.iface.dto.res.TicketCreatedResource;
+import com.example.demo.iface.dto.res.TicketQueriedResource;
 import com.example.demo.service.TicketCommandService;
 import com.example.demo.service.TicketQueryService;
 

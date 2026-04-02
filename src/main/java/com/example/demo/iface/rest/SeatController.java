@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.base.util.BaseDataTransformer;
 import com.example.demo.domain.share.SeatQueriedData;
 import com.example.demo.domain.share.UnbookedSeatGottenData;
-import com.example.demo.iface.dto.SeatQueriedResource;
-import com.example.demo.iface.dto.UnbookedSeatGottenResource;
+import com.example.demo.iface.dto.res.SeatQueriedResource;
+import com.example.demo.iface.dto.res.UnbookedSeatGottenResource;
 import com.example.demo.service.SeatQueryService;
 import com.example.demo.util.DateTransformUtil;
 

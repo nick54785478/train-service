@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.base.enums.YesNo;
+import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.share.OptionQueriedData;
 import com.example.demo.domain.share.enums.TicketType;
 import com.example.demo.domain.train.aggregate.Train;

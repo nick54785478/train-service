@@ -2,7 +2,7 @@ package com.example.demo.domain.setting.aggregate;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.example.demo.base.enums.YesNo;
+import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.setting.command.CreateSettingCommand;
 import com.example.demo.domain.setting.command.UpdateSettingCommand;
 

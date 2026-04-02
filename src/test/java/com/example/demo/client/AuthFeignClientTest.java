@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.example.demo.iface.dto.UserInfoResource;
+import com.example.demo.iface.dto.res.UserInfoGottenResource;
+import com.example.demo.infra.client.AuthFeignClient;
 
 @SpringBootTest
 class AuthFeignClientTest {
@@ -34,7 +35,7 @@ class AuthFeignClientTest {
 
 	@Test
 	void test() {
-		UserInfoResource resource = authFeignClient.getUserByEmail("nick123@example.coms");
+		UserInfoGottenResource resource = authFeignClient.getUserByEmail("nick123@example.coms");
 		System.out.println("response data: "+resource);
 	}
 

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.base.util.BaseDataTransformer;
-import com.example.demo.iface.dto.OptionQueriedResource;
+import com.example.demo.iface.dto.res.OptionQueriedResource;
 import com.example.demo.service.OptionQueryService;
 
 import io.swagger.v3.oas.annotations.Operation;

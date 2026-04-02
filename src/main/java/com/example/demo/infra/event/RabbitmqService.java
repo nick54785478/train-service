@@ -4,8 +4,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.base.event.BaseEvent;
-import com.example.demo.base.port.EventPublishPort;
+import com.example.demo.base.application.port.EventPublishPort;
+import com.example.demo.base.shared.event.BaseEvent;
 
 import lombok.extern.slf4j.Slf4j;
 

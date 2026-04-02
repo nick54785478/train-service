@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.base.enums.YesNo;
-import com.example.demo.base.exception.ValidationException;
-import com.example.demo.base.service.BaseDomainService;
+import com.example.demo.base.application.service.BaseDomainService;
+import com.example.demo.base.shared.enums.YesNo;
+import com.example.demo.base.shared.exception.exception.ValidationException;
 import com.example.demo.domain.setting.aggregate.ConfigurableSetting;
 import com.example.demo.domain.share.StopQueriedData;
 import com.example.demo.domain.share.StopSummaryQueriedData;

@@ -14,12 +14,12 @@ import com.example.demo.domain.booking.command.BookTicketCommand;
 import com.example.demo.domain.booking.command.CheckInTicketCommand;
 import com.example.demo.domain.booking.command.RefundTicketCommand;
 import com.example.demo.domain.share.BookingQueriedData;
-import com.example.demo.iface.dto.BookTicketResource;
-import com.example.demo.iface.dto.BookingQueriedResource;
-import com.example.demo.iface.dto.CheckInTicketResource;
-import com.example.demo.iface.dto.RefundTicketResource;
-import com.example.demo.iface.dto.TicketBookedResource;
-import com.example.demo.iface.dto.TicketCheckedInResource;
+import com.example.demo.iface.dto.req.BookTicketResource;
+import com.example.demo.iface.dto.req.CheckInTicketResource;
+import com.example.demo.iface.dto.req.RefundTicketResource;
+import com.example.demo.iface.dto.res.BookingQueriedResource;
+import com.example.demo.iface.dto.res.TicketBookedResource;
+import com.example.demo.iface.dto.res.TicketCheckedInResource;
 import com.example.demo.service.BookQueryService;
 import com.example.demo.service.TicketCommandService;
 

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.base.entity.EventLog;
-import com.example.demo.base.enums.EventLogSendQueueStatus;
+import com.example.demo.base.shared.enums.EventLogSendQueueStatus;
 
 @Repository
 public interface EventLogRepository extends JpaRepository<EventLog, Long> {

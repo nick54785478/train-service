@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.base.service.BaseApplicationService;
+import com.example.demo.base.application.service.BaseApplicationService;
 import com.example.demo.domain.service.TemplateService;
 import com.example.demo.domain.share.TemplateQueriedData;
 import com.example.demo.domain.template.command.UploadTemplateCommand;

@@ -1,4 +1,4 @@
-package com.example.demo.schedule;
+package com.example.demo.iface.schedule;
 
 import java.util.Date;
 import java.util.List;
@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.base.application.port.EventPublishPort;
 import com.example.demo.base.entity.EventLog;
-import com.example.demo.base.enums.EventLogSendQueueStatus;
-import com.example.demo.base.event.BaseEvent;
-import com.example.demo.base.port.EventPublishPort;
 import com.example.demo.base.repository.EventLogRepository;
+import com.example.demo.base.shared.enums.EventLogSendQueueStatus;
+import com.example.demo.base.shared.event.BaseEvent;
 import com.example.demo.util.JsonParseUtil;
 
 import lombok.extern.slf4j.Slf4j;

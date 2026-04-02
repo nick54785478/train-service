@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.base.service.BaseApplicationService;
+import com.example.demo.base.application.service.BaseApplicationService;
 import com.example.demo.domain.service.SettingService;
 import com.example.demo.domain.setting.command.CreateSettingCommand;
 import com.example.demo.domain.setting.command.UpdateSettingCommand;

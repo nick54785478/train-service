@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.base.util.BaseDataTransformer;
-import com.example.demo.iface.dto.StopDetailQueriedResource;
+import com.example.demo.iface.dto.res.StopDetailQueriedResource;
 import com.example.demo.service.TrainStopQueryService;
 
 import io.swagger.v3.oas.annotations.Operation;

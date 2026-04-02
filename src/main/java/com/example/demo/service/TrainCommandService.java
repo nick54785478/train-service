@@ -22,9 +22,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.base.enums.YesNo;
-import com.example.demo.base.exception.ValidationException;
-import com.example.demo.base.service.BaseApplicationService;
+import com.example.demo.base.application.service.BaseApplicationService;
+import com.example.demo.base.shared.enums.YesNo;
+import com.example.demo.base.shared.exception.exception.ValidationException;
 import com.example.demo.domain.service.TicketService;
 import com.example.demo.domain.service.TimetableService;
 import com.example.demo.domain.service.TrainService;

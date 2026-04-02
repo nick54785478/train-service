@@ -1,4 +1,4 @@
-package com.example.demo.client;
+package com.example.demo.infra.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.config.AuthFeignConfiguration;
 import com.example.demo.domain.share.UserLoginCommand;
-import com.example.demo.iface.dto.JwtTokenGettenResource;
-import com.example.demo.iface.dto.RegisterUserResource;
-import com.example.demo.iface.dto.UserInfoResource;
-import com.example.demo.iface.dto.UserRegisteredResource;
+import com.example.demo.iface.dto.req.RegisterUserResource;
+import com.example.demo.iface.dto.res.JwtTokenGettenResource;
+import com.example.demo.iface.dto.res.UserInfoGottenResource;
+import com.example.demo.iface.dto.res.UserRegisteredResource;
 
 @FeignClient(value = "AuthFeignClient", url = "${auth.endpoint.service}", configuration = AuthFeignConfiguration.class)
 public interface AuthFeignClient {
@@ -41,6 +41,9 @@ public interface AuthFeignClient {
 	 * @return 使用者資料
 	 */
 	@GetMapping(value = "/api/v1/users/queryByEmail")
-	public UserInfoResource getUserByEmail(@RequestParam(value = "email", required = false) String email);
+	public UserInfoGottenResource getUserByEmail(@RequestParam(value = "email", required = false) String email);
 
+	
+//	@PostMapping(value = "/api/v1/auth/validate")
+//	public 
 }

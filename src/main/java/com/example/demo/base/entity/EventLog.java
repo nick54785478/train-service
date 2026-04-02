@@ -6,7 +6,7 @@ import java.util.Objects;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.example.demo.base.enums.EventLogSendQueueStatus;
+import com.example.demo.base.shared.enums.EventLogSendQueueStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

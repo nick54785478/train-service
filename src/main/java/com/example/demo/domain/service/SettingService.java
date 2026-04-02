@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.base.exception.ValidationException;
+import com.example.demo.base.shared.exception.exception.ValidationException;
 import com.example.demo.base.util.BaseDataTransformer;
 import com.example.demo.domain.setting.aggregate.ConfigurableSetting;
 import com.example.demo.domain.setting.command.CreateSettingCommand;

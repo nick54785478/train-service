@@ -18,10 +18,10 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.base.command.BaseIdempotentCommand;
-import com.example.demo.base.enums.YesNo;
-import com.example.demo.base.service.BaseDomainService;
-import com.example.demo.base.service.EventIdempotentLogService;
+import com.example.demo.base.application.port.EventIdempotenceHandlerPort;
+import com.example.demo.base.application.service.BaseDomainService;
+import com.example.demo.base.shared.command.BaseIdempotentCommand;
+import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.seat.aggregate.TrainSeat;
 import com.example.demo.domain.setting.aggregate.ConfigurableSetting;
 import com.example.demo.domain.share.SeatQueriedData;
@@ -37,7 +37,7 @@ public class SeatService extends BaseDomainService {
 
 	private SettingRepository settingRepository;
 	private TrainSeatRepository trainSeatRepository;
-	private EventIdempotentLogService eventIdempotentLogService;
+	private EventIdempotenceHandlerPort eventIdempotentLogService;
 
 	/**
 	 * 查詢該乘車時段已被預訂的車位

@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.base.util.BaseDataTransformer;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
 import com.example.demo.domain.account.command.DepositMoneyCommand;
-import com.example.demo.iface.dto.CreateMoneyAccountResource;
-import com.example.demo.iface.dto.DepositMoneyResource;
-import com.example.demo.iface.dto.MoneyAccountQueriedResource;
-import com.example.demo.iface.dto.MoneyAccountRegisteredResource;
-import com.example.demo.iface.dto.MoneyDepositedResource;
+import com.example.demo.iface.dto.req.CreateMoneyAccountResource;
+import com.example.demo.iface.dto.req.DepositMoneyResource;
+import com.example.demo.iface.dto.res.MoneyAccountQueriedResource;
+import com.example.demo.iface.dto.res.MoneyAccountRegisteredResource;
+import com.example.demo.iface.dto.res.MoneyDepositedResource;
 import com.example.demo.service.MoneyAccountCommandService;
 import com.example.demo.service.MoneyAccountQueryService;
 

@@ -5,7 +5,7 @@ import java.util.Date;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.example.demo.base.enums.StatusCode;
+import com.example.demo.base.shared.enums.StatusCode;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

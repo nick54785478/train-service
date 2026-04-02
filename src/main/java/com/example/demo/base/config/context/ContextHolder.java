@@ -1,7 +1,7 @@
 package com.example.demo.base.config.context;
 
-import com.example.demo.base.event.BaseEvent;
 import com.example.demo.base.service.JwtTokenService.JwtConstants;
+import com.example.demo.base.shared.event.BaseEvent;
 
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;

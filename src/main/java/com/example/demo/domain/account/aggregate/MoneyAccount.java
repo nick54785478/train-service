@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.example.demo.base.config.context.ContextHolder;
 import com.example.demo.base.entity.BaseEntity;
-import com.example.demo.base.event.BaseEvent;
+import com.example.demo.base.shared.event.BaseEvent;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
 import com.example.demo.domain.account.outbound.RegisterUserEvent;
 

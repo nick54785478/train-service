@@ -1,4 +1,4 @@
-package com.example.demo.schedule;
+package com.example.demo.iface.schedule;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.base.enums.YesNo;
+import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.seat.aggregate.TrainSeat;
 import com.example.demo.infra.repository.TrainSeatRepository;
 import com.example.demo.util.DateTransformUtil;

@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import com.example.demo.base.config.context.ContextHolder;
 import com.example.demo.base.entity.BaseEntity;
-import com.example.demo.base.enums.YesNo;
+import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.customisation.aggregate.vo.CustomisationType;
 import com.example.demo.domain.customisation.command.CreateCustomisationCommand;
 import com.example.demo.domain.customisation.command.UpdateCustomisationCommand;

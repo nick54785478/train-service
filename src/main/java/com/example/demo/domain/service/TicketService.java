@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.base.exception.ValidationException;
-import com.example.demo.base.service.BaseDomainService;
+import com.example.demo.base.application.service.BaseDomainService;
+import com.example.demo.base.shared.exception.exception.ValidationException;
 import com.example.demo.domain.share.TicketQueriedData;
 import com.example.demo.domain.ticket.aggregate.Ticket;
 import com.example.demo.domain.ticket.command.CreateOrUpdateTicketCommand;

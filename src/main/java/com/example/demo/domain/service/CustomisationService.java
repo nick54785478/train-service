@@ -11,10 +11,10 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.base.application.service.BaseDomainService;
 import com.example.demo.base.config.context.ContextHolder;
-import com.example.demo.base.enums.YesNo;
-import com.example.demo.base.exception.ValidationException;
-import com.example.demo.base.service.BaseDomainService;
+import com.example.demo.base.shared.enums.YesNo;
+import com.example.demo.base.shared.exception.exception.ValidationException;
 import com.example.demo.domain.customisation.aggregate.Customisation;
 import com.example.demo.domain.customisation.aggregate.vo.CustomisationType;
 import com.example.demo.domain.customisation.command.CreateCustomisationCommand;

@@ -128,6 +128,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		// 解析 JWT Token
 		Claims claims = jwtTokenService.getTokenBody(token);
 
+		
+		
 		log.debug("JWT claims: {}", claims);
 
 		if (jwtAuthEnabled) {
