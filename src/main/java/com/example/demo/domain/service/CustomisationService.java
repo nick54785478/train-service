@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.base.application.service.BaseDomainService;
-import com.example.demo.base.config.context.ContextHolder;
+import com.example.demo.base.infra.context.ContextHolder;
 import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.base.shared.exception.exception.ValidationException;
 import com.example.demo.domain.customisation.aggregate.Customisation;

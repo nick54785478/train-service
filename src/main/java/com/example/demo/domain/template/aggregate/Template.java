@@ -2,7 +2,7 @@ package com.example.demo.domain.template.aggregate;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.example.demo.base.entity.BaseEntity;
+import com.example.demo.base.domain.BaseAggreagteRoot;
 import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.template.aggregate.vo.FileType;
 import com.example.demo.domain.template.aggregate.vo.TemplateType;
@@ -32,7 +32,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Table(name = "TEMPLATE")
 @EntityListeners(AuditingEntityListener.class)
-public class Template extends BaseEntity {
+public class Template extends BaseAggreagteRoot {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,7 +72,7 @@ public class Template extends BaseEntity {
 		this.fileName = command.getFileName();
 		this.deleteFlag = YesNo.N;
 	}
-	
+
 	/**
 	 * 更新 Template 資料
 	 * 
@@ -82,6 +82,5 @@ public class Template extends BaseEntity {
 		this.filePath = command.getFileType();
 		this.fileName = command.getFileName();
 	}
-
 
 }

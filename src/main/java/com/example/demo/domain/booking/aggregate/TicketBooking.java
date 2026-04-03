@@ -3,8 +3,8 @@ package com.example.demo.domain.booking.aggregate;
 import java.util.Objects;
 import java.util.UUID;
 
-import com.example.demo.base.config.context.ContextHolder;
-import com.example.demo.base.entity.BaseEntity;
+import com.example.demo.base.domain.BaseAggreagteRoot;
+import com.example.demo.base.infra.context.ContextHolder;
 import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.booking.aggregate.vo.TicketStatus;
@@ -32,7 +32,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "TICKET_BOOKING")
-public class TicketBooking extends BaseEntity {
+public class TicketBooking extends BaseAggreagteRoot {
 
 	@Id
 	@Column(name = "UUID")

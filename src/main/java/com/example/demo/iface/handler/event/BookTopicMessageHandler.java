@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 import com.example.demo.base.application.port.EventIdempotenceHandlerPort;
 import com.example.demo.base.application.port.EventPublishPort;
 import com.example.demo.base.iface.handler.BaseEventHandler;
-import com.example.demo.base.repository.EventLogRepository;
-import com.example.demo.base.repository.EventSourceRepository;
+import com.example.demo.base.infra.persistence.EventLogRepository;
+import com.example.demo.base.infra.persistence.EventSourceRepository;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.account.outbound.AccountTxEvent;
 import com.example.demo.domain.booking.aggregate.TicketBooking;
@@ -39,26 +39,23 @@ import lombok.extern.slf4j.Slf4j;
 @RabbitListener(queues = "${rabbitmq.book-topic-queue.name}")
 public class BookTopicMessageHandler extends BaseEventHandler {
 
-	private TicketBookingRepository ticketBookingRepository;
+	private TicketRepository ticketRepository;
 	private TrainSeatRepository trainSeatRepository;
 	private MoneyAccountRepository moneyAccountRepository;
-	private TicketRepository ticketRepository;
+	private TicketBookingRepository ticketBookingRepository;
 
 	public BookTopicMessageHandler(EventIdempotenceHandlerPort eventIdempotentLogService,
 			EventPublishPort rabbitmqService, EventLogRepository eventLogRepository,
 			EventSourceRepository eventSourceRepository, TicketBookingRepository ticketBookingRepository,
 			TrainSeatRepository trainSeatRepository, MoneyAccountRepository moneyAccountRepository) {
 		super(eventIdempotentLogService, rabbitmqService, eventLogRepository, eventSourceRepository);
-		this.ticketBookingRepository = ticketBookingRepository;
 		this.trainSeatRepository = trainSeatRepository;
+		this.ticketBookingRepository = ticketBookingRepository;
 		this.moneyAccountRepository = moneyAccountRepository;
 	}
 
 	@Value("${rabbitmq.acount-tx-topic-queue.name}")
 	private String txQueueName;
-
-	@Value("${rabbitmq.exchange.name}")
-	private String exchangeName;
 
 	@RabbitHandler
 	public void handle(TicketBookingEvent event, Channel channel, Message message) throws IOException {
@@ -115,7 +112,7 @@ public class BookTopicMessageHandler extends BaseEventHandler {
 					this.generateEventLog(txQueueName, txEvent);
 
 					// 發布 Event 進行退費動作
-					this.publishEvent(exchangeName, txQueueName, txEvent);
+					this.publishEvent(txQueueName, txEvent);
 				}
 			}
 		});

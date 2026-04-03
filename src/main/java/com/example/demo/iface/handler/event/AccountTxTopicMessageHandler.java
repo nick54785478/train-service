@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 
 import com.example.demo.base.application.port.EventIdempotenceHandlerPort;
 import com.example.demo.base.application.port.EventPublishPort;
-import com.example.demo.base.config.context.ContextHolder;
 import com.example.demo.base.iface.handler.BaseEventHandler;
-import com.example.demo.base.repository.EventLogRepository;
-import com.example.demo.base.repository.EventSourceRepository;
+import com.example.demo.base.infra.context.ContextHolder;
+import com.example.demo.base.infra.persistence.EventLogRepository;
+import com.example.demo.base.infra.persistence.EventSourceRepository;
 import com.example.demo.domain.account.command.DepositMoneyCommand;
 import com.example.demo.domain.account.outbound.AccountTxEvent;
 import com.example.demo.service.MoneyAccountCommandService;

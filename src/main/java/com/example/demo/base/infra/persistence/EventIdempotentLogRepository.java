@@ -1,4 +1,4 @@
-package com.example.demo.base.repository;
+package com.example.demo.base.infra.persistence;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.base.entity.EventIdempotentLog;
-import com.example.demo.base.entity.EventIdempotentLogId;
+import com.example.demo.base.shared.entity.EventIdempotentLog;
+import com.example.demo.base.shared.entity.EventIdempotentLogId;
 
 import jakarta.persistence.LockModeType;
 

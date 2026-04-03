@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.base.util.BaseDataTransformer;
 import com.example.demo.domain.setting.command.CreateSettingCommand;
 import com.example.demo.domain.setting.command.UpdateSettingCommand;
 import com.example.demo.iface.dto.req.CreateSettingResource;
@@ -25,6 +24,7 @@ import com.example.demo.iface.dto.res.SettingQueriedResource;
 import com.example.demo.iface.dto.res.SettingUpdatedResource;
 import com.example.demo.service.SettingCommandService;
 import com.example.demo.service.SettingQueryService;
+import com.example.demo.util.BaseDataTransformer;
 
 import lombok.AllArgsConstructor;
 

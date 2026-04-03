@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.example.demo.base.entity.BaseEntity;
+import com.example.demo.base.domain.BaseAggreagteRoot;
 import com.example.demo.domain.train.aggregate.entity.TrainStop;
 import com.example.demo.domain.train.aggregate.vo.TrainKind;
 import com.example.demo.domain.train.command.CreateStopCommand;
@@ -40,7 +40,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "TRAIN")
-public class Train extends BaseEntity {
+public class Train extends BaseAggreagteRoot {
 
 	@Id
 	@Column(name = "UUID")

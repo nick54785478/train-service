@@ -1,4 +1,4 @@
-package com.example.demo.base.config.context;
+package com.example.demo.base.infra.context;
 
 import com.example.demo.base.service.JwtTokenService.JwtConstants;
 import com.example.demo.base.shared.event.BaseEvent;

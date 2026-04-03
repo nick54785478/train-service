@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.base.application.port.EventPublishPort;
-import com.example.demo.base.entity.EventLog;
-import com.example.demo.base.repository.EventLogRepository;
+import com.example.demo.base.infra.persistence.EventLogRepository;
+import com.example.demo.base.shared.command.PublishEventCommand;
+import com.example.demo.base.shared.entity.EventLog;
 import com.example.demo.base.shared.event.BaseEvent;
-import com.example.demo.base.util.BaseDataTransformer;
+import com.example.demo.util.BaseDataTransformer;
 import com.example.demo.util.JsonParseUtil;
 
 /**
@@ -50,27 +51,29 @@ public abstract class BaseApplicationService {
 	/**
 	 * 發布事件 (Event)
 	 * 
-	 * @param exchange   交換機
-	 * @param topicQueue Topic 通道
-	 * @param event      事件
+	 * @param exchange 交換機
+	 * @param topic    Topic 通道
+	 * @param event    事件
 	 */
-	public void publishEvent(String exchangeName, String topicQueue, BaseEvent event) {
-		rabbitmqService.publish(exchangeName, topicQueue, event);
+	public void publishEvent(String topic, BaseEvent event) {
+		PublishEventCommand<BaseEvent> publishCommand = PublishEventCommand.<BaseEvent>builder().event(event)
+				.topic(topic).build();
+		rabbitmqService.publish(publishCommand);
 	}
 
 	/**
 	 * 建立 EventLog
 	 * 
-	 * @param topicQueue   Topic 通道
+	 * @param topic   Topic 通道
 	 * @param eventLogUuid EventLog 的 UUID
 	 * @param targetId     目標物 UUID
 	 * @param event        事件
 	 * @param body         事件發生變動內容
 	 */
-	public EventLog generateEventLog(String topicQueue, String eventLogUuid, String targetId, BaseEvent event) {
+	public EventLog generateEventLog(String topic, String eventLogUuid, String targetId, BaseEvent event) {
 
 		// 建立 EventLog
-		EventLog eventLog = EventLog.builder().uuid(eventLogUuid).topic(topicQueue).targetId(targetId)
+		EventLog eventLog = EventLog.builder().uuid(eventLogUuid).topic(topic).targetId(targetId)
 				.className(event.getClass().getName()).body(JsonParseUtil.serialize(event)).userId("SYSTEM").build();
 
 		return eventLogRepository.save(eventLog);

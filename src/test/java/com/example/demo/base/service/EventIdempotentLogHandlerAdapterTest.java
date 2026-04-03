@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.example.demo.base.application.port.EventIdempotenceHandlerPort;
 import com.example.demo.domain.booking.outbound.TicketBookingEvent;
 import com.example.demo.util.DateTransformUtil;
 
@@ -20,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 class EventIdempotentLogHandlerAdapterTest {
 
 	@Autowired
-	EventIdempotentLogHandlerAdapter eventIdempotentLogService;
+	EventIdempotenceHandlerPort eventIdempotentLogService;
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {

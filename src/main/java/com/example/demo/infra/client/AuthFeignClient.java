@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.base.shared.dto.UserInfoValidatedResource;
 import com.example.demo.config.AuthFeignConfiguration;
 import com.example.demo.domain.share.UserLoginCommand;
 import com.example.demo.iface.dto.req.RegisterUserResource;
@@ -24,13 +25,13 @@ public interface AuthFeignClient {
 	 */
 	@PostMapping(value = "/api/v1/users/register")
 	public UserRegisteredResource register(@RequestBody RegisterUserResource resource);
-	
+
 	/**
 	 * 登入功能
 	 * 
 	 * @param resource
 	 * @return JwToken
-	 * */
+	 */
 	@PostMapping(value = "/api/v1/login")
 	public JwtTokenGettenResource login(@RequestBody UserLoginCommand command);
 
@@ -43,7 +44,9 @@ public interface AuthFeignClient {
 	@GetMapping(value = "/api/v1/users/queryByEmail")
 	public UserInfoGottenResource getUserByEmail(@RequestParam(value = "email", required = false) String email);
 
-	
-//	@PostMapping(value = "/api/v1/auth/validate")
-//	public 
+	/**
+	 * 驗證 JwToken
+	 */
+	@PostMapping(value = "/api/v1/auth/validate")
+	public UserInfoValidatedResource validate(String jwtToken);
 }

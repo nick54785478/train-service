@@ -2,7 +2,7 @@ package com.example.demo.domain.seat.aggregate;
 
 import java.time.LocalDate;
 
-import com.example.demo.base.entity.BaseEntity;
+import com.example.demo.base.domain.BaseAggreagteRoot;
 import com.example.demo.base.shared.enums.YesNo;
 
 import jakarta.persistence.Column;
@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "TRAIN_SEAT")
-public class TrainSeat extends BaseEntity {
+public class TrainSeat extends BaseAggreagteRoot {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

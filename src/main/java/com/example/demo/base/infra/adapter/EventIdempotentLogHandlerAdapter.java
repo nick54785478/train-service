@@ -1,4 +1,4 @@
-package com.example.demo.base.service;
+package com.example.demo.base.infra.adapter;
 
 import java.util.List;
 
@@ -8,9 +8,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.base.application.port.EventIdempotenceHandlerPort;
-import com.example.demo.base.entity.EventIdempotentLog;
-import com.example.demo.base.repository.EventIdempotentLogRepository;
+import com.example.demo.base.infra.persistence.EventIdempotentLogRepository;
 import com.example.demo.base.shared.command.BaseIdempotentCommand;
+import com.example.demo.base.shared.entity.EventIdempotentLog;
 import com.example.demo.base.shared.event.BaseEvent;
 
 /**
@@ -28,7 +28,7 @@ class EventIdempotentLogHandlerAdapter implements EventIdempotenceHandlerPort {
 	/**
 	 * 執行 Event 的冪等機制
 	 * 
-	 * @param event
+	 * @param event 事件
 	 * @return boolean
 	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.DEFAULT, timeout = 3600, rollbackFor = Exception.class)

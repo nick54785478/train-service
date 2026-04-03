@@ -1,12 +1,11 @@
-package com.example.demo.base.entity;
+package com.example.demo.base.shared.entity;
 
 import java.util.Date;
-import java.util.Objects;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.example.demo.base.shared.enums.EventLogSendQueueStatus;
+import com.example.demo.base.shared.enums.StatusCode;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,7 +15,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,9 +28,10 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "EVENT_LOG")
+@Table(name = "EVENT_SOURCE", uniqueConstraints = {
+		@jakarta.persistence.UniqueConstraint(columnNames = { "targetId", "version" }) })
 @EntityListeners(AuditingEntityListener.class)
-public class EventLog {
+public class EventSource {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +39,9 @@ public class EventLog {
 
 	@Column(name = "UUID")
 	private String uuid;
+
+	@Column(name = "AGGREGATE_ID")
+	private String targetId; // 目標 UUID
 
 	@Column(name = "USER_ID")
 	private String userId; // 使用者帳號
@@ -51,47 +53,22 @@ public class EventLog {
 	@Column(name = "OCCURED_AT")
 	private Date occuredAt;
 
-	@Column(name = "TARGET_ID")
-	private String targetId;
-
 	@Column(name = "BODY")
-	private String body;
+	private String body; // Aggregate Root 實體 JSON
 
-	@Column(name = "TOPIC")
-	private String topic;
-
-	/**
-	 * Event 狀態
-	 */
+	@Column(name = "VERSION")
+	private Long version;
+	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "SEND_QUEUE_STATUS")
-	private EventLogSendQueueStatus status;
-
-	/**
-	 * 在持久化之前執行的方法，用於設置 status。
-	 */
-	@PrePersist
-	public void prePersist() {
-		if (Objects.isNull(this.status)) {
-			this.status = EventLogSendQueueStatus.INITIAL;
-		}
+	@Column(name = "STATUS")
+	private StatusCode status;
+	
+	public void setRollback() {
+		this.status = StatusCode.ERROR;
 	}
-
-	/**
-	 * 確認 Event 已發布後更新
-	 * 
-	 * @param 發布的實體
-	 */
-	public void publish(String body) {
-		this.body = body;
-		this.status = EventLogSendQueueStatus.SENT;
+	
+	public void setVersion(Long num) {
+		this.version += num;
 	}
-
-	/**
-	 * 確認 Event 已消費後更新
-	 */
-	public void consume() {
-		this.status = EventLogSendQueueStatus.CONSUMED;
-	}
-
+	
 }

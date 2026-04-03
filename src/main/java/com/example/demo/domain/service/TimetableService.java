@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.example.demo.base.application.service.BaseDomainService;
 import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.base.shared.exception.exception.ValidationException;
-import com.example.demo.base.util.BaseDataTransformer;
 import com.example.demo.domain.setting.aggregate.ConfigurableSetting;
 import com.example.demo.domain.share.SettingQueriedData;
 import com.example.demo.domain.share.TemplateQueriedData;
@@ -21,6 +20,7 @@ import com.example.demo.domain.template.aggregate.vo.TemplateType;
 import com.example.demo.domain.train.command.GenerateTimetableCommand;
 import com.example.demo.infra.repository.SettingRepository;
 import com.example.demo.infra.repository.TemplateRepository;
+import com.example.demo.util.BaseDataTransformer;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -3,8 +3,8 @@ package com.example.demo.domain.account.aggregate;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import com.example.demo.base.config.context.ContextHolder;
-import com.example.demo.base.entity.BaseEntity;
+import com.example.demo.base.domain.BaseAggreagteRoot;
+import com.example.demo.base.infra.context.ContextHolder;
 import com.example.demo.base.shared.event.BaseEvent;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
 import com.example.demo.domain.account.outbound.RegisterUserEvent;
@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "MONEY_ACCOUNT")
-public class MoneyAccount extends BaseEntity {
+public class MoneyAccount extends BaseAggreagteRoot {
 
 	@Id
 	@Column(name = "UUID")

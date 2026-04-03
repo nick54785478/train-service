@@ -2,8 +2,8 @@ package com.example.demo.domain.customisation.aggregate;
 
 import java.util.Objects;
 
-import com.example.demo.base.config.context.ContextHolder;
-import com.example.demo.base.entity.BaseEntity;
+import com.example.demo.base.domain.BaseAggreagteRoot;
+import com.example.demo.base.infra.context.ContextHolder;
 import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.customisation.aggregate.vo.CustomisationType;
 import com.example.demo.domain.customisation.command.CreateCustomisationCommand;
@@ -31,7 +31,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "CUSTOMISATION")
 @EqualsAndHashCode(callSuper = true)
-public class Customisation extends BaseEntity {
+public class Customisation extends BaseAggreagteRoot {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

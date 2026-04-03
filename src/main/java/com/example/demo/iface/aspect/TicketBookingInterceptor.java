@@ -6,7 +6,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.base.config.context.ContextHolder;
+import com.example.demo.base.infra.context.ContextHolder;
 import com.example.demo.base.shared.event.BaseEvent;
 import com.example.demo.domain.booking.aggregate.TicketBooking;
 import com.example.demo.domain.service.TicketBookingService;

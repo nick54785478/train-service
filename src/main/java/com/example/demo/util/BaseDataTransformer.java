@@ -1,4 +1,4 @@
-package com.example.demo.base.util;
+package com.example.demo.util;
 
 import java.math.BigDecimal;
 import java.text.ParseException;

@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.base.application.service.BaseApplicationService;
-import com.example.demo.base.config.context.ContextHolder;
-import com.example.demo.base.entity.EventLog;
+import com.example.demo.base.infra.context.ContextHolder;
+import com.example.demo.base.shared.entity.EventLog;
 import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.base.shared.event.BaseEvent;
 import com.example.demo.base.shared.exception.exception.ValidationException;
@@ -58,9 +58,6 @@ public class TicketCommandService extends BaseApplicationService {
 
 	@Value("${rabbitmq.acount-tx-topic-queue.name}")
 	private String txQueueName;
-
-	@Value("${rabbitmq.exchange.name}")
-	private String exchangeName;
 
 	/**
 	 * 新增車票資訊
@@ -112,7 +109,7 @@ public class TicketCommandService extends BaseApplicationService {
 			EventLog eventLog = this.generateEventLog(txQueueName, event.getEventLogUuid(), event.getTargetId(), event);
 
 			// 發布 Event 進行儲值
-			this.publishEvent(exchangeName, txQueueName, event);
+			this.publishEvent(txQueueName, event);
 			eventLog.publish(eventLog.getBody());
 			eventLogRepository.save(eventLog);
 
@@ -122,7 +119,7 @@ public class TicketCommandService extends BaseApplicationService {
 
 		// 發布事件
 		var event = ContextHolder.getEvent();
-		this.publishEvent(exchangeName, bookingQueueName, event);
+		this.publishEvent(bookingQueueName, event);
 
 		// 查詢 EventLog
 		EventLog eventLog = eventLogRepository.findByUuid(event.getEventLogUuid());
@@ -150,7 +147,7 @@ public class TicketCommandService extends BaseApplicationService {
 
 		// 發布事件
 		BaseEvent event = ContextHolder.getEvent();
-		this.publishEvent(exchangeName, bookingQueueName, event);
+		this.publishEvent(bookingQueueName, event);
 
 		EventLog eventLog = eventLogRepository.findByUuid(event.getEventLogUuid());
 		eventLog.publish(JsonParseUtil.serialize(event));
@@ -176,8 +173,7 @@ public class TicketCommandService extends BaseApplicationService {
 
 		// 發布事件
 		BaseEvent event = ContextHolder.getEvent();
-		this.publishEvent(exchangeName, bookingQueueName, event);
-
+		this.publishEvent(bookingQueueName, event);
 		EventLog eventLog = eventLogRepository.findByUuid(event.getEventLogUuid());
 		eventLog.publish(JsonParseUtil.serialize(event));
 		eventLogRepository.save(eventLog);

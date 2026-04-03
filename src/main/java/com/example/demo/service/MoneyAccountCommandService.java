@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.base.application.service.BaseApplicationService;
-import com.example.demo.base.config.context.ContextHolder;
-import com.example.demo.base.entity.EventLog;
+import com.example.demo.base.infra.context.ContextHolder;
+import com.example.demo.base.shared.entity.EventLog;
 import com.example.demo.base.shared.event.BaseEvent;
 import com.example.demo.base.shared.exception.exception.ValidationException;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
@@ -41,9 +41,6 @@ public class MoneyAccountCommandService extends BaseApplicationService {
 	@Value("${rabbitmq.acount-tx-topic-queue.name}")
 	private String txQueueName;
 
-	@Value("${rabbitmq.exchange.name}")
-	private String exchangeName;
-
 	private final MoneyAccountService moneyAccountService;
 	private final MoneyAccountRepository moneyAccountRepository;
 
@@ -70,7 +67,7 @@ public class MoneyAccountCommandService extends BaseApplicationService {
 		// 紀錄 Message 狀態
 		EventLog eventLog = this.generateEventLog(registerQueueName, event.getEventLogUuid(), saved.getUuid(), event);
 		// 發布註冊使用者事件 (到 AuthService 進行註冊)
-		this.publishEvent(exchangeName, registerQueueName, event);
+		this.publishEvent(registerQueueName, event);
 		eventLog.publish(JsonParseUtil.serialize(event)); // 更改狀態為:已發布
 		eventLogRepository.save(eventLog);
 		return saved;
@@ -97,7 +94,7 @@ public class MoneyAccountCommandService extends BaseApplicationService {
 			EventLog eventLog = this.generateEventLog(txQueueName, event.getEventLogUuid(), event.getTargetId(), event);
 
 			// 發布 Event 進行儲值
-			this.publishEvent(exchangeName, txQueueName, event);
+			this.publishEvent(txQueueName, event);
 			eventLog.publish(eventLog.getBody());
 			eventLogRepository.save(eventLog);
 

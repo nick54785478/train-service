@@ -7,11 +7,12 @@ import org.springframework.stereotype.Component;
 
 import com.example.demo.base.application.port.EventIdempotenceHandlerPort;
 import com.example.demo.base.application.port.EventPublishPort;
-import com.example.demo.base.entity.EventLog;
-import com.example.demo.base.repository.EventLogRepository;
-import com.example.demo.base.repository.EventSourceRepository;
+import com.example.demo.base.infra.persistence.EventLogRepository;
+import com.example.demo.base.infra.persistence.EventSourceRepository;
+import com.example.demo.base.shared.command.PublishEventCommand;
+import com.example.demo.base.shared.entity.EventLog;
 import com.example.demo.base.shared.event.BaseEvent;
-import com.example.demo.base.util.BaseDataTransformer;
+import com.example.demo.util.BaseDataTransformer;
 import com.example.demo.util.JsonParseUtil;
 
 /**
@@ -20,10 +21,10 @@ import com.example.demo.util.JsonParseUtil;
 @Component
 public class BaseEventHandler {
 
-	protected EventIdempotenceHandlerPort eventIdempotentLogService;
 	protected EventPublishPort rabbitmqService;
 	protected EventLogRepository eventLogRepository;
 	protected EventSourceRepository eventSourceRepository;
+	protected EventIdempotenceHandlerPort eventIdempotentLogService;
 
 	public BaseEventHandler(EventIdempotenceHandlerPort eventIdempotentLogService, EventPublishPort rabbitmqService,
 			EventLogRepository eventLogRepository, EventSourceRepository eventSourceRepository) {
@@ -74,9 +75,10 @@ public class BaseEventHandler {
 	 * @param topicQueue Topic 通道
 	 * @param event      事件
 	 */
-	public void publishEvent(String exchangeName, String topicQueue, BaseEvent event) {
-		rabbitmqService.publish(exchangeName, topicQueue, event);
-		// 建立 EventLog
+	public void publishEvent(String topicQueue, BaseEvent event) {
+		PublishEventCommand<BaseEvent> publishCommand = PublishEventCommand.<BaseEvent>builder().event(event)
+				.topic(topicQueue).build();
+		rabbitmqService.publish(publishCommand);
 	}
 
 	/**
