@@ -1,4 +1,4 @@
-package com.example.demo.base.application.service;
+package com.example.demo.base.domain.service;
 
 import java.util.Date;
 import java.util.List;
@@ -30,10 +30,10 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class BaseDomainService {
 
 	@Autowired
-	protected EventSourceRepository eventSourceRepository;
-	@Autowired
 	protected EventLogRepository eventLogRepository;
-	
+	@Autowired
+	protected EventSourceRepository eventSourceRepository;
+
 	/**
 	 * 呼叫 BaseDataTransformer 進行資料轉換
 	 * 

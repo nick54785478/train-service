@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoValidatedResource {
+public class JwtTokenValidatedAndParsedResource {
 
 	private String username;
 	

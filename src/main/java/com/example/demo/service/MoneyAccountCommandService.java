@@ -89,7 +89,7 @@ public class MoneyAccountCommandService extends BaseApplicationService {
 			BigDecimal balance = moneyAccount.getBalance().add(command.getMoney());
 			AccountTxEvent event = AccountTxEvent.builder().targetId(moneyAccount.getUuid())
 					.eventLogUuid(UUID.randomUUID().toString()).money(balance).build();
-			
+
 			// 建立 EventLog
 			EventLog eventLog = this.generateEventLog(txQueueName, event.getEventLogUuid(), event.getTargetId(), event);
 

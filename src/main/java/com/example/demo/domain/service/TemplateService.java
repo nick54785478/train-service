@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.base.application.service.BaseDomainService;
+import com.example.demo.base.domain.service.BaseDomainService;
 import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.share.TemplateQueriedData;
 import com.example.demo.domain.template.aggregate.Template;

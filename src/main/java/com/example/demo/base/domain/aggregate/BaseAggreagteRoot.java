@@ -1,6 +1,8 @@
-package com.example.demo.base.domain;
+package com.example.demo.base.domain.aggregate;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -8,9 +10,12 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.example.demo.base.shared.event.BaseEvent;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 
 /**
@@ -19,22 +24,35 @@ import lombok.Getter;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity {
+public abstract class BaseAggreagteRoot {
 
 	@CreatedDate
 	@Column(name = "CREATED_DATE")
-	private Date createdDate;	// 創建時間
+	private Date createdDate; // 創建時間
 
 	@CreatedBy
 	@Column(name = "CREATED_BY")
-	private String createdBy;	// 創建者
+	private String createdBy; // 創建者
 
 	@LastModifiedDate
 	@Column(name = "LAST_UPDATED_DATE")
-	private Date lastUpdatedDate;	// 最後異動時間
+	private Date lastUpdatedDate; // 最後異動時間
 
 	@LastModifiedBy
 	@Column(name = "LAST_UPDATED_BY")
-	private String lastUpdatedBy;	// 最後異動者
+	private String lastUpdatedBy; // 最後異動者
+
+	/**
+	 * Domain Event 清單
+	 */
+	@Transient
+	protected List<BaseEvent> domainEvents = new ArrayList<>();
+
+	/**
+	 * 清除 Domain Event 清單
+	 */
+	public void clear() {
+		this.domainEvents.clear();
+	}
 
 }

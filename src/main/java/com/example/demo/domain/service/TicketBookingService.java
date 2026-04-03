@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.base.application.service.BaseDomainService;
+import com.example.demo.base.domain.service.BaseDomainService;
 import com.example.demo.base.infra.context.ContextHolder;
 import com.example.demo.base.shared.event.BaseEvent;
 import com.example.demo.base.shared.exception.exception.ValidationException;

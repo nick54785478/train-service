@@ -1,18 +1,19 @@
 package com.example.demo.base.iface.filter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.example.demo.base.application.port.AuthServiceClientPort;
 import com.example.demo.base.infra.context.ContextHolder;
-import com.example.demo.base.service.JwtTokenService;
-import com.example.demo.base.service.JwtTokenService.JwtConstants;
+import com.example.demo.base.shared.dto.JwtTokenValidatedAndParsedResource;
+import com.example.demo.base.shared.enums.JwtConstants;
+import com.example.demo.base.shared.exception.exception.ValidationException;
 
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,11 +28,15 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-	@Autowired
-	JwtTokenService jwtTokenService;
+	private final AuthServiceClientPort authServiceClient;
 
-	@Value("${jwt.auth.enabled}")
 	private boolean jwtAuthEnabled;
+
+	public JwtTokenFilter(AuthServiceClientPort authServiceClient,
+			@Value("${jwt.auth.enabled}") boolean jwtAuthEnabled) {
+		this.authServiceClient = authServiceClient;
+		this.jwtAuthEnabled = jwtAuthEnabled;
+	}
 
 	/**
 	 * 用於進行 URL 路徑匹配的 Ant 格式路徑匹配器。
@@ -69,11 +74,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 		// 未開直接放行
 		if (!jwtAuthEnabled) {
-			// 測試用: 10 年的 Token
-			String token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJEQVRBX09XTkVSIl0sImlzcyI6IlNZU1RFTSIsInN1YiI6Im5pY2sxMjNAZXhhbXBsZS5jb20iLCJpYXQiOjE3MjYxMzcyNDQsImV4cCI6MjA0MTQ5NzI0NH0.kxzrgtEifDx7u-IFAl9lHQshyjUYOaHkRfCi7ZWFooY";
-			Claims tokenBody = jwtTokenService.getTokenBody(token);
-			ContextHolder.setJwtClaims(tokenBody);
-			ContextHolder.setJwtToken(token);
+			JwtTokenValidatedAndParsedResource jwtContext = new JwtTokenValidatedAndParsedResource(
+					"nick123@example.com", new ArrayList<>());
+			// 設置資料進 ContextHolder 供後續取用
+			this.setJwtTokenContext("Test", jwtContext);
 			chain.doFilter(request, response);
 			return;
 		}
@@ -94,7 +98,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		} else {
 			log.error("No JWT Token");
 			// 如果沒有獲取到授權資訊，返回 401 錯誤碼
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No JWT Token");
+			throw new ValidationException("401", "無權限執行該行為");
 		}
 	}
 
@@ -125,23 +129,30 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	 * @throws IOException 如果發生 I/O 相關異常
 	 */
 	private boolean validateJwtToken(String token, HttpServletResponse response) throws IOException {
-		// 解析 JWT Token
-		Claims claims = jwtTokenService.getTokenBody(token);
+		// 呼叫外部 API 來驗證並解析 JWT Token
+		try {
+			JwtTokenValidatedAndParsedResource tokenBody = authServiceClient.validateJwtToken(token);
+			log.debug("JWT Parsed claims: {}", tokenBody);
 
-		
-		
-		log.debug("JWT claims: {}", claims);
-
-		if (jwtAuthEnabled) {
-			// 驗證 JWT Token
-			jwtTokenService.parseToken(token);
+			// 驗證通過將 JWT Token 存儲到 ContextHolder 中
+			this.setJwtTokenContext(token, tokenBody);
+		} catch (Exception e) {
+			return false;
 		}
-
-		// 驗證通過將 JWT Token 存儲到 ContextHolder 中
-		ContextHolder.setJwtToken(token);
-		ContextHolder.setJwtClaims(claims);
 
 		return true;
 
+	}
+
+	/**
+	 * 設置資料進 ContextHolder 供後續取用
+	 * 
+	 * @param jwtContext 解析後的資料
+	 */
+	private void setJwtTokenContext(String token, JwtTokenValidatedAndParsedResource jwtContext) {
+		ContextHolder.setUsername(jwtContext.getUsername());
+		ContextHolder.setRoleList(jwtContext.getRoles());
+		ContextHolder.setEmail(jwtContext.getUsername()); // 這邊設計帳號與使用者名稱相同
+		ContextHolder.setJwtToken(token);
 	}
 }

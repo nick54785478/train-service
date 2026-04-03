@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.DateUtil;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 import lombok.AccessLevel;
@@ -25,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
  * 將 Map<屬性, 值> 資料 轉換為 Entity
  */
 @Slf4j
-@Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ParameterMappingUtil {
 

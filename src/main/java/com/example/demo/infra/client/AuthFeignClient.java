@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.demo.base.shared.dto.UserInfoValidatedResource;
+import com.example.demo.base.shared.dto.JwtTokenValidatedAndParsedResource;
 import com.example.demo.config.AuthFeignConfiguration;
 import com.example.demo.domain.share.UserLoginCommand;
 import com.example.demo.iface.dto.req.RegisterUserResource;
@@ -48,5 +48,5 @@ public interface AuthFeignClient {
 	 * 驗證 JwToken
 	 */
 	@PostMapping(value = "/api/v1/auth/validate")
-	public UserInfoValidatedResource validate(String jwtToken);
+	public JwtTokenValidatedAndParsedResource validate(String jwtToken);
 }

@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.base.application.service.BaseDomainService;
+import com.example.demo.base.domain.service.BaseDomainService;
 import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.base.shared.exception.exception.ValidationException;
 import com.example.demo.domain.setting.aggregate.ConfigurableSetting;

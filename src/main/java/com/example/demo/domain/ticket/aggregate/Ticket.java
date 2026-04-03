@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
-import com.example.demo.base.domain.BaseAggreagteRoot;
+import com.example.demo.base.domain.aggregate.BaseAggreagteRoot;
 import com.example.demo.domain.ticket.command.CreateOrUpdateTicketCommand;
 import com.example.demo.domain.ticket.command.CreateTicketCommand;
 

@@ -3,7 +3,7 @@ package com.example.demo.domain.train.aggregate.entity;
 import java.time.LocalTime;
 import java.util.UUID;
 
-import com.example.demo.base.domain.BaseEntity;
+import com.example.demo.base.domain.aggregate.BaseEntity;
 import com.example.demo.base.shared.enums.YesNo;
 
 import jakarta.persistence.Column;

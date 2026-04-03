@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.base.application.port.EventIdempotenceHandlerPort;
-import com.example.demo.base.application.service.BaseDomainService;
+import com.example.demo.base.domain.service.BaseDomainService;
 import com.example.demo.base.shared.command.BaseIdempotentCommand;
 import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.seat.aggregate.TrainSeat;

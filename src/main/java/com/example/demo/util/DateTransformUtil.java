@@ -14,12 +14,12 @@ import org.springframework.stereotype.Component;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 日期資料轉換器
  */
-@Log4j2
+@Slf4j
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DateTransformUtil {

@@ -1,6 +1,5 @@
 package com.example.demo.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -21,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonParseUtil {
 
-	@Autowired
 	protected static final ObjectMapper mapper = new ObjectMapper();
 
 	/**

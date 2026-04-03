@@ -1,6 +1,6 @@
 package com.example.demo.base.application.port;
 
-import com.example.demo.base.shared.dto.UserInfoValidatedResource;
+import com.example.demo.base.shared.dto.JwtTokenValidatedAndParsedResource;
 import com.example.demo.domain.share.UserLoginCommand;
 import com.example.demo.iface.dto.req.RegisterUserResource;
 import com.example.demo.iface.dto.res.JwtTokenGettenResource;
@@ -39,6 +39,6 @@ public interface AuthServiceClientPort {
 	 * @param jwtTokwn JWT Token
 	 * @return 解析後的資料
 	 */
-	public UserInfoValidatedResource validateJwtToken(String jwtToken);
+	public JwtTokenValidatedAndParsedResource validateJwtToken(String jwtToken);
 
 }

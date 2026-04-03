@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.example.demo.base.domain.BaseAggreagteRoot;
+import com.example.demo.base.domain.aggregate.BaseAggreagteRoot;
 import com.example.demo.domain.train.aggregate.entity.TrainStop;
 import com.example.demo.domain.train.aggregate.vo.TrainKind;
 import com.example.demo.domain.train.command.CreateStopCommand;

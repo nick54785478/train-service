@@ -2,7 +2,7 @@ package com.example.demo.domain.customisation.aggregate;
 
 import java.util.Objects;
 
-import com.example.demo.base.domain.BaseAggreagteRoot;
+import com.example.demo.base.domain.aggregate.BaseAggreagteRoot;
 import com.example.demo.base.infra.context.ContextHolder;
 import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.customisation.aggregate.vo.CustomisationType;

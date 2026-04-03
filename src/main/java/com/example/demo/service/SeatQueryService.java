@@ -10,10 +10,10 @@ import com.example.demo.domain.service.SeatService;
 import com.example.demo.domain.share.SeatQueriedData;
 import com.example.demo.domain.share.UnbookedSeatGottenData;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SeatQueryService extends BaseApplicationService {
 
 	private SeatService seatService;

@@ -2,7 +2,7 @@ package com.example.demo.domain.template.aggregate;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.example.demo.base.domain.BaseAggreagteRoot;
+import com.example.demo.base.domain.aggregate.BaseAggreagteRoot;
 import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.template.aggregate.vo.FileType;
 import com.example.demo.domain.template.aggregate.vo.TemplateType;

@@ -3,7 +3,7 @@ package com.example.demo.domain.booking.aggregate;
 import java.util.Objects;
 import java.util.UUID;
 
-import com.example.demo.base.domain.BaseAggreagteRoot;
+import com.example.demo.base.domain.aggregate.BaseAggreagteRoot;
 import com.example.demo.base.infra.context.ContextHolder;
 import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.account.aggregate.MoneyAccount;

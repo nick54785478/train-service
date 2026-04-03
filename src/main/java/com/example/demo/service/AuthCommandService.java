@@ -1,16 +1,17 @@
 package com.example.demo.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.share.UserLoginCommand;
 import com.example.demo.iface.dto.res.JwtTokenGettenResource;
 import com.example.demo.infra.client.AuthFeignClient;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class AuthCommandService {
 
-	@Autowired
 	private AuthFeignClient client;
 
 	/**
@@ -24,6 +25,3 @@ public class AuthCommandService {
 	}
 
 }
-
-
-

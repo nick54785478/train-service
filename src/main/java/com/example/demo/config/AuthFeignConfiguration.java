@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.example.demo.base.service.JwtTokenService.JwtConstants;
+import com.example.demo.base.infra.context.ContextHolder;
+import com.example.demo.base.shared.enums.JwtConstants;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -27,7 +28,9 @@ public class AuthFeignConfiguration {
 			@Override
 			public void apply(RequestTemplate requestTemplate) {
 				// 在此處新增 JWToken Request Header
-				requestTemplate.header(JwtConstants.JWT_HEADER.getValue(), JwtConstants.JWT_PREFIX.getValue() + token);
+				String jwtoken = ContextHolder.getJwtoken();
+				requestTemplate.header(JwtConstants.JWT_HEADER.getValue(),
+						JwtConstants.JWT_PREFIX.getValue() + jwtoken);
 			}
 		};
 	}

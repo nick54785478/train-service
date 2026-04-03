@@ -3,7 +3,7 @@ package com.example.demo.domain.account.aggregate;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import com.example.demo.base.domain.BaseAggreagteRoot;
+import com.example.demo.base.domain.aggregate.BaseAggreagteRoot;
 import com.example.demo.base.infra.context.ContextHolder;
 import com.example.demo.base.shared.event.BaseEvent;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;

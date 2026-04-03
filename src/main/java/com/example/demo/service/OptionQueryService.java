@@ -8,10 +8,10 @@ import com.example.demo.base.application.service.BaseApplicationService;
 import com.example.demo.domain.service.OptionService;
 import com.example.demo.domain.share.OptionQueriedData;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OptionQueryService extends BaseApplicationService {
 
 	private OptionService optionService;

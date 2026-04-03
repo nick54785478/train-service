@@ -64,7 +64,7 @@ public abstract class BaseApplicationService {
 	/**
 	 * 建立 EventLog
 	 * 
-	 * @param topic   Topic 通道
+	 * @param topic        Topic 通道
 	 * @param eventLogUuid EventLog 的 UUID
 	 * @param targetId     目標物 UUID
 	 * @param event        事件
