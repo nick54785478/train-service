@@ -31,7 +31,7 @@ class RabbitmqServiceTest {
 	@Test
 	void testPublish() {
 		BookSeatEvent event = BookSeatEvent.builder().eventLogUuid("EventLogUuid").targetId("Booking UUID")
-				.seatNo("4A").takeDate(DateTransformUtil.transformLocalDateToString(LocalDate.now())).build();
+				.seatNo("4A").takeDate(LocalDate.now()).build();
 
 //		EventLog eventLog = EventLog.builder().uuid(uuid).targetId("火車UUID").className(testQueueName).userId("Nick123")
 //				.body("Request Body").build();

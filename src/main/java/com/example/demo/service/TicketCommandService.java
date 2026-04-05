@@ -104,34 +104,46 @@ public class TicketCommandService extends BaseApplicationService {
 
 		// 發布 Domain Event 進行扣款及訂位
 		this.publishEventsForBooking(ticketBooking, account);
-
 		return new TicketBookedData(ticketBooking.getUuid());
 	}
 
 	/**
 	 * Check in Ticket
 	 * 
-	 * @param command
-	 * @param TicketCheckedInResource
+	 * @param command             {@link CheckInTicketCommand}
+	 * @param TicketCheckedInData
 	 */
 	public TicketCheckedInData checkInTicket(CheckInTicketCommand command) {
-		TicketCheckedInData checkIn = ticketBookingService.checkIn(command);
+		TicketBooking booking = ticketBookingRepository.findById(command.getUuid())
+				.orElseThrow(() -> new ValidationException("VALIDATION_EXCEPTION", "發生錯誤，查無此訂位"));
 
-		TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndSeatNoAndTakeDateAndActiveFlag(command.getUuid(),
-				command.getSeatNo(), command.getTakeDate(), YesNo.N);
-		if (!Objects.isNull(trainSeat)) {
-			log.error("該票券已失效");
-			throw new ValidationException("VALIDATION_EXCEPTION", "該票券已失效");
-		}
+		// 進行 Ticket 的 Check-in 動作
+		ticketBookingService.checkInTicket(command, booking);
+		TicketBooking saved = ticketBookingRepository.save(booking);
 
-		// 發布事件
-		BaseEvent event = ContextHolder.getEvent();
-		this.publishEvent(bookSeatQueueName, event);
+		// 取出 Domain Events
+		List<BaseEvent> domainEvents = booking.getDomainEvents();
 
-		EventLog eventLog = eventLogRepository.findByUuid(event.getEventLogUuid());
-		eventLog.publish(JsonParseUtil.serialize(event));
-		eventLogRepository.save(eventLog);
-		return checkIn;
+		// 發布 Domain Event
+		domainEvents.stream().forEach(event -> {
+			// 透過 Event 類型取得特定 Topic
+			String topic = eventTopicResolver.resolve(event);
+
+			// EventLog 在這裡建立（不在 Domain）
+			EventLog eventLog = this.generateEventLog(topic, event);
+
+			// 發送 MQ
+			this.publishEvent(topic, event);
+
+			// 更新狀態
+			eventLog.publish(eventLog.getBody());
+			eventLogRepository.saveAndFlush(eventLog);
+		});
+		
+		// 清除 Domain Events
+		booking.clearDomainEvents();
+
+		return new TicketCheckedInData(saved.getUuid(), saved.getLastUpdatedDate(), "Check in Successfully!");
 	}
 
 	/**
@@ -175,8 +187,6 @@ public class TicketCommandService extends BaseApplicationService {
 
 		// 統一發布
 		allEvents.forEach(event -> {
-
-			System.out.println("event:" + event);
 
 			// 透過 Event 類型取得特定 Topic
 			String topic = eventTopicResolver.resolve(event);

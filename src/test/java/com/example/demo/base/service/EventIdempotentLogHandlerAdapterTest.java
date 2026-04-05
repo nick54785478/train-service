@@ -43,7 +43,7 @@ class EventIdempotentLogHandlerAdapterTest {
 	@Test
 	void testHandleIdempotency() {
 		BookSeatEvent event = BookSeatEvent.builder().eventLogUuid("EventLogUuid").targetId("Booking UUID")
-				.seatNo("4A").takeDate(DateTransformUtil.transformLocalDateToString(LocalDate.now())).build();
+				.seatNo("4A").takeDate(LocalDate.now()).build();
 
 		// 冪等機制，防止重覆消費所帶來的副作用
 		if (!eventIdempotentLogService.handleIdempotency(event)) {
@@ -57,7 +57,7 @@ class EventIdempotentLogHandlerAdapterTest {
 	@Test
 	void testHandleIdempotency2() {
 		BookSeatEvent event = BookSeatEvent.builder().eventLogUuid("EventLogUuid").targetId("Booking UUID")
-				.seatNo("4A").takeDate(DateTransformUtil.transformLocalDateToString(LocalDate.now())).build();
+				.seatNo("4A").takeDate(LocalDate.now()).build();
 		// 冪等機制，防止重覆消費所帶來的副作用
 		if (!eventIdempotentLogService.handleIdempotency(event)) {
 			log.warn("Consume repeated: {}", event);

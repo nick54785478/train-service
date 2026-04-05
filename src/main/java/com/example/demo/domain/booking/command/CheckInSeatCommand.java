@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CheckInTicketCommand {
+public class CheckInSeatCommand {
 
 	private String uuid; // booking uuid
-
+	
 	private String seatNo; // 座號
-
+	
 	private Long carNo; // 車廂編號
-
-	private LocalDate takeDate; // 搭乘日期
+	
+	private LocalDate takeDate;	// 搭乘日期
 
 }

@@ -41,7 +41,6 @@ public class TestController {
 	@PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public String upload(@RequestPart(name = "resource", required = true) UploadTemplateResource resource,
 			@RequestPart(name = "file", required = true) MultipartFile file) throws Exception {
-		System.out.println("resource:" + resource);
 		minioService.uploadFile(file, resource.getFileName(), resource.getFilePath());
 		return "End";
 	}

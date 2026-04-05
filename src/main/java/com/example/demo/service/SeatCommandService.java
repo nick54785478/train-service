@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.domain.booking.command.CheckInSeatCommand;
+import com.example.demo.domain.booking.command.CheckInTicketCommand;
 import com.example.demo.domain.seat.aggregate.TrainSeat;
 import com.example.demo.domain.seat.command.CreateSeatCommand;
 import com.example.demo.infra.repository.TrainSeatRepository;
@@ -25,6 +27,19 @@ public class SeatCommandService {
 	@Transactional
 	public void bookSeat(CreateSeatCommand command) {
 		TrainSeat trainSeat = TrainSeat.create(command);
+		trainSeatRepository.save(trainSeat);
+	}
+
+	/**
+	 * 進行 Check in 動作
+	 * 
+	 * @param command {@link CheckInTicketCommand}
+	 */
+	@Transactional
+	public void checkInSeat(CheckInSeatCommand command) {
+		TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndTakeDateAndSeatNoAndCarNo(command.getUuid(),
+				command.getTakeDate(), command.getSeatNo(), command.getCarNo());
+		trainSeat.checkIn();
 		trainSeatRepository.save(trainSeat);
 	}
 

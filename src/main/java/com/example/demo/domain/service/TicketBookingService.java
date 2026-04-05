@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.base.domain.service.BaseDomainService;
 import com.example.demo.base.infra.context.ContextHolder;
+import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.base.shared.event.BaseEvent;
 import com.example.demo.base.shared.exception.exception.ValidationException;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
@@ -24,7 +25,6 @@ import com.example.demo.domain.booking.command.CheckInTicketCommand;
 import com.example.demo.domain.booking.command.RefundTicketCommand;
 import com.example.demo.domain.seat.aggregate.TrainSeat;
 import com.example.demo.domain.share.BookingQueriedData;
-import com.example.demo.domain.share.TicketCheckedInData;
 import com.example.demo.domain.share.TicketRefundedData;
 import com.example.demo.domain.share.TrainSeatBookedData;
 import com.example.demo.domain.share.enums.PayMethod;
@@ -87,24 +87,20 @@ public class TicketBookingService extends BaseDomainService {
 	}
 
 	/**
-	 * Check in 車票
+	 * 進行 Ticket 的 Check-in 動作
 	 * 
-	 * @param command
-	 * @return 成功訊息
+	 * @param command {@link CheckInTicketCommand}
+	 * @param booking Booking 資料
 	 */
-	public TicketCheckedInData checkIn(CheckInTicketCommand command) {
-		Optional<TicketBooking> option = ticketBookingRepository.findById(command.getUuid());
-		if (option.isPresent()) {
-			TicketBooking booking = option.get();
-			booking.checkIn(command);
-			TicketBooking saved = ticketBookingRepository.save(booking);
+	public void checkInTicket(CheckInTicketCommand command, TicketBooking booking) {
+		// 進行領域檢核 -> 確認該座位尚未 check in
+		TrainSeat trainSeat = trainSeatRepository
+				.findByBookUuidAndSeatNoAndTakeDateAndAndBookedAndActiveFlag(command.getUuid(), command.getSeatNo(),
+						command.getTakeDate(), YesNo.Y, YesNo.Y)
+				.orElseThrow(() -> new ValidationException("VALIDATE_FAILED", "該座位資料已失效，Check in 失敗"));
 
-			BaseEvent event = ContextHolder.getEvent();
-			this.generateEventLog(bookingQueueName, event.getEventLogUuid(), event.getTargetId(), event);
-			return new TicketCheckedInData(saved.getTrainUuid(), saved.getCreatedDate(), "Checked In Successfully");
-		}
-		log.error("發生錯誤，查無此預約");
-		throw new ValidationException("VALIDATION_EXCEPTION", "發生錯誤，查無此預約");
+		// 進行 Check in 動作
+		booking.checkIn(trainSeat.getTakeDate(), trainSeat.getSeatNo(), trainSeat.getCarNo());
 	}
 
 	/**

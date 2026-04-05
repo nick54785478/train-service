@@ -1,19 +1,18 @@
 package com.example.demo.domain.booking.aggregate;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
 import com.example.demo.base.domain.aggregate.BaseAggreagteRoot;
-import com.example.demo.base.infra.context.ContextHolder;
 import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.booking.aggregate.vo.TicketStatus;
 import com.example.demo.domain.booking.command.BookTicketCommand;
-import com.example.demo.domain.booking.command.CheckInTicketCommand;
 import com.example.demo.domain.booking.command.RefundTicketCommand;
 import com.example.demo.domain.booking.outbound.BookSeatEvent;
+import com.example.demo.domain.booking.outbound.CheckInSeatEvent;
 import com.example.demo.domain.share.enums.TicketAction;
-import com.example.demo.util.DateTransformUtil;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -82,8 +81,7 @@ public class TicketBooking extends BaseAggreagteRoot {
 		ticketBooking.activeFlag = YesNo.Y;
 
 		// 建立一個 Domain Event
-		BookSeatEvent event = BookSeatEvent.builder().targetId(ticketBooking.uuid)
-				.takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
+		BookSeatEvent event = BookSeatEvent.builder().targetId(ticketBooking.uuid).takeDate(command.getTakeDate())
 				.action(TicketAction.BOOK.getName()).seatNo(command.getSeatNo()).carNo(command.getCarNo()).build();
 
 		// 設置 Domain Event
@@ -92,20 +90,33 @@ public class TicketBooking extends BaseAggreagteRoot {
 	}
 
 	/**
-	 * check in
+	 * 進行 Check in 動作
 	 * 
-	 * @param command
+	 * @param takeDate 搭乘日期
+	 * @param seatNo   乘坐位置
+	 * @param carNo    車廂編號
 	 */
-	public void checkIn(CheckInTicketCommand command) {
+	public void checkIn(LocalDate takeDate, String seatNo, Long carNo) {
 		this.status = TicketStatus.TAKEN;
 		this.activeFlag = YesNo.N;
 
-		// 建立一個 Event
-		BookSeatEvent event = BookSeatEvent.builder().eventLogUuid(UUID.randomUUID().toString())
-				.targetId(this.uuid).takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
-				.action(TicketAction.CHECK_IN.getName()).seatNo(command.getSeatNo()).carNo(command.getCarNo()).build();
-		// 設置進 Context 上下文
-		ContextHolder.setBaseEvent(event);
+		// 建立 Domain Event : 車票 Check in 事件
+		CheckInSeatEvent event = CheckInSeatEvent.builder().targetId(this.uuid).takeDate(takeDate)
+				.action(TicketAction.CHECK_IN.getName()).seatNo(seatNo).carNo(carNo).build();
+		// 設置 Domain Event
+		this.raiseEvent(event);
+
+//		BookSeatEvent event = BookSeatEvent.builder().targetId(ticketBooking.uuid)
+//				.takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
+//				.action(TicketAction.BOOK.getName()).seatNo(command.getSeatNo()).carNo(command.getCarNo()).build();
+//
+//		
+//		// 建立一個 Event
+//		CheckInSeatEvent event = CheckInSeatEvent.builder().eventLogUuid(UUID.randomUUID().toString())
+//				.targetId(this.uuid).takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
+//				.action(TicketAction.CHECK_IN.getName()).seatNo(command.getSeatNo()).carNo(command.getCarNo()).build();
+//		// 設置進 Context 上下文
+//		ContextHolder.setBaseEvent(event);
 	}
 
 	/**
@@ -117,12 +128,12 @@ public class TicketBooking extends BaseAggreagteRoot {
 		this.status = TicketStatus.REFUNDED;
 		this.activeFlag = YesNo.N;
 
-		// 建立一個 Event
-		BookSeatEvent event = BookSeatEvent.builder().eventLogUuid(UUID.randomUUID().toString())
-				.targetId(this.uuid).takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
-				.action(TicketAction.REFUNDED.getName()).seatNo(command.getSeatNo()).carNo(command.getCarNo()).build();
-		// 設置進 Context 上下文
-		ContextHolder.setBaseEvent(event);
+//		// 建立一個 Event
+//		BookSeatEvent event = BookSeatEvent.builder().eventLogUuid(UUID.randomUUID().toString()).targetId(this.uuid)
+//				.takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
+//				.action(TicketAction.REFUNDED.getName()).seatNo(command.getSeatNo()).carNo(command.getCarNo()).build();
+//		// 設置進 Context 上下文
+//		ContextHolder.setBaseEvent(event);
 
 	}
 }

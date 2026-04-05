@@ -37,7 +37,6 @@ public class BookingController {
 	private BookQueryService bookQueryService;
 	private TicketCommandService ticketCommandService;
 
-
 	/**
 	 * 查詢該使用者的訂票資訊
 	 * 
@@ -46,13 +45,12 @@ public class BookingController {
 	@GetMapping("/{username}")
 	@Operation(summary = "API - 查詢該使用者的訂票資訊", description = "查詢該使用者的訂票資訊。")
 	public ResponseEntity<BookingQueriedResource> queryBooking(
-			@Parameter(description = "使用者帳號")
-			@PathVariable String username) {
+			@Parameter(description = "使用者帳號") @PathVariable String username) {
 		BookingQueriedData bookQueriedData = bookQueryService.queryBooking(username);
-		return new ResponseEntity<>(
-				BaseDataTransformer.transformData(bookQueriedData, BookingQueriedResource.class), HttpStatus.OK);
+		return new ResponseEntity<>(BaseDataTransformer.transformData(bookQueriedData, BookingQueriedResource.class),
+				HttpStatus.OK);
 	}
-	
+
 	/**
 	 * 預定車票資料
 	 * 
@@ -68,14 +66,14 @@ public class BookingController {
 				BaseDataTransformer.transformData(ticketCommandService.bookTicket(command), TicketBookedResource.class),
 				HttpStatus.OK);
 	}
-	
+
 	/**
 	 * 進行車票 Check in 動作
 	 * 
 	 * @param resource
 	 * @return ResponseEntity
 	 */
-	@PostMapping("/checkIn")
+	@PostMapping("/check-in")
 	@Operation(summary = "API - 進行車票 Check in 動作", description = "進行車票 Check in 動作。")
 	public ResponseEntity<TicketCheckedInResource> bookTicket(
 			@Parameter(description = "車票 Check IN 資訊") @RequestBody CheckInTicketResource resource) {

@@ -46,11 +46,10 @@ public class BookSeatEventHandler extends BaseEventHandler {
 	private MoneyAccountRepository moneyAccountRepository;
 	private TicketBookingRepository ticketBookingRepository;
 
-	public BookSeatEventHandler(EventIdempotenceHandlerPort eventIdempotentLogService,
-			EventPublishPort rabbitmqService, EventLogRepository eventLogRepository,
-			EventSourceRepository eventSourceRepository, TicketBookingRepository ticketBookingRepository,
-			TrainSeatRepository trainSeatRepository, MoneyAccountRepository moneyAccountRepository,
-			SeatCommandService seatCommandService) {
+	public BookSeatEventHandler(EventIdempotenceHandlerPort eventIdempotentLogService, EventPublishPort rabbitmqService,
+			EventLogRepository eventLogRepository, EventSourceRepository eventSourceRepository,
+			TicketBookingRepository ticketBookingRepository, TrainSeatRepository trainSeatRepository,
+			MoneyAccountRepository moneyAccountRepository, SeatCommandService seatCommandService) {
 		super(eventIdempotentLogService, rabbitmqService, eventLogRepository, eventSourceRepository);
 		this.trainSeatRepository = trainSeatRepository;
 		this.ticketBookingRepository = ticketBookingRepository;
@@ -82,7 +81,7 @@ public class BookSeatEventHandler extends BaseEventHandler {
 			if (StringUtils.equals(event.getAction(), TicketAction.BOOK.getName())) {
 				CreateSeatCommand command = CreateSeatCommand.builder().ticketUuid(booking.getTicketUuid())
 						.trainUuid(booking.getTrainUuid()).bookingUuid(booking.getUuid())
-						.takeDate(DateTransformUtil.transformStringToLocalDate(event.getTakeDate()))
+						.takeDate(event.getTakeDate())
 						.seatNo(event.getSeatNo()).carNo(event.getCarNo()).build();
 				seatCommandService.bookSeat(command);
 
@@ -92,43 +91,39 @@ public class BookSeatEventHandler extends BaseEventHandler {
 
 				// Refund
 			} else if (StringUtils.equals(event.getAction(), TicketAction.REFUNDED.getName())) {
-				TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndTakeDateAndSeatNoAndCarNo(
-						event.getTargetId(), DateTransformUtil.transformStringToLocalDate(event.getTakeDate()),
-						event.getSeatNo(), event.getCarNo());
-				trainSeat.refund();
-				trainSeatRepository.save(trainSeat);
-
-				// 先查該票價
-				Ticket ticket = ticketRepository.findByTicketNo(booking.getTicketUuid());
-
-				Optional<MoneyAccount> option = moneyAccountRepository.findById(booking.getAccountUuid());
-
-				if (option.isEmpty()) {
-					log.error("發生錯誤，查詢帳號資訊失敗。");
-					return;
-				} else {
-
-					MoneyAccount moneyAccount = option.get();
-					// 取出票價加總
-					BigDecimal balance = moneyAccount.getBalance().add(ticket.getPrice());
-
-					// 建立 Event
-					AccountTxEvent txEvent = AccountTxEvent.builder().money(balance)
-							.eventLogUuid(UUID.randomUUID().toString()).targetId(booking.getAccountUuid()).build();
-
-					// 建立 EventLog
-					this.generateEventLog(txQueueName, txEvent);
-
-					// 發布 Event 進行退費動作
-					this.publishEvent(txQueueName, txEvent);
-				}
+//				TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndTakeDateAndSeatNoAndCarNo(
+//						event.getTargetId(), DateTransformUtil.transformStringToLocalDate(event.getTakeDate()),
+//						event.getSeatNo(), event.getCarNo());
+//				trainSeat.refund();
+//				trainSeatRepository.save(trainSeat);
+//
+//				// 先查該票價
+//				Ticket ticket = ticketRepository.findByTicketNo(booking.getTicketUuid());
+//
+//				Optional<MoneyAccount> option = moneyAccountRepository.findById(booking.getAccountUuid());
+//
+//				if (option.isEmpty()) {
+//					log.error("發生錯誤，查詢帳號資訊失敗。");
+//					return;
+//				} else {
+//
+//					MoneyAccount moneyAccount = option.get();
+//					// 取出票價加總
+//					BigDecimal balance = moneyAccount.getBalance().add(ticket.getPrice());
+//
+//					// 建立 Event
+//					AccountTxEvent txEvent = AccountTxEvent.builder().money(balance)
+//							.eventLogUuid(UUID.randomUUID().toString()).targetId(booking.getAccountUuid()).build();
+//
+//					// 建立 EventLog
+//					this.generateEventLog(txQueueName, txEvent);
+//
+//					// 發布 Event 進行退費動作
+//					this.publishEvent(txQueueName, txEvent);
+//				}
 			}
 		});
-
-		// 進行消費
-		this.consumeEvent(event.getEventLogUuid());
 	}
-
 
 	/**
 	 * check in
@@ -138,7 +133,7 @@ public class BookSeatEventHandler extends BaseEventHandler {
 	 */
 	private void checkIn(BookSeatEvent event) {
 		TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndTakeDateAndSeatNoAndCarNo(event.getTargetId(),
-				DateTransformUtil.transformStringToLocalDate(event.getTakeDate()), event.getSeatNo(), event.getCarNo());
+				event.getTakeDate(), event.getSeatNo(), event.getCarNo());
 		trainSeat.checkIn();
 		trainSeatRepository.save(trainSeat);
 

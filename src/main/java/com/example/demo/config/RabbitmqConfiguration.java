@@ -23,6 +23,9 @@ public class RabbitmqConfiguration {
 	@Value("${rabbitmq.book-seat-topic-queue.name}")
 	private String bookSeatQueueName;
 
+	@Value("${rabbitmq.checkin-seat-topic-queue.name}")
+	private String checkInSeatQueueName;
+
 	@Value("${rabbitmq.register-topic-queue.name}")
 	private String registerUserQueueName;
 
@@ -68,7 +71,17 @@ public class RabbitmqConfiguration {
 	}
 
 	/**
-	 * create Rabbit Ticket Booked Queue
+	 * create Rabbit Ticket Booking Queue
+	 * 
+	 * @return bookingQueue
+	 */
+	@Bean
+	public Queue bookSeatQueue() {
+		return new Queue(bookSeatQueueName, true);
+	}
+
+	/**
+	 * create Rabbit Check In Seat Queue
 	 * <p>
 	 * 註. Ticket Booked 後的執行邏輯會放在這 (如: 更新座位資訊)
 	 * </p>
@@ -76,8 +89,8 @@ public class RabbitmqConfiguration {
 	 * @return bookingQueue
 	 */
 	@Bean
-	public Queue bookSeatQueue() {
-		return new Queue(bookSeatQueueName, true);
+	public Queue checkInSeatQueue() {
+		return new Queue(checkInSeatQueueName, true);
 	}
 
 	/**
@@ -113,7 +126,7 @@ public class RabbitmqConfiguration {
 	}
 
 	/**
-	 * 將佇列 (Ticket Booking Queue) 綁定到主題交換器 (TopicExchange)，並指定路由鍵模式。
+	 * 將佇列 (Seat Booking Queue) 綁定到主題交換器 (TopicExchange)，並指定路由鍵模式。
 	 */
 	@Bean
 	public Binding bookSeatTopicQueueBinding(Queue bookSeatQueue, TopicExchange exchange) {
@@ -121,6 +134,19 @@ public class RabbitmqConfiguration {
 		// * ：有且僅有一個
 		// #：匹配0個或者多個
 		return BindingBuilder.bind(bookSeatQueue).to(exchange).with(bookSeatQueueName); // 註. bind 需與上方 Queue 名稱一致
+//		return BindingBuilder.bind(testQueue()).to(topicExchange()).with("*.test.#"); //所有符合 "*.test.#" 这种模式的消息，都会被路由到 testQueue 队列。
+
+	}
+	
+	/**
+	 * 將佇列 (Seat Check-in Queue) 綁定到主題交換器 (TopicExchange)，並指定路由鍵模式。
+	 */
+	@Bean
+	public Binding checkInSeatTopicQueueBinding(Queue checkInSeatQueue, TopicExchange exchange) {
+		// 結合設定檔設定的匹配規則
+		// * ：有且僅有一個
+		// #：匹配0個或者多個
+		return BindingBuilder.bind(checkInSeatQueue).to(exchange).with(checkInSeatQueueName); // 註. bind 需與上方 Queue 名稱一致
 //		return BindingBuilder.bind(testQueue()).to(topicExchange()).with("*.test.#"); //所有符合 "*.test.#" 这种模式的消息，都会被路由到 testQueue 队列。
 
 	}

@@ -2,11 +2,15 @@ package com.example.demo.util;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -22,10 +26,17 @@ public class JsonParseUtil {
 
 	protected static final ObjectMapper mapper = new ObjectMapper();
 
+	static {
+		mapper.registerModule(new JavaTimeModule()); // 支援 LocalDate / LocalDateTime
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // 不用 timestamp
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+	}
+
 	/**
 	 * 序列化物件 為 JSON
 	 * 
-	 * @param target
+	 * @param target 目標物件
 	 * @return 序列化 JSON 字串
 	 */
 	public static String serialize(Object target) {
