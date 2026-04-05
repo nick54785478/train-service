@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@EventTopic("${rabbitmq.book-topic-queue.name}")
+@EventTopic("${rabbitmq.ticket-booking-topic-queue.name}")
 public class TicketBookingEvent extends BaseEvent {
 
 	private String action; // 動作

@@ -51,7 +51,7 @@ public class TicketCommandService extends BaseApplicationService {
 	private final MoneyAccountRepository moneyAccountRepository;
 	private final TicketBookingRepository ticketBookingRepository;
 
-	@Value("${rabbitmq.book-topic-queue.name}")
+	@Value("${rabbitmq.ticket-booking-topic-queue.name}")
 	private String bookingQueueName;
 
 	@Value("${rabbitmq.acount-tx-topic-queue.name}")
@@ -100,10 +100,8 @@ public class TicketCommandService extends BaseApplicationService {
 
 		// 呼叫 Domain Service 進行訂位
 		TicketBooking ticketBooking = ticketBookingService.book(command, account, username, email);
-		ticketBookingRepository.save(ticketBooking);
-		
-		System.out.println("Domain Events: "+ticketBooking.getDomainEvents());
-		
+		ticketBookingRepository.saveAndFlush(ticketBooking); // 這邊要 Save & Flush，否則 Event 可能會在 Commit 前觸發
+
 		// 發布 Domain Event 進行扣款及訂位
 		this.publishEventsForBooking(ticketBooking, account);
 

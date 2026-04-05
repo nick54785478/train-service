@@ -1,6 +1,5 @@
 package com.example.demo.base.infra.event;
 
-import java.lang.System.Logger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

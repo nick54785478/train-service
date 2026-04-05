@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TicketBookingService extends BaseDomainService {
 
-	@Value("${rabbitmq.book-topic-queue.name}")
+	@Value("${rabbitmq.ticket-booking-topic-queue.name}")
 	private String bookingQueueName;
 
 	private final TicketBookingRepository ticketBookingRepository;
@@ -75,7 +75,7 @@ public class TicketBookingService extends BaseDomainService {
 		if (StringUtils.equals(PayMethod.fromLabel(command.getPayMethod()).getCode(),
 				PayMethod.PAY_BY_ACCOUNT.getCode())) {
 			// 進行扣款
-			// 註. eventId（由第一個 Aggregate 產生）
+			// 註. eventTxId（由第一個 Aggregate 產生）
 			account.chargeForBooking(command.getPrice(), ticketBooking.getEventTxId());
 
 		} else {

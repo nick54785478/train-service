@@ -20,15 +20,15 @@ public class RabbitmqConfiguration {
 	@Value("${rabbitmq.test-topic-queue.name}")
 	private String testQueueName;
 
-	@Value("${rabbitmq.book-topic-queue.name}")
+	@Value("${rabbitmq.ticket-booking-topic-queue.name}")
 	private String bookingQueueName;
-	
+
 	@Value("${rabbitmq.register-topic-queue.name}")
 	private String registerUserQueueName;
 
 	@Value("${rabbitmq.exchange.name}")
 	private String exchangeName;
-	
+
 	@Value("${rabbitmq.acount-tx-topic-queue.name}")
 	private String accountQueueTxName;
 
@@ -76,7 +76,7 @@ public class RabbitmqConfiguration {
 	public Queue bookingQueue() {
 		return new Queue(bookingQueueName, true);
 	}
-	
+
 	/**
 	 * create Rabbit User Registering Queue
 	 * 
@@ -86,7 +86,7 @@ public class RabbitmqConfiguration {
 	public Queue registeringQueue() {
 		return new Queue(registerUserQueueName, true);
 	}
-	
+
 	/**
 	 * create Rabbit Account Transaction Queue
 	 * 
@@ -96,7 +96,6 @@ public class RabbitmqConfiguration {
 	public Queue accountTxQueue() {
 		return new Queue(accountQueueTxName, true);
 	}
-
 
 	/**
 	 * 將佇列 (Test Queue) 綁定到主題交換器 (TopicExchange)，並指定路由鍵模式。
@@ -111,7 +110,7 @@ public class RabbitmqConfiguration {
 	}
 
 	/**
-	 * 將佇列 (Booking Queue) 綁定到主題交換器 (TopicExchange)，並指定路由鍵模式。
+	 * 將佇列 (Ticket Booking Queue) 綁定到主題交換器 (TopicExchange)，並指定路由鍵模式。
 	 */
 	@Bean
 	public Binding bookingTopicQueueBinding(Queue bookingQueue, TopicExchange exchange) {
@@ -122,7 +121,7 @@ public class RabbitmqConfiguration {
 //		return BindingBuilder.bind(testQueue()).to(topicExchange()).with("*.test.#"); //所有符合 "*.test.#" 这种模式的消息，都会被路由到 testQueue 队列。
 
 	}
-	
+
 	/**
 	 * 將佇列 (Registering Queue) 綁定到主題交換器 (TopicExchange)，並指定路由鍵模式。
 	 */
@@ -131,11 +130,12 @@ public class RabbitmqConfiguration {
 		// 結合設定檔設定的匹配規則
 		// * ：有且僅有一個
 		// #：匹配0個或者多個
-		return BindingBuilder.bind(registeringQueue).to(exchange).with(registerUserQueueName); // 註. bind 需與上方 Queue 名稱一致
+		return BindingBuilder.bind(registeringQueue).to(exchange).with(registerUserQueueName); // 註. bind 需與上方 Queue
+																								// 名稱一致
 //		return BindingBuilder.bind(testQueue()).to(topicExchange()).with("*.test.#"); //所有符合 "*.test.#" 这种模式的消息，都会被路由到 testQueue 队列。
 
 	}
-	
+
 	/**
 	 * 將佇列 (Account Transaction Queue) 綁定到主題交換器 (TopicExchange)，並指定路由鍵模式。
 	 */
