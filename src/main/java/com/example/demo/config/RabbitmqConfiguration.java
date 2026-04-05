@@ -26,6 +26,9 @@ public class RabbitmqConfiguration {
 	@Value("${rabbitmq.checkin-seat-topic-queue.name}")
 	private String checkInSeatQueueName;
 
+	@Value("${rabbitmq.cancel-seat-topic-queue.name}")
+	private String cancelSeatQueueName;
+
 	@Value("${rabbitmq.register-topic-queue.name}")
 	private String registerUserQueueName;
 
@@ -82,6 +85,16 @@ public class RabbitmqConfiguration {
 
 	/**
 	 * create Rabbit Check In Seat Queue
+	 * 
+	 * @return bookingQueue
+	 */
+	@Bean
+	public Queue checkInSeatQueue() {
+		return new Queue(checkInSeatQueueName, true);
+	}
+
+	/**
+	 * create Rabbit Cancel Seat Queue
 	 * <p>
 	 * 註. Ticket Booked 後的執行邏輯會放在這 (如: 更新座位資訊)
 	 * </p>
@@ -89,7 +102,7 @@ public class RabbitmqConfiguration {
 	 * @return bookingQueue
 	 */
 	@Bean
-	public Queue checkInSeatQueue() {
+	public Queue cancelSeatQueue() {
 		return new Queue(checkInSeatQueueName, true);
 	}
 
@@ -137,7 +150,7 @@ public class RabbitmqConfiguration {
 //		return BindingBuilder.bind(testQueue()).to(topicExchange()).with("*.test.#"); //所有符合 "*.test.#" 这种模式的消息，都会被路由到 testQueue 队列。
 
 	}
-	
+
 	/**
 	 * 將佇列 (Seat Check-in Queue) 綁定到主題交換器 (TopicExchange)，並指定路由鍵模式。
 	 */

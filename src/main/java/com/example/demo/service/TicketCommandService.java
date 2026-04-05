@@ -20,20 +20,19 @@ import com.example.demo.base.shared.exception.exception.ValidationException;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.booking.aggregate.TicketBooking;
 import com.example.demo.domain.booking.command.BookTicketCommand;
-import com.example.demo.domain.booking.command.CheckInTicketCommand;
-import com.example.demo.domain.booking.command.RefundTicketCommand;
+import com.example.demo.domain.booking.command.CancelTicketBookingCommand;
+import com.example.demo.domain.booking.command.CheckInTicketBookingCommand;
 import com.example.demo.domain.seat.aggregate.TrainSeat;
 import com.example.demo.domain.service.TicketBookingService;
 import com.example.demo.domain.service.TicketService;
 import com.example.demo.domain.share.TicketBookedData;
+import com.example.demo.domain.share.TicketCancelledData;
 import com.example.demo.domain.share.TicketCheckedInData;
-import com.example.demo.domain.share.TicketRefundedData;
 import com.example.demo.domain.ticket.command.CreateOrUpdateTicketCommand;
 import com.example.demo.domain.ticket.command.CreateTicketCommand;
 import com.example.demo.infra.repository.MoneyAccountRepository;
 import com.example.demo.infra.repository.TicketBookingRepository;
 import com.example.demo.infra.repository.TrainSeatRepository;
-import com.example.demo.util.JsonParseUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -108,12 +107,12 @@ public class TicketCommandService extends BaseApplicationService {
 	}
 
 	/**
-	 * Check in Ticket
+	 * Check in Ticket Booking
 	 * 
-	 * @param command             {@link CheckInTicketCommand}
+	 * @param command             {@link CheckInTicketBookingCommand}
 	 * @param TicketCheckedInData
 	 */
-	public TicketCheckedInData checkInTicket(CheckInTicketCommand command) {
+	public TicketCheckedInData checkInBooking(CheckInTicketBookingCommand command) {
 		TicketBooking booking = ticketBookingRepository.findById(command.getUuid())
 				.orElseThrow(() -> new ValidationException("VALIDATION_EXCEPTION", "發生錯誤，查無此訂位"));
 
@@ -139,7 +138,7 @@ public class TicketCommandService extends BaseApplicationService {
 			eventLog.publish(eventLog.getBody());
 			eventLogRepository.saveAndFlush(eventLog);
 		});
-		
+
 		// 清除 Domain Events
 		booking.clearDomainEvents();
 
@@ -147,12 +146,19 @@ public class TicketCommandService extends BaseApplicationService {
 	}
 
 	/**
-	 * Refund Ticket
+	 * Cancel Ticket Booking
 	 * 
-	 * @param command
-	 * @param TicketCheckedInResource
+	 * @param command             {@link CancelTicketBookingCommand}
+	 * @param TicketCancelledData
 	 */
-	public TicketRefundedData refundTicket(RefundTicketCommand command) {
+	public TicketCancelledData cancelBooking(CancelTicketBookingCommand command) {
+		TicketBooking booking = ticketBookingRepository.findById(command.getUuid())
+				.orElseThrow(() -> new ValidationException("VALIDATION_EXCEPTION", "發生錯誤，查無此訂位"));
+
+		// 取消 Ticket 的預約
+		booking.cancel(command.getTakeDate(), command.getSeatNo(), command.getCarNo());
+
+		// 查詢相對應的座位
 		TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndSeatNoAndTakeDateAndActiveFlag(command.getUuid(),
 				command.getSeatNo(), command.getTakeDate(), YesNo.N);
 		if (!Objects.isNull(trainSeat)) {
@@ -160,15 +166,26 @@ public class TicketCommandService extends BaseApplicationService {
 			throw new ValidationException("VALIDATION_EXCEPTION", "該票券已失效");
 		}
 
-		TicketRefundedData refundedData = ticketBookingService.refund(command);
+		// 處理 Domain Events
+		List<BaseEvent> domainEvents = booking.getDomainEvents();
+		// 發布 Domain Event
+		domainEvents.stream().forEach(event -> {
+			// 透過 Event 類型取得特定 Topic
+			String topic = eventTopicResolver.resolve(event);
 
-		// 發布事件
-		BaseEvent event = ContextHolder.getEvent();
-		this.publishEvent(bookSeatQueueName, event);
-		EventLog eventLog = eventLogRepository.findByUuid(event.getEventLogUuid());
-		eventLog.publish(JsonParseUtil.serialize(event));
-		eventLogRepository.save(eventLog);
-		return refundedData;
+			// EventLog 在這裡建立（不在 Domain）
+			EventLog eventLog = this.generateEventLog(topic, event);
+
+			// 發送 MQ
+			this.publishEvent(topic, event);
+
+			// 更新狀態
+			eventLog.publish(eventLog.getBody());
+			eventLogRepository.saveAndFlush(eventLog);
+		});
+
+		ticketBookingRepository.save(booking);
+		return new TicketCancelledData(booking.getUuid(), booking.getLastUpdatedDate(), "Cancel Ticket Successfully!");
 	}
 
 	/**

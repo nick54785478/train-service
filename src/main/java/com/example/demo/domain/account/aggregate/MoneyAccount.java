@@ -71,19 +71,34 @@ public class MoneyAccount extends BaseAggreagteRoot {
 	}
 
 	/**
-	 * 扣款事件
+	 * 為預訂座位建立扣款事件
 	 */
 	public void chargeForBooking(BigDecimal balance, String eventId) {
-		BigDecimal deducted = this.balance.subtract(balance);
-		
+		// 進行扣款
+		BigDecimal result = this.balance.subtract(balance);
+
 		// 賦予 Event Transaction ID 標註此次事件在同一次業務行為
 		this.assignEventTxId(eventId);
 		// 發布扣款事件
-		AccountTxEvent event = AccountTxEvent.builder().targetId(this.uuid)
-				.money(deducted).build();
+		AccountTxEvent event = AccountTxEvent.builder().targetId(this.uuid).money(result).build();
 
 		// 設置 Domain Event
 		this.raiseEvent(event);
 	}
 
+	/**
+	 * 針對取消座位建立退款事件
+	 */
+	public void refundForSeatCancelling(BigDecimal refund) {
+		// 將退款加總回去
+		BigDecimal result = this.balance.add(refund);
+
+		// 建立退款事件
+		AccountTxEvent event = AccountTxEvent.builder().money(result).eventLogUuid(UUID.randomUUID().toString())
+				.targetId(this.uuid).build();
+
+		// 設置 Domain Event
+		this.raiseEvent(event);
+
+	}
 }

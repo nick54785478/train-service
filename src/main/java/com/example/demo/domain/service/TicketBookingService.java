@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -14,18 +13,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.base.domain.service.BaseDomainService;
-import com.example.demo.base.infra.context.ContextHolder;
 import com.example.demo.base.shared.enums.YesNo;
-import com.example.demo.base.shared.event.BaseEvent;
 import com.example.demo.base.shared.exception.exception.ValidationException;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.booking.aggregate.TicketBooking;
 import com.example.demo.domain.booking.command.BookTicketCommand;
-import com.example.demo.domain.booking.command.CheckInTicketCommand;
-import com.example.demo.domain.booking.command.RefundTicketCommand;
+import com.example.demo.domain.booking.command.CheckInTicketBookingCommand;
 import com.example.demo.domain.seat.aggregate.TrainSeat;
 import com.example.demo.domain.share.BookingQueriedData;
-import com.example.demo.domain.share.TicketRefundedData;
 import com.example.demo.domain.share.TrainSeatBookedData;
 import com.example.demo.domain.share.enums.PayMethod;
 import com.example.demo.domain.ticket.aggregate.Ticket;
@@ -89,10 +84,10 @@ public class TicketBookingService extends BaseDomainService {
 	/**
 	 * 進行 Ticket 的 Check-in 動作
 	 * 
-	 * @param command {@link CheckInTicketCommand}
+	 * @param command {@link CheckInTicketBookingCommand}
 	 * @param booking Booking 資料
 	 */
-	public void checkInTicket(CheckInTicketCommand command, TicketBooking booking) {
+	public void checkInTicket(CheckInTicketBookingCommand command, TicketBooking booking) {
 		// 進行領域檢核 -> 確認該座位尚未 check in
 		TrainSeat trainSeat = trainSeatRepository
 				.findByBookUuidAndSeatNoAndTakeDateAndAndBookedAndActiveFlag(command.getUuid(), command.getSeatNo(),
@@ -103,25 +98,25 @@ public class TicketBookingService extends BaseDomainService {
 		booking.checkIn(trainSeat.getTakeDate(), trainSeat.getSeatNo(), trainSeat.getCarNo());
 	}
 
-	/**
-	 * 退費取消訂票
-	 * 
-	 */
-	public TicketRefundedData refund(RefundTicketCommand command) {
-		Optional<TicketBooking> option = ticketBookingRepository.findById(command.getUuid());
-		if (option.isPresent()) {
-			TicketBooking booking = option.get();
-			booking.refund(command);
-			TicketBooking saved = ticketBookingRepository.save(booking);
-
-			BaseEvent event = ContextHolder.getEvent();
-			this.generateEventLog(bookingQueueName, event.getEventLogUuid(), event.getTargetId(), event);
-			return new TicketRefundedData(saved.getTrainUuid(), saved.getCreatedDate(), "Refunded Successfully");
-		}
-		log.error("發生錯誤，查無此預約");
-		throw new ValidationException("VALIDATION_EXCEPTION", "發生錯誤，查無此預約");
-
-	}
+//	/**
+//	 * 退費取消訂票
+//	 * 
+//	 */
+//	public TicketRefundedData refund(RefundTicketCommand command) {
+//		Optional<TicketBooking> option = ticketBookingRepository.findById(command.getUuid());
+//		if (option.isPresent()) {
+//			TicketBooking booking = option.get();
+//			booking.refund(command);
+//			TicketBooking saved = ticketBookingRepository.save(booking);
+//
+//			BaseEvent event = ContextHolder.getEvent();
+//			this.generateEventLog(bookingQueueName, event.getEventLogUuid(), event.getTargetId(), event);
+//			return new TicketRefundedData(saved.getTrainUuid(), saved.getCreatedDate(), "Refunded Successfully");
+//		}
+//		log.error("發生錯誤，查無此預約");
+//		throw new ValidationException("VALIDATION_EXCEPTION", "發生錯誤，查無此預約");
+//
+//	}
 
 	/**
 	 * 查詢個人訂票資訊

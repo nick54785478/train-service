@@ -1,10 +1,7 @@
 package com.example.demo.iface.handler.event;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.core.Message;
@@ -18,19 +15,15 @@ import com.example.demo.base.application.port.EventPublishPort;
 import com.example.demo.base.iface.handler.BaseEventHandler;
 import com.example.demo.base.infra.persistence.EventLogRepository;
 import com.example.demo.base.infra.persistence.EventSourceRepository;
-import com.example.demo.domain.account.aggregate.MoneyAccount;
-import com.example.demo.domain.account.outbound.AccountTxEvent;
 import com.example.demo.domain.booking.outbound.BookSeatEvent;
 import com.example.demo.domain.seat.aggregate.TrainSeat;
 import com.example.demo.domain.seat.command.CreateSeatCommand;
 import com.example.demo.domain.share.enums.TicketAction;
-import com.example.demo.domain.ticket.aggregate.Ticket;
 import com.example.demo.infra.repository.MoneyAccountRepository;
 import com.example.demo.infra.repository.TicketBookingRepository;
 import com.example.demo.infra.repository.TicketRepository;
 import com.example.demo.infra.repository.TrainSeatRepository;
 import com.example.demo.service.SeatCommandService;
-import com.example.demo.util.DateTransformUtil;
 import com.rabbitmq.client.Channel;
 
 import lombok.extern.slf4j.Slf4j;

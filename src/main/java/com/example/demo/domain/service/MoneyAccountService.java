@@ -1,5 +1,8 @@
 package com.example.demo.domain.service;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.example.demo.base.domain.service.BaseDomainService;
@@ -65,5 +68,11 @@ public class MoneyAccountService extends BaseDomainService {
 		}
 
 		return this.transformEntityToData(account, MoneyAccountQueriedData.class);
+	}
+
+	public void refuned(String bookingId, BigDecimal refund) {
+		
+		;
+
 	}
 }

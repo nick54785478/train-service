@@ -1,5 +1,6 @@
 package com.example.demo.domain.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,20 +24,27 @@ import com.example.demo.base.domain.service.BaseDomainService;
 import com.example.demo.base.shared.command.BaseIdempotentCommand;
 import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.seat.aggregate.TrainSeat;
+import com.example.demo.domain.seat.command.CancelSeatCommand;
 import com.example.demo.domain.setting.aggregate.ConfigurableSetting;
 import com.example.demo.domain.share.SeatQueriedData;
 import com.example.demo.domain.share.UnbookedSeatGottenData;
+import com.example.demo.infra.repository.MoneyAccountRepository;
 import com.example.demo.infra.repository.SettingRepository;
+import com.example.demo.infra.repository.TicketBookingRepository;
 import com.example.demo.infra.repository.TrainSeatRepository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class SeatService extends BaseDomainService {
 
 	private SettingRepository settingRepository;
 	private TrainSeatRepository trainSeatRepository;
+	private MoneyAccountRepository moneyAccountRepository;
+	private TicketBookingRepository ticketBookingRepository;
 	private EventIdempotenceHandlerPort eventIdempotentLogService;
 
 	/**
@@ -163,6 +171,5 @@ public class SeatService extends BaseDomainService {
 				}
 			});
 		}
-
 	}
 }

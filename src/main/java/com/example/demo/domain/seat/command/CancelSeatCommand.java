@@ -1,4 +1,4 @@
-package com.example.demo.domain.booking.command;
+package com.example.demo.domain.seat.command;
 
 import java.time.LocalDate;
 
@@ -11,14 +11,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CheckInSeatCommand {
+public class CancelSeatCommand {
 
 	private String uuid; // booking uuid
-	
-	private String seatNo; // 座號
-	
-	private Long carNo; // 車廂編號
-	
-	private LocalDate takeDate;	// 搭乘日期
 
+	private Long carNo; // 車廂編號
+
+	private String seatNo; // 座號
+
+	private LocalDate takeDate; // 乘車日期
 }

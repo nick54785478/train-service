@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import com.example.demo.base.domain.aggregate.BaseAggreagteRoot;
 import com.example.demo.base.shared.enums.YesNo;
+import com.example.demo.domain.booking.outbound.CancelSeatEvent;
 import com.example.demo.domain.seat.command.CreateSeatCommand;
 
 import jakarta.persistence.Column;
@@ -82,16 +83,16 @@ public class TrainSeat extends BaseAggreagteRoot {
 	}
 
 	/**
-	 * check in
+	 * check in 座位
 	 */
 	public void checkIn() {
 		this.activeFlag = YesNo.N;
 	}
 
 	/**
-	 * refund
+	 * 取消座位
 	 */
-	public void refund() {
+	public void cancel() {
 		this.activeFlag = YesNo.N;
 		this.booked = YesNo.N;
 	}

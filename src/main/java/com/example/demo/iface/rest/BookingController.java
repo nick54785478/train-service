@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.booking.command.BookTicketCommand;
-import com.example.demo.domain.booking.command.CheckInTicketCommand;
-import com.example.demo.domain.booking.command.RefundTicketCommand;
+import com.example.demo.domain.booking.command.CancelTicketBookingCommand;
+import com.example.demo.domain.booking.command.CheckInTicketBookingCommand;
 import com.example.demo.domain.share.BookingQueriedData;
 import com.example.demo.iface.dto.req.BookTicketResource;
+import com.example.demo.iface.dto.req.CancelTicketBookingResource;
 import com.example.demo.iface.dto.req.CheckInTicketResource;
-import com.example.demo.iface.dto.req.RefundTicketResource;
 import com.example.demo.iface.dto.res.BookingQueriedResource;
 import com.example.demo.iface.dto.res.TicketBookedResource;
 import com.example.demo.iface.dto.res.TicketCheckedInResource;
@@ -77,8 +77,8 @@ public class BookingController {
 	@Operation(summary = "API - 進行車票 Check in 動作", description = "進行車票 Check in 動作。")
 	public ResponseEntity<TicketCheckedInResource> bookTicket(
 			@Parameter(description = "車票 Check IN 資訊") @RequestBody CheckInTicketResource resource) {
-		CheckInTicketCommand command = BaseDataTransformer.transformData(resource, CheckInTicketCommand.class);
-		return new ResponseEntity<>(BaseDataTransformer.transformData(ticketCommandService.checkInTicket(command),
+		CheckInTicketBookingCommand command = BaseDataTransformer.transformData(resource, CheckInTicketBookingCommand.class);
+		return new ResponseEntity<>(BaseDataTransformer.transformData(ticketCommandService.checkInBooking(command),
 				TicketCheckedInResource.class), HttpStatus.OK);
 	}
 
@@ -90,10 +90,10 @@ public class BookingController {
 	 */
 	@PostMapping("/refund")
 	@Operation(summary = "API - 進行車票退票動作", description = "進行車票退票動作。")
-	public ResponseEntity<TicketCheckedInResource> refund(
-			@Parameter(description = "車票退票資訊") @RequestBody RefundTicketResource resource) {
-		RefundTicketCommand command = BaseDataTransformer.transformData(resource, RefundTicketCommand.class);
-		return new ResponseEntity<>(BaseDataTransformer.transformData(ticketCommandService.refundTicket(command),
+	public ResponseEntity<TicketCheckedInResource> cancelBooking(
+			@Parameter(description = "車票退票資訊") @RequestBody CancelTicketBookingResource resource) {
+		CancelTicketBookingCommand command = BaseDataTransformer.transformData(resource, CancelTicketBookingCommand.class);
+		return new ResponseEntity<>(BaseDataTransformer.transformData(ticketCommandService.cancelBooking(command),
 				TicketCheckedInResource.class), HttpStatus.OK);
 	}
 

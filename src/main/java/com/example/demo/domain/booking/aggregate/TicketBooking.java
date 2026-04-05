@@ -9,8 +9,8 @@ import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.booking.aggregate.vo.TicketStatus;
 import com.example.demo.domain.booking.command.BookTicketCommand;
-import com.example.demo.domain.booking.command.RefundTicketCommand;
 import com.example.demo.domain.booking.outbound.BookSeatEvent;
+import com.example.demo.domain.booking.outbound.CancelSeatEvent;
 import com.example.demo.domain.booking.outbound.CheckInSeatEvent;
 import com.example.demo.domain.share.enums.TicketAction;
 
@@ -120,20 +120,20 @@ public class TicketBooking extends BaseAggreagteRoot {
 	}
 
 	/**
-	 * refund
+	 * cancel Ticket
 	 * 
-	 * @param command
+	 * @param takeDate 搭乘日期
+	 * @param seatNo   乘坐位置
+	 * @param carNo    車廂編號
 	 */
-	public void refund(RefundTicketCommand command) {
+	public void cancel(LocalDate takeDate, String seatNo, Long carNo) {
 		this.status = TicketStatus.REFUNDED;
 		this.activeFlag = YesNo.N;
 
-//		// 建立一個 Event
-//		BookSeatEvent event = BookSeatEvent.builder().eventLogUuid(UUID.randomUUID().toString()).targetId(this.uuid)
-//				.takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
-//				.action(TicketAction.REFUNDED.getName()).seatNo(command.getSeatNo()).carNo(command.getCarNo()).build();
-//		// 設置進 Context 上下文
-//		ContextHolder.setBaseEvent(event);
-
+		// 建立一個 取消座位的 Event
+		CancelSeatEvent event = CancelSeatEvent.builder().eventLogUuid(UUID.randomUUID().toString()).targetId(this.uuid)
+				.takeDate(takeDate).action(TicketAction.REFUNDED.getName()).seatNo(seatNo).carNo(carNo).build();
+		// 設置 Domain Event
+		this.raiseEvent(event);
 	}
 }
