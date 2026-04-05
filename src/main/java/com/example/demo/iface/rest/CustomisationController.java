@@ -29,7 +29,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/customisation")
@@ -85,6 +87,7 @@ public class CustomisationController {
 	@Operation(summary = "API - 透過使用者帳號查詢個人化表格參數配置", description = "透過使用者帳號查詢個人化表格參數配置。")
 	public ResponseEntity<CustomisationQueriedResource> queryCustomisations(@PathVariable String username,
 			@RequestParam(required = false) String dataType, @RequestParam String type) {
+		log.info("username:{}, dataType:{}, type:{}", username, dataType, type);
 		return new ResponseEntity<>(
 				BaseDataTransformer.transformData(customisationQueryService.query(username, dataType, type),
 						CustomisationQueriedResource.class),

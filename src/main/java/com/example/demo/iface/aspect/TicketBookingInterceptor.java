@@ -3,7 +3,6 @@ package com.example.demo.iface.aspect;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.base.infra.context.ContextHolder;
@@ -18,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * 針對 TicketBooking 領域的攔截器，用於紀錄 Event Source
  */
 @Slf4j
-@Aspect
+//@Aspect
 @Component
 public class TicketBookingInterceptor {
 
@@ -31,7 +30,7 @@ public class TicketBookingInterceptor {
 	/**
 	 * 定義切入點，針對 MoneyAccountRepository 的 save 方法進行切入。
 	 */
-	@Pointcut("execution(* com.example.demo.infra.repository.TicketBookingRepository.save(..))")
+//	@Pointcut("execution(* com.example.demo.infra.repository.TicketBookingRepository.save(..))")
 	public void pointCut() {
 
 	}

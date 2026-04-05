@@ -9,7 +9,9 @@ import com.example.demo.base.shared.enums.JwtConstants;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Configuration
 public class AuthFeignConfiguration {
 
@@ -29,6 +31,7 @@ public class AuthFeignConfiguration {
 			public void apply(RequestTemplate requestTemplate) {
 				// 在此處新增 JWToken Request Header
 				String jwtoken = ContextHolder.getJwtoken();
+				log.info("[requestTokenInterceptor] jwtoken :{}", jwtoken);
 				requestTemplate.header(JwtConstants.JWT_HEADER.getValue(),
 						JwtConstants.JWT_PREFIX.getValue() + jwtoken);
 			}

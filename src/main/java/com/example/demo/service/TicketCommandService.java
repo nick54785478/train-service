@@ -1,11 +1,9 @@
 package com.example.demo.service;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -14,12 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.base.application.service.BaseApplicationService;
 import com.example.demo.base.infra.context.ContextHolder;
+import com.example.demo.base.infra.event.EventTopicResolver;
 import com.example.demo.base.shared.entity.EventLog;
 import com.example.demo.base.shared.enums.YesNo;
 import com.example.demo.base.shared.event.BaseEvent;
 import com.example.demo.base.shared.exception.exception.ValidationException;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
-import com.example.demo.domain.account.outbound.AccountTxEvent;
+import com.example.demo.domain.booking.aggregate.TicketBooking;
 import com.example.demo.domain.booking.command.BookTicketCommand;
 import com.example.demo.domain.booking.command.CheckInTicketCommand;
 import com.example.demo.domain.booking.command.RefundTicketCommand;
@@ -29,10 +28,10 @@ import com.example.demo.domain.service.TicketService;
 import com.example.demo.domain.share.TicketBookedData;
 import com.example.demo.domain.share.TicketCheckedInData;
 import com.example.demo.domain.share.TicketRefundedData;
-import com.example.demo.domain.share.enums.PayMethod;
 import com.example.demo.domain.ticket.command.CreateOrUpdateTicketCommand;
 import com.example.demo.domain.ticket.command.CreateTicketCommand;
 import com.example.demo.infra.repository.MoneyAccountRepository;
+import com.example.demo.infra.repository.TicketBookingRepository;
 import com.example.demo.infra.repository.TrainSeatRepository;
 import com.example.demo.util.JsonParseUtil;
 
@@ -46,12 +45,11 @@ import lombok.extern.slf4j.Slf4j;
 public class TicketCommandService extends BaseApplicationService {
 
 	private final TicketService ticketService;
-
+	private final EventTopicResolver eventTopicResolver;
 	private final TrainSeatRepository trainSeatRepository;
-
 	private final TicketBookingService ticketBookingService;
-
 	private final MoneyAccountRepository moneyAccountRepository;
+	private final TicketBookingRepository ticketBookingRepository;
 
 	@Value("${rabbitmq.book-topic-queue.name}")
 	private String bookingQueueName;
@@ -81,10 +79,14 @@ public class TicketCommandService extends BaseApplicationService {
 	/**
 	 * 劃位訂票
 	 * 
-	 * @param command
+	 * @param command {@link BookTicketCommand}
 	 * @return TicketBookedData
 	 */
 	public TicketBookedData bookTicket(BookTicketCommand command) {
+
+		// 取得當前使用者資訊
+		String username = ContextHolder.getUsername();
+		String email = ContextHolder.getUserEmail();
 
 		TrainSeat seat = trainSeatRepository.findByTakeDateAndSeatNoAndTrainUuidAndBooked(command.getTakeDate(),
 				command.getSeatNo(), command.getTrainUuid(), YesNo.Y);
@@ -94,39 +96,18 @@ public class TicketCommandService extends BaseApplicationService {
 		}
 
 		// 查詢 儲值帳號 資訊
-		MoneyAccount account = moneyAccountRepository.findByUsername(ContextHolder.getUsername());
-		TicketBookedData resource = ticketBookingService.book(command, account);
+		MoneyAccount account = moneyAccountRepository.findByUsername(username);
 
-		// 付款方式: 錢包
-		if (StringUtils.equals(PayMethod.fromLabel(command.getPayMethod()).getCode(),
-				PayMethod.PAY_BY_ACCOUNT.getCode())) {
-			BigDecimal balance = account.getBalance().subtract(command.getPrice());
-			// 發布扣款事件
-			AccountTxEvent event = AccountTxEvent.builder().targetId(account.getUuid())
-					.eventLogUuid(UUID.randomUUID().toString()).money(balance).build();
+		// 呼叫 Domain Service 進行訂位
+		TicketBooking ticketBooking = ticketBookingService.book(command, account, username, email);
+		ticketBookingRepository.save(ticketBooking);
+		
+		System.out.println("Domain Events: "+ticketBooking.getDomainEvents());
+		
+		// 發布 Domain Event 進行扣款及訂位
+		this.publishEventsForBooking(ticketBooking, account);
 
-			// 建立 EventLog
-			EventLog eventLog = this.generateEventLog(txQueueName, event.getEventLogUuid(), event.getTargetId(), event);
-
-			// 發布 Event 進行儲值
-			this.publishEvent(txQueueName, event);
-			eventLog.publish(eventLog.getBody());
-			eventLogRepository.save(eventLog);
-
-		} else {
-			// TODO 剩餘作法
-		}
-
-		// 發布事件
-		var event = ContextHolder.getEvent();
-		this.publishEvent(bookingQueueName, event);
-
-		// 查詢 EventLog
-		EventLog eventLog = eventLogRepository.findByUuid(event.getEventLogUuid());
-		eventLog.publish(eventLog.getBody()); // 更改狀態為: 已發布
-		eventLogRepository.save(eventLog);
-
-		return resource;
+		return new TicketBookedData(ticketBooking.getUuid());
 	}
 
 	/**
@@ -178,5 +159,43 @@ public class TicketCommandService extends BaseApplicationService {
 		eventLog.publish(JsonParseUtil.serialize(event));
 		eventLogRepository.save(eventLog);
 		return refundedData;
+	}
+
+	/**
+	 * 發布 Domain Event (扣款訂位)
+	 * 
+	 * @param ticketBooking 訂票資訊聚合根
+	 * @param account       付款帳號
+	 */
+	private void publishEventsForBooking(TicketBooking ticketBooking, MoneyAccount account) {
+
+		// 修改點：合併所有 Aggregate 的事件
+		List<BaseEvent> allEvents = new ArrayList<>();
+		allEvents.addAll(ticketBooking.getDomainEvents());
+		allEvents.addAll(account.getDomainEvents());
+		System.out.println("all events:" + allEvents);
+
+		// 統一發布
+		allEvents.forEach(event -> {
+
+			System.out.println("event:" + event);
+
+			// 透過 Event 類型取得特定 Topic
+			String topic = eventTopicResolver.resolve(event);
+
+			// EventLog 在這裡建立（不在 Domain）
+			EventLog eventLog = generateEventLog(topic, event);
+
+			// 發送 MQ
+			this.publishEvent(topic, event);
+
+			// 更新狀態
+			eventLog.publish(eventLog.getBody());
+			eventLogRepository.saveAndFlush(eventLog);
+		});
+
+		// 清理
+		ticketBooking.clearDomainEvents();
+		account.clearDomainEvents();
 	}
 }

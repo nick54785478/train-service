@@ -73,7 +73,7 @@ public class SettingService {
 			setting.delete();
 			settingRepository.save(setting);
 		}, () -> {
-			log.error("查無此資料，ID:" + id + "，刪除失敗");
+			log.error("查無此資料，ID:{}，刪除失敗", id);
 			throw new ValidationException("VALIDATE_FAILED", "查無此資料，刪除失敗");
 		});
 	}

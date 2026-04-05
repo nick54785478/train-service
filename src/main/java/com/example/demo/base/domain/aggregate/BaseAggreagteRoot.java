@@ -1,8 +1,10 @@
 package com.example.demo.base.domain.aggregate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -43,16 +45,51 @@ public abstract class BaseAggreagteRoot {
 	private String lastUpdatedBy; // 最後異動者
 
 	/**
-	 * Domain Event 清單
+	 * 聚合根內部事件清單
 	 */
 	@Transient
-	protected List<BaseEvent> domainEvents = new ArrayList<>();
+	private final List<BaseEvent> domainEvents = new ArrayList<>();
 
 	/**
-	 * 清除 Domain Event 清單
+	 * 本次業務行為的統一代號
 	 */
-	public void clear() {
-		this.domainEvents.clear();
+	@Transient
+	private String eventTxId;
+
+	/**
+	 * 支援「外部傳入 eventId」（跨 Aggregate 共用）
+	 */
+	public void assignEventTxId(String eventTxId) {
+		this.eventTxId = eventTxId;
+	}
+
+	/**
+	 * 產生新事件並加入清單
+	 */
+	protected void raiseEvent(BaseEvent event) {
+		// lazy 初始化 eventId
+		if (eventTxId == null) {
+			this.eventTxId = UUID.randomUUID().toString();
+		}
+
+		// 綁定 eventTxId 到事件
+		event.setEventTxId(this.eventTxId);
+		domainEvents.add(event);
+	}
+	
+	/**
+	 * 取得事件清單
+	 */
+	public List<BaseEvent> getDomainEvents() {
+		return Collections.unmodifiableList(domainEvents);
+	}
+
+	/**
+	 * 清理事件
+	 */
+	public void clearDomainEvents() {
+		domainEvents.clear();
+		eventTxId = null;
 	}
 
 }

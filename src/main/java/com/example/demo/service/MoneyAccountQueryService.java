@@ -6,10 +6,10 @@ import com.example.demo.base.application.service.BaseApplicationService;
 import com.example.demo.domain.service.MoneyAccountService;
 import com.example.demo.domain.share.MoneyAccountQueriedData;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class MoneyAccountQueryService extends BaseApplicationService {
 
 	private MoneyAccountService moneyAccountService;

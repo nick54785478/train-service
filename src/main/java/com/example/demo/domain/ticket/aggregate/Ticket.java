@@ -75,7 +75,7 @@ public class Ticket extends BaseAggreagteRoot {
 	 * 建立 票券資料
 	 * 
 	 * @param command
-	 * @param trainUuid 火車uuid
+	 * @param trainUuid 火車 uuid
 	 */
 	public void create(CreateOrUpdateTicketCommand command, String trainUuid) {
 		this.price = command.getPrice();
@@ -88,7 +88,7 @@ public class Ticket extends BaseAggreagteRoot {
 	 * 更新 票券資料
 	 * 
 	 * @param command
-	 * @param train   火車實體
+	 * @param trainUuid 火車 uuid
 	 */
 	public void update(CreateOrUpdateTicketCommand command, String trainUuid) {
 		this.price = command.getPrice();

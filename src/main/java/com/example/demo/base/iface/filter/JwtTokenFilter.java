@@ -90,6 +90,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		if (authorization != null && authorization.startsWith(JwtConstants.JWT_PREFIX.getValue())) {
 			// 截取 Bearer 後面的 Access Token
 			final String token = authorization.substring(JwtConstants.JWT_PREFIX.getValue().length());
+			ContextHolder.setJwtToken(token); // 設置 Jwt Token 進入上下文工具
 
 			if (validateJwtToken(token, response)) {
 				chain.doFilter(request, response);
@@ -137,6 +138,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			// 驗證通過將 JWT Token 存儲到 ContextHolder 中
 			this.setJwtTokenContext(token, tokenBody);
 		} catch (Exception e) {
+			log.error("發生錯誤", e);
 			return false;
 		}
 
@@ -153,6 +155,5 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		ContextHolder.setUsername(jwtContext.getUsername());
 		ContextHolder.setRoleList(jwtContext.getRoles());
 		ContextHolder.setEmail(jwtContext.getUsername()); // 這邊設計帳號與使用者名稱相同
-		ContextHolder.setJwtToken(token);
 	}
 }

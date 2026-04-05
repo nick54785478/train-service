@@ -23,12 +23,14 @@ import com.example.demo.domain.account.outbound.AccountTxEvent;
 import com.example.demo.domain.booking.aggregate.TicketBooking;
 import com.example.demo.domain.booking.outbound.TicketBookingEvent;
 import com.example.demo.domain.seat.aggregate.TrainSeat;
+import com.example.demo.domain.seat.command.CreateSeatCommand;
 import com.example.demo.domain.share.enums.TicketAction;
 import com.example.demo.domain.ticket.aggregate.Ticket;
 import com.example.demo.infra.repository.MoneyAccountRepository;
 import com.example.demo.infra.repository.TicketBookingRepository;
 import com.example.demo.infra.repository.TicketRepository;
 import com.example.demo.infra.repository.TrainSeatRepository;
+import com.example.demo.service.SeatCommandService;
 import com.example.demo.util.DateTransformUtil;
 import com.rabbitmq.client.Channel;
 
@@ -41,17 +43,20 @@ public class BookTopicMessageHandler extends BaseEventHandler {
 
 	private TicketRepository ticketRepository;
 	private TrainSeatRepository trainSeatRepository;
+	private SeatCommandService seatCommandService;
 	private MoneyAccountRepository moneyAccountRepository;
 	private TicketBookingRepository ticketBookingRepository;
 
 	public BookTopicMessageHandler(EventIdempotenceHandlerPort eventIdempotentLogService,
 			EventPublishPort rabbitmqService, EventLogRepository eventLogRepository,
 			EventSourceRepository eventSourceRepository, TicketBookingRepository ticketBookingRepository,
-			TrainSeatRepository trainSeatRepository, MoneyAccountRepository moneyAccountRepository) {
+			TrainSeatRepository trainSeatRepository, MoneyAccountRepository moneyAccountRepository,
+			SeatCommandService seatCommandService) {
 		super(eventIdempotentLogService, rabbitmqService, eventLogRepository, eventSourceRepository);
 		this.trainSeatRepository = trainSeatRepository;
 		this.ticketBookingRepository = ticketBookingRepository;
 		this.moneyAccountRepository = moneyAccountRepository;
+		this.seatCommandService = seatCommandService;
 	}
 
 	@Value("${rabbitmq.acount-tx-topic-queue.name}")
@@ -72,67 +77,72 @@ public class BookTopicMessageHandler extends BaseEventHandler {
 			return;
 		}
 
-		ticketBookingRepository.findById(event.getTargetId()).ifPresent(booking -> {
+		try {
 
-			// Book
-			if (StringUtils.equals(event.getAction(), TicketAction.BOOK.getName())) {
-				this.book(booking, event);
+			ticketBookingRepository.findById(event.getTargetId()).ifPresent(booking -> {
 
-				// Check In
-			} else if (StringUtils.equals(event.getAction(), TicketAction.CHECK_IN.getName())) {
-				this.checkIn(event);
+				// Book
+				if (StringUtils.equals(event.getAction(), TicketAction.BOOK.getName())) {
+					this.bookTicket(booking, event);
 
-				// Refund
-			} else if (StringUtils.equals(event.getAction(), TicketAction.REFUNDED.getName())) {
-				TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndTakeDateAndSeatNoAndCarNo(
-						event.getTargetId(), DateTransformUtil.transformStringToLocalDate(event.getTakeDate()),
-						event.getSeatNo(), event.getCarNo());
-				trainSeat.refund();
-				trainSeatRepository.save(trainSeat);
+					// Check In
+				} else if (StringUtils.equals(event.getAction(), TicketAction.CHECK_IN.getName())) {
+					this.checkIn(event);
 
-				// 先查該票價
-				Ticket ticket = ticketRepository.findByTicketNo(booking.getTicketUuid());
+					// Refund
+				} else if (StringUtils.equals(event.getAction(), TicketAction.REFUNDED.getName())) {
+					TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndTakeDateAndSeatNoAndCarNo(
+							event.getTargetId(), DateTransformUtil.transformStringToLocalDate(event.getTakeDate()),
+							event.getSeatNo(), event.getCarNo());
+					trainSeat.refund();
+					trainSeatRepository.save(trainSeat);
 
-				Optional<MoneyAccount> option = moneyAccountRepository.findById(booking.getAccountUuid());
+					// 先查該票價
+					Ticket ticket = ticketRepository.findByTicketNo(booking.getTicketUuid());
 
-				if (option.isEmpty()) {
-					log.error("發生錯誤，查詢帳號資訊失敗。");
-					return;
-				} else {
+					Optional<MoneyAccount> option = moneyAccountRepository.findById(booking.getAccountUuid());
 
-					MoneyAccount moneyAccount = option.get();
-					// 取出票價加總
-					BigDecimal balance = moneyAccount.getBalance().add(ticket.getPrice());
+					if (option.isEmpty()) {
+						log.error("發生錯誤，查詢帳號資訊失敗。");
+						return;
+					} else {
 
-					// 建立 Event
-					AccountTxEvent txEvent = AccountTxEvent.builder().money(balance)
-							.eventLogUuid(UUID.randomUUID().toString()).targetId(booking.getAccountUuid()).build();
+						MoneyAccount moneyAccount = option.get();
+						// 取出票價加總
+						BigDecimal balance = moneyAccount.getBalance().add(ticket.getPrice());
 
-					// 建立 EventLog
-					this.generateEventLog(txQueueName, txEvent);
+						// 建立 Event
+						AccountTxEvent txEvent = AccountTxEvent.builder().money(balance)
+								.eventLogUuid(UUID.randomUUID().toString()).targetId(booking.getAccountUuid()).build();
 
-					// 發布 Event 進行退費動作
-					this.publishEvent(txQueueName, txEvent);
+						// 建立 EventLog
+						this.generateEventLog(txQueueName, txEvent);
+
+						// 發布 Event 進行退費動作
+						this.publishEvent(txQueueName, txEvent);
+					}
 				}
-			}
-		});
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		// 進行消費
 		this.consumeEvent(event.getEventLogUuid());
-
 	}
 
 	/**
-	 * 劃位
+	 * 進行劃位動作
 	 * 
 	 * @param booking Booking 資訊
 	 * @param event   Event 資料
 	 */
-	private void book(TicketBooking booking, TicketBookingEvent event) {
-		TrainSeat trainSeat = new TrainSeat();
-		trainSeat.create(booking.getTicketUuid(), booking.getTrainUuid(), booking.getUuid(),
-				DateTransformUtil.transformStringToLocalDate(event.getTakeDate()), event.getSeatNo(), event.getCarNo());
-		trainSeatRepository.save(trainSeat);
+	private void bookTicket(TicketBooking booking, TicketBookingEvent event) {
+		CreateSeatCommand command = CreateSeatCommand.builder().ticketUuid(booking.getTicketUuid())
+				.trainUuid(booking.getTrainUuid()).bookingUuid(booking.getUuid())
+				.takeDate(DateTransformUtil.transformStringToLocalDate(event.getTakeDate())).seatNo(event.getSeatNo())
+				.carNo(event.getCarNo()).build();
+		seatCommandService.bookSeat(command);
 	}
 
 	/**

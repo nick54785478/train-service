@@ -21,19 +21,19 @@ public class BookTicketResource {
 
 	@Schema(description = "火車號次")
 	private Integer trainNo; // 火車號次
-	
+
 	@Schema(description = "價格")
 	private BigDecimal price; // 價格
 
 	@Schema(description = "座號")
 	private String seatNo; // 座號
-	
+
 	@Schema(description = "車廂編號")
 	private Long carNo;
 
 	@Schema(description = "乘車日期 (yyyy/mm/dd)")
 	private String takeDate; // 乘車日期
-	
+
 	@Schema(description = "付款方式")
 	private String payMethod; // 付款方式
 }

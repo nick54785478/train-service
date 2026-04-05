@@ -41,6 +41,9 @@ public class EventLog {
 	@Column(name = "UUID")
 	private String uuid;
 
+	@Column(name = "TX_ID")
+	private String txId; // 該 Transaction Id
+
 	@Column(name = "USER_ID")
 	private String userId; // 使用者帳號
 

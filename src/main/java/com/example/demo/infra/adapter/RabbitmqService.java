@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 class RabbitmqService implements EventPublishPort {
 
-	private RabbitTemplate rabbitTemplate;
+	private final RabbitTemplate rabbitTemplate;
 
 	@Value("${rabbitmq.exchange.name}")
 	private String exchangeName;
@@ -42,7 +42,6 @@ class RabbitmqService implements EventPublishPort {
 	 * @param topicQueue Topic 通道
 	 * @param event      事件
 	 */
-
 	@Override
 	public void publish(List<PublishEventCommand<?>> commands) {
 		commands.stream().forEach(this::publish);

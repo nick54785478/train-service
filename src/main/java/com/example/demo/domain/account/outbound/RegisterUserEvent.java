@@ -1,5 +1,6 @@
 package com.example.demo.domain.account.outbound;
 
+import com.example.demo.base.infra.annotation.EventTopic;
 import com.example.demo.base.shared.event.BaseEvent;
 
 import lombok.AllArgsConstructor;
@@ -13,6 +14,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@EventTopic("${rabbitmq.register-topic-queue.name}")
 public class RegisterUserEvent extends BaseEvent {
 
 	private String name; // 使用者名稱

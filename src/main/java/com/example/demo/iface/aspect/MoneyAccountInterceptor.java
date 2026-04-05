@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
  * 針對 MoneyAccount 領域的攔截器，用於紀錄 Event Source
  */
 @Slf4j
-@Aspect
+//@Aspect
 @Component
 public class MoneyAccountInterceptor {
 
@@ -31,7 +31,7 @@ public class MoneyAccountInterceptor {
 	/**
 	 * 定義切入點，針對 MoneyAccountRepository 的 save 方法進行切入。
 	 */
-	@Pointcut("execution(* com.example.demo.infra.repository.MoneyAccountRepository.save(..))")
+//	@Pointcut("execution(* com.example.demo.infra.repository.MoneyAccountRepository.save(..))")
 	public void pointCut() {
 
 	}

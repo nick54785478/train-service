@@ -67,6 +67,7 @@ public class ParameterMappingUtil {
 	 * @param field 參數
 	 * @param value 值
 	 */
+	@SuppressWarnings("unchecked")
 	private static Object convertToFieldType(Field field, String value) {
 		Class<?> fieldType = field.getType();
 
@@ -80,13 +81,14 @@ public class ParameterMappingUtil {
 			} else if (fieldType.equals(Boolean.class) || fieldType.equals(boolean.class)) {
 				return Boolean.parseBoolean(value);
 			} else if (fieldType.isEnum()) {
+				@SuppressWarnings({ "rawtypes" })
 				Class<Enum> enumType = (Class<Enum>) fieldType;
 				return Enum.valueOf(enumType, value);
 			} else if (fieldType.equals(BigDecimal.class)) {
 				return new BigDecimal(value);
 			}
 
-			// **處理 Date 及 LocalDate / LocalTime / LocalDateTime**
+			// 處理 Date 及 LocalDate / LocalTime / LocalDateTime
 			else if (fieldType.equals(Date.class) || fieldType.equals(LocalDate.class)
 					|| fieldType.equals(LocalTime.class) || fieldType.equals(LocalDateTime.class)) {
 

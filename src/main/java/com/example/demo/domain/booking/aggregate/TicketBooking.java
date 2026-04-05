@@ -21,6 +21,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,8 +29,8 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "TICKET_BOOKING")
 public class TicketBooking extends BaseAggreagteRoot {
@@ -63,23 +64,31 @@ public class TicketBooking extends BaseAggreagteRoot {
 
 	/**
 	 * book
+	 * 
+	 * @param command      預訂車票命令
+	 * @param MoneyAccount 訂票帳戶相關資訊
+	 * @param username     使用者名稱
+	 * @param email        信箱
 	 */
-	public void create(BookTicketCommand command, MoneyAccount account) {
-		this.uuid = UUID.randomUUID().toString();
-		this.trainUuid = command.getTrainUuid();
-		this.ticketUuid = command.getTicketUuid();
-		this.username = ContextHolder.getUsername();
-		this.email = ContextHolder.getUserEmail();
-		this.status = TicketStatus.UNTAKEN;
-		this.accountUuid = (Objects.isNull(account)) ? null : account.getUuid();
-		this.activeFlag = YesNo.Y;
+	public static TicketBooking create(BookTicketCommand command, MoneyAccount account, String username, String email) {
+		TicketBooking ticketBooking = new TicketBooking();
+		ticketBooking.uuid = UUID.randomUUID().toString();
+		ticketBooking.trainUuid = command.getTrainUuid();
+		ticketBooking.ticketUuid = command.getTicketUuid();
+		ticketBooking.username = username;
+		ticketBooking.email = email;
+		ticketBooking.status = TicketStatus.UNTAKEN;
+		ticketBooking.accountUuid = (Objects.isNull(account)) ? null : account.getUuid();
+		ticketBooking.activeFlag = YesNo.Y;
 
-		// 建立一個 Event
-		TicketBookingEvent event = TicketBookingEvent.builder().eventLogUuid(UUID.randomUUID().toString())
-				.targetId(this.uuid).takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
+		// 建立一個 Domain Event
+		TicketBookingEvent event = TicketBookingEvent.builder().targetId(ticketBooking.uuid)
+				.takeDate(DateTransformUtil.transformLocalDateToString(command.getTakeDate()))
 				.action(TicketAction.BOOK.getName()).seatNo(command.getSeatNo()).carNo(command.getCarNo()).build();
-		// 設置進 Context 上下文
-		ContextHolder.setBaseEvent(event);
+
+		// 設置 Domain Event
+		ticketBooking.raiseEvent(event);
+		return ticketBooking;
 	}
 
 	/**

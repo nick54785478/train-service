@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,10 @@ import com.example.demo.domain.booking.command.CheckInTicketCommand;
 import com.example.demo.domain.booking.command.RefundTicketCommand;
 import com.example.demo.domain.seat.aggregate.TrainSeat;
 import com.example.demo.domain.share.BookingQueriedData;
-import com.example.demo.domain.share.TicketBookedData;
 import com.example.demo.domain.share.TicketCheckedInData;
 import com.example.demo.domain.share.TicketRefundedData;
 import com.example.demo.domain.share.TrainSeatBookedData;
+import com.example.demo.domain.share.enums.PayMethod;
 import com.example.demo.domain.ticket.aggregate.Ticket;
 import com.example.demo.domain.train.aggregate.Train;
 import com.example.demo.domain.train.aggregate.entity.TrainStop;
@@ -57,23 +58,32 @@ public class TicketBookingService extends BaseDomainService {
 	private final TicketRepository ticketReposiotry;
 
 	/**
-	 * Book 車票
+	 * 車票訂位
 	 * 
-	 * @param command
+	 * @param command  訂位命令
+	 * @param account  訂票帳號
+	 * @param username 帳號
+	 * @param email    信箱
 	 * @return 成功訊息
 	 */
-	public TicketBookedData book(BookTicketCommand command, MoneyAccount account) {
-		TicketBooking ticketBooking = new TicketBooking();
-		ticketBooking.create(command, account);
+	public TicketBooking book(BookTicketCommand command, MoneyAccount account, String username, String email) {
+
+		// 建立 TicketBooking（會產生 event）
+		TicketBooking ticketBooking = TicketBooking.create(command, account, username, email);
+
+		// 付款方式: 錢包
+		if (StringUtils.equals(PayMethod.fromLabel(command.getPayMethod()).getCode(),
+				PayMethod.PAY_BY_ACCOUNT.getCode())) {
+			// 進行扣款
+			// 註. eventId（由第一個 Aggregate 產生）
+			account.chargeForBooking(command.getPrice(), ticketBooking.getEventTxId());
+
+		} else {
+			// TODO 剩餘作法
+		}
 
 		// 儲存 Ticket Booking 資訊
-		TicketBooking saved = ticketBookingRepository.save(ticketBooking);
-
-		// 從上下文取得 Event
-		var event = ContextHolder.getEvent();
-		// 寫入 EventLog
-		this.generateEventLog(bookingQueueName, event.getEventLogUuid(), saved.getUuid(), event);
-		return new TicketBookedData(saved.getUuid());
+		return ticketBooking;
 	}
 
 	/**

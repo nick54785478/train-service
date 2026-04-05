@@ -65,7 +65,7 @@ public class MoneyAccountCommandService extends BaseApplicationService {
 		BaseEvent event = ContextHolder.getEvent();
 
 		// 紀錄 Message 狀態
-		EventLog eventLog = this.generateEventLog(registerQueueName, event.getEventLogUuid(), saved.getUuid(), event);
+		EventLog eventLog = this.generateEventLog(registerQueueName, event);
 		// 發布註冊使用者事件 (到 AuthService 進行註冊)
 		this.publishEvent(registerQueueName, event);
 		eventLog.publish(JsonParseUtil.serialize(event)); // 更改狀態為:已發布
@@ -91,7 +91,7 @@ public class MoneyAccountCommandService extends BaseApplicationService {
 					.eventLogUuid(UUID.randomUUID().toString()).money(balance).build();
 
 			// 建立 EventLog
-			EventLog eventLog = this.generateEventLog(txQueueName, event.getEventLogUuid(), event.getTargetId(), event);
+			EventLog eventLog = this.generateEventLog(txQueueName, event);
 
 			// 發布 Event 進行儲值
 			this.publishEvent(txQueueName, event);

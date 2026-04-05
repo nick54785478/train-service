@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import com.example.demo.base.domain.aggregate.BaseAggreagteRoot;
 import com.example.demo.base.shared.enums.YesNo;
+import com.example.demo.domain.seat.command.CreateSeatCommand;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -59,22 +60,25 @@ public class TrainSeat extends BaseAggreagteRoot {
 	/**
 	 * create seat
 	 * 
-	 * @param ticketUuid
-	 * @param trainUuid
-	 * @param bookUuid
-	 * @param takeDate
-	 * @param seatNo
-	 * @param carNo
+	 * @param ticketUuid Ticket UUID
+	 * @param trainUuid  Train UUID
+	 * @param bookUuid   Booking UUID
+	 * @param takeDate   搭乘日期
+	 * @param seatNo     座位
+	 * @param carNo      車廂編號
+	 * @return TrainSeat
 	 */
-	public void create(String ticketUuid, String trainUuid, String bookUuid, LocalDate takeDate, String seatNo, Long carNo) {
-		this.ticketUuid = ticketUuid;
-		this.trainUuid = trainUuid;
-		this.bookUuid = bookUuid;
-		this.takeDate = takeDate;
-		this.carNo = carNo;
-		this.seatNo = seatNo;
-		this.booked = YesNo.Y;
-		this.activeFlag = YesNo.Y;
+	public static TrainSeat create(CreateSeatCommand command) {
+		TrainSeat seat = new TrainSeat();
+		seat.ticketUuid = command.getTicketUuid();
+		seat.trainUuid = command.getTrainUuid();
+		seat.bookUuid = command.getBookingUuid();
+		seat.takeDate = command.getTakeDate();
+		seat.carNo = command.getCarNo();
+		seat.seatNo = command.getSeatNo();
+		seat.booked = YesNo.Y;
+		seat.activeFlag = YesNo.Y;
+		return seat;
 	}
 
 	/**

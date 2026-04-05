@@ -7,6 +7,7 @@ import com.example.demo.base.domain.aggregate.BaseAggreagteRoot;
 import com.example.demo.base.infra.context.ContextHolder;
 import com.example.demo.base.shared.event.BaseEvent;
 import com.example.demo.domain.account.command.CreateMoneyAccountCommand;
+import com.example.demo.domain.account.outbound.AccountTxEvent;
 import com.example.demo.domain.account.outbound.RegisterUserEvent;
 
 import jakarta.persistence.Column;
@@ -29,7 +30,7 @@ public class MoneyAccount extends BaseAggreagteRoot {
 	@Id
 	@Column(name = "UUID")
 	private String uuid;
-	
+
 	@Column(name = "NAME")
 	private String name; // 人名
 
@@ -41,7 +42,6 @@ public class MoneyAccount extends BaseAggreagteRoot {
 
 	@Column(name = "BALANCE")
 	private BigDecimal balance = new BigDecimal("0"); // 餘額
-
 
 	/**
 	 * 新增帳戶訊息
@@ -56,8 +56,8 @@ public class MoneyAccount extends BaseAggreagteRoot {
 		this.balance = this.balance.add(command.getMoney()); // 加上去
 
 		// 建立 Event
-		BaseEvent event = RegisterUserEvent.builder().name(this.name).targetId(this.uuid).eventLogUuid(UUID.randomUUID().toString())
-				.username(this.username).email(this.email).build();
+		BaseEvent event = RegisterUserEvent.builder().name(this.name).targetId(this.uuid)
+				.eventLogUuid(UUID.randomUUID().toString()).username(this.username).email(this.email).build();
 		ContextHolder.setBaseEvent(event);
 	}
 
@@ -69,6 +69,21 @@ public class MoneyAccount extends BaseAggreagteRoot {
 	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
 	}
-	
+
+	/**
+	 * 扣款事件
+	 */
+	public void chargeForBooking(BigDecimal balance, String eventId) {
+		BigDecimal deducted = this.balance.subtract(balance);
+		
+		// 賦予 Event Transaction ID 標註此次事件在同一次業務行為
+		this.assignEventTxId(eventId);
+		// 發布扣款事件
+		AccountTxEvent event = AccountTxEvent.builder().targetId(this.uuid)
+				.money(deducted).build();
+
+		// 設置 Domain Event
+		this.raiseEvent(event);
+	}
 
 }

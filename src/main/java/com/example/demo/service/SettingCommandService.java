@@ -5,14 +5,10 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.base.application.port.EventPublishPort;
 import com.example.demo.base.application.service.BaseApplicationService;
-import com.example.demo.base.infra.persistence.EventLogRepository;
 import com.example.demo.domain.service.SettingService;
 import com.example.demo.domain.setting.command.CreateSettingCommand;
 import com.example.demo.domain.setting.command.UpdateSettingCommand;
-
-import lombok.AllArgsConstructor;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, timeout = 36000, rollbackFor = Exception.class)
@@ -23,8 +19,7 @@ public class SettingCommandService extends BaseApplicationService {
 	/**
 	 * 建立設定
 	 * 
-	 * @param command
-	 * @return SettingCreated
+	 * @param command CreateSettingCommand
 	 */
 	public void create(CreateSettingCommand command) {
 		// 檢查設定
@@ -36,7 +31,6 @@ public class SettingCommandService extends BaseApplicationService {
 	 * 修改設定
 	 * 
 	 * @param command
-	 * @return SettingCreated
 	 */
 	public void update(UpdateSettingCommand command) {
 		// 檢查設定
