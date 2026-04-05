@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.example.demo.base.application.port.EventPublishPort;
 import com.example.demo.base.infra.persistence.EventLogRepository;
 import com.example.demo.base.shared.command.PublishEventCommand;
-import com.example.demo.domain.booking.outbound.TicketBookingEvent;
+import com.example.demo.domain.booking.outbound.BookSeatEvent;
 import com.example.demo.util.DateTransformUtil;
 
 @SpringBootTest
@@ -30,13 +30,13 @@ class RabbitmqServiceTest {
 
 	@Test
 	void testPublish() {
-		TicketBookingEvent event = TicketBookingEvent.builder().eventLogUuid("EventLogUuid").targetId("Booking UUID")
+		BookSeatEvent event = BookSeatEvent.builder().eventLogUuid("EventLogUuid").targetId("Booking UUID")
 				.seatNo("4A").takeDate(DateTransformUtil.transformLocalDateToString(LocalDate.now())).build();
 
 //		EventLog eventLog = EventLog.builder().uuid(uuid).targetId("火車UUID").className(testQueueName).userId("Nick123")
 //				.body("Request Body").build();
 //		
-		PublishEventCommand<TicketBookingEvent> command = PublishEventCommand.<TicketBookingEvent>builder().event(event)
+		PublishEventCommand<BookSeatEvent> command = PublishEventCommand.<BookSeatEvent>builder().event(event)
 				.topic(testQueueName).build();
 
 		// 儲存 EventLog

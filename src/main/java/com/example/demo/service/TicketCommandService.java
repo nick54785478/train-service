@@ -51,8 +51,8 @@ public class TicketCommandService extends BaseApplicationService {
 	private final MoneyAccountRepository moneyAccountRepository;
 	private final TicketBookingRepository ticketBookingRepository;
 
-	@Value("${rabbitmq.ticket-booking-topic-queue.name}")
-	private String bookingQueueName;
+	@Value("${rabbitmq.book-seat-topic-queue.name}")
+	private String bookSeatQueueName;
 
 	@Value("${rabbitmq.acount-tx-topic-queue.name}")
 	private String txQueueName;
@@ -126,7 +126,7 @@ public class TicketCommandService extends BaseApplicationService {
 
 		// 發布事件
 		BaseEvent event = ContextHolder.getEvent();
-		this.publishEvent(bookingQueueName, event);
+		this.publishEvent(bookSeatQueueName, event);
 
 		EventLog eventLog = eventLogRepository.findByUuid(event.getEventLogUuid());
 		eventLog.publish(JsonParseUtil.serialize(event));
@@ -152,7 +152,7 @@ public class TicketCommandService extends BaseApplicationService {
 
 		// 發布事件
 		BaseEvent event = ContextHolder.getEvent();
-		this.publishEvent(bookingQueueName, event);
+		this.publishEvent(bookSeatQueueName, event);
 		EventLog eventLog = eventLogRepository.findByUuid(event.getEventLogUuid());
 		eventLog.publish(JsonParseUtil.serialize(event));
 		eventLogRepository.save(eventLog);
@@ -171,7 +171,7 @@ public class TicketCommandService extends BaseApplicationService {
 		List<BaseEvent> allEvents = new ArrayList<>();
 		allEvents.addAll(ticketBooking.getDomainEvents());
 		allEvents.addAll(account.getDomainEvents());
-		System.out.println("all events:" + allEvents);
+		log.info("all events: {}", allEvents);
 
 		// 統一發布
 		allEvents.forEach(event -> {

@@ -20,8 +20,7 @@ import com.example.demo.base.infra.persistence.EventLogRepository;
 import com.example.demo.base.infra.persistence.EventSourceRepository;
 import com.example.demo.domain.account.aggregate.MoneyAccount;
 import com.example.demo.domain.account.outbound.AccountTxEvent;
-import com.example.demo.domain.booking.aggregate.TicketBooking;
-import com.example.demo.domain.booking.outbound.TicketBookingEvent;
+import com.example.demo.domain.booking.outbound.BookSeatEvent;
 import com.example.demo.domain.seat.aggregate.TrainSeat;
 import com.example.demo.domain.seat.command.CreateSeatCommand;
 import com.example.demo.domain.share.enums.TicketAction;
@@ -38,8 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@RabbitListener(queues = "${rabbitmq.ticket-booking-topic-queue.name}")
-public class BookTopicMessageHandler extends BaseEventHandler {
+@RabbitListener(queues = "${rabbitmq.book-seat-topic-queue.name}")
+public class BookSeatEventHandler extends BaseEventHandler {
 
 	private TicketRepository ticketRepository;
 	private TrainSeatRepository trainSeatRepository;
@@ -47,7 +46,7 @@ public class BookTopicMessageHandler extends BaseEventHandler {
 	private MoneyAccountRepository moneyAccountRepository;
 	private TicketBookingRepository ticketBookingRepository;
 
-	public BookTopicMessageHandler(EventIdempotenceHandlerPort eventIdempotentLogService,
+	public BookSeatEventHandler(EventIdempotenceHandlerPort eventIdempotentLogService,
 			EventPublishPort rabbitmqService, EventLogRepository eventLogRepository,
 			EventSourceRepository eventSourceRepository, TicketBookingRepository ticketBookingRepository,
 			TrainSeatRepository trainSeatRepository, MoneyAccountRepository moneyAccountRepository,
@@ -63,8 +62,8 @@ public class BookTopicMessageHandler extends BaseEventHandler {
 	private String txQueueName;
 
 	@RabbitHandler
-	public void handle(TicketBookingEvent event, Channel channel, Message message) throws IOException {
-		log.info("Book Topic Queue -- 接收到消息： {}", event);
+	public void handle(BookSeatEvent event, Channel channel, Message message) throws IOException {
+		log.info("Book Seat Topic Queue -- 接收到消息： {}", event);
 
 		if (Objects.isNull(event)) {
 			log.error("Consumer 接收到的 Message 有問題, 內容:{}", event);
@@ -137,7 +136,7 @@ public class BookTopicMessageHandler extends BaseEventHandler {
 	 * @param booking Booking 資訊
 	 * @param event   Event 資料
 	 */
-	private void checkIn(TicketBookingEvent event) {
+	private void checkIn(BookSeatEvent event) {
 		TrainSeat trainSeat = trainSeatRepository.findByBookUuidAndTakeDateAndSeatNoAndCarNo(event.getTargetId(),
 				DateTransformUtil.transformStringToLocalDate(event.getTakeDate()), event.getSeatNo(), event.getCarNo());
 		trainSeat.checkIn();

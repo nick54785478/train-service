@@ -20,8 +20,8 @@ public class RabbitmqConfiguration {
 	@Value("${rabbitmq.test-topic-queue.name}")
 	private String testQueueName;
 
-	@Value("${rabbitmq.ticket-booking-topic-queue.name}")
-	private String bookingQueueName;
+	@Value("${rabbitmq.book-seat-topic-queue.name}")
+	private String bookSeatQueueName;
 
 	@Value("${rabbitmq.register-topic-queue.name}")
 	private String registerUserQueueName;
@@ -68,13 +68,16 @@ public class RabbitmqConfiguration {
 	}
 
 	/**
-	 * create Rabbit Ticket Booking Queue
+	 * create Rabbit Ticket Booked Queue
+	 * <p>
+	 * 註. Ticket Booked 後的執行邏輯會放在這 (如: 更新座位資訊)
+	 * </p>
 	 * 
 	 * @return bookingQueue
 	 */
 	@Bean
-	public Queue bookingQueue() {
-		return new Queue(bookingQueueName, true);
+	public Queue bookSeatQueue() {
+		return new Queue(bookSeatQueueName, true);
 	}
 
 	/**
@@ -113,11 +116,11 @@ public class RabbitmqConfiguration {
 	 * 將佇列 (Ticket Booking Queue) 綁定到主題交換器 (TopicExchange)，並指定路由鍵模式。
 	 */
 	@Bean
-	public Binding bookingTopicQueueBinding(Queue bookingQueue, TopicExchange exchange) {
+	public Binding bookSeatTopicQueueBinding(Queue bookSeatQueue, TopicExchange exchange) {
 		// 結合設定檔設定的匹配規則
 		// * ：有且僅有一個
 		// #：匹配0個或者多個
-		return BindingBuilder.bind(bookingQueue).to(exchange).with(bookingQueueName); // 註. bind 需與上方 Queue 名稱一致
+		return BindingBuilder.bind(bookSeatQueue).to(exchange).with(bookSeatQueueName); // 註. bind 需與上方 Queue 名稱一致
 //		return BindingBuilder.bind(testQueue()).to(topicExchange()).with("*.test.#"); //所有符合 "*.test.#" 这种模式的消息，都会被路由到 testQueue 队列。
 
 	}

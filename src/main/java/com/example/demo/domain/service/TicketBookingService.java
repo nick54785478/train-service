@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TicketBookingService extends BaseDomainService {
 
-	@Value("${rabbitmq.ticket-booking-topic-queue.name}")
+	@Value("${rabbitmq.book-seat-topic-queue.name}")
 	private String bookingQueueName;
 
 	private final TicketBookingRepository ticketBookingRepository;
